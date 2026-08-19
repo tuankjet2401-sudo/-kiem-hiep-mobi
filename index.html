@@ -88,7 +88,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 <div id="msg"></div>
 <div id="teleport" class="modal travelModal">
   <button class="close" onclick="closeTeleport()">×</button>
-  <h1>🌀 Dịch chuyển</h1>
+  <h1>🐎 Xa Phu · Dịch chuyển</h1>
   <button class="action" onclick="capeOn=!capeOn;toast(capeOn?'🪽 Phi phong bật':'🪽 Phi phong tắt');closeTeleport()">🪽 Phi phong: <span id="capeState">Bật</span></button>
   <div class="travelCard">
     <strong>🏠 Tân Thủ Thôn</strong>
@@ -120,6 +120,7 @@ const P={x:1600,y:1500,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15,dead:false};
 const cam={x:P.x,y:P.y};
 const town={x:1600,y:1200};
 const city={x:2600,y:700};
+const xaPhu={x:1460,y:1080};
 let mounted=false;
 let capeOn=true;
 let locationName="Tân Thủ Thôn";
@@ -276,7 +277,16 @@ let joy={x:0,y:0,active:false};const joyEl=document.getElementById("joy"),stick=
 function setJoy(e){const r=joyEl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,lim=r.width*.36;const d=Math.hypot(dx,dy);if(d>lim){dx*=lim/d;dy*=lim/d}joy.x=dx/lim;joy.y=dy/lim;stick.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`}
 function endJoy(){joy.x=joy.y=0;joy.active=false;stick.style.transform="translate(-50%,-50%)"}
 joyEl.addEventListener("touchstart",e=>{joy.active=true;setJoy(e.touches[0])},{passive:true});joyEl.addEventListener("touchmove",e=>{if(joy.active)setJoy(e.touches[0])},{passive:true});joyEl.addEventListener("touchend",endJoy,{passive:true});
-c.addEventListener("touchstart",e=>{if(document.getElementById("bag").style.display==="block")return;pickup()},{passive:true});
+c.addEventListener("touchstart",e=>{
+  if(document.getElementById("bag").style.display==="block")return;
+  const r=c.getBoundingClientRect(), tx=(e.touches[0].clientX-r.left-W/2)/ZOOM+cam.x, ty=(e.touches[0].clientY-r.top-H/2)/ZOOM+cam.y;
+  if(Math.hypot(P.x-xaPhu.x,P.y-xaPhu.y)<120 && Math.hypot(tx-xaPhu.x,ty-xaPhu.y)<120){
+    openTeleport();
+    toast("🐎 Xa Phu: Chọn nơi muốn đến");
+    return;
+  }
+  pickup();
+},{passive:true});
 
 function update(dt){
 let dx=joy.x,dy=joy.y;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;

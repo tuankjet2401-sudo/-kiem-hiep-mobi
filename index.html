@@ -114,36 +114,39 @@ P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.
 for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330){m.x+=(P.x-m.x)/Math.max(d,1)*45*dt;m.y+=(P.y-m.y)/Math.max(d,1)*45*dt}if(d<55)m.hit=Math.max(m.hit,0.1);m.hit=Math.max(0,m.hit-dt)}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);
 
-/* 3.9.9 CAMERA ONLY
-   - Không đổi P, World, quái, rơi đồ, đánh hay túi.
-   - Player được giữ trong vùng nhìn an toàn.
-   - Vùng joystick góc trái dưới được coi là vùng cấm.
-   - Camera vẫn bị clamp theo World, nên World không chạy theo player.
+/* 3.9.10 CAMERA ONLY
+   - Giữ nguyên toàn bộ gameplay.
+   - Không đổi P, World, quái, đánh, rơi đồ hoặc túi.
+   - Player luôn nằm trong vùng nhìn rõ.
+   - Né vùng joystick bên trái và cụm kỹ năng bên phải.
+   - Ở mép WORLD, camera được phép nhìn ra ngoài WORLD
+     một khoảng nhỏ để player không bị dồn khỏi màn hình.
 */
 const viewW=W/ZOOM,viewH=H/ZOOM;
-const halfW=viewW/2,halfH=viewH/2;
-const minCamX=halfW,maxCamX=Math.max(halfW,world.w-halfW);
-const minCamY=halfH,maxCamY=Math.max(halfH,world.h-halfH);
 
-const safeLeft=Math.max(92,Math.min(W*0.22,140));
-const safeRight=Math.min(W-82,Math.max(W*0.78,260));
-const safeTop=Math.max(150,Math.min(H*0.28,220));
-const safeBottom=Math.max(safeTop+140,H-285);
+// Vùng an toàn trung tâm, tránh hai cụm điều khiển phía dưới.
+const safeLeft=Math.min(W*0.30,245);
+const safeRight=Math.max(W*0.70,W-245);
+const safeTop=Math.min(H*0.38,360);
+const safeBottom=Math.min(H*0.66,H-260);
 
-let px=(P.x-cam.x)*ZOOM+W/2;
-let py=(P.y-cam.y)*ZOOM+H/2;
+const desiredScreenX=(safeLeft+safeRight)/2;
+const desiredScreenY=(safeTop+safeBottom)/2;
 
-let desiredX=cam.x,desiredY=cam.y;
-if(px<safeLeft) desiredX=P.x-(safeLeft-W/2)/ZOOM;
-else if(px>safeRight) desiredX=P.x-(safeRight-W/2)/ZOOM;
-if(py<safeTop) desiredY=P.y-(safeTop-H/2)/ZOOM;
-else if(py>safeBottom) desiredY=P.y-(safeBottom-H/2)/ZOOM;
+// Đặt player vào vùng an toàn thay vì ép camera vào đúng tâm.
+let desiredX=P.x-(desiredScreenX-W/2)/ZOOM;
+let desiredY=P.y-(desiredScreenY-H/2)/ZOOM;
 
-desiredX=Math.max(minCamX,Math.min(maxCamX,desiredX));
-desiredY=Math.max(minCamY,Math.min(maxCamY,desiredY));
+// Cho camera vượt biên WORLD một chút ở mép bản đồ.
+// Nhờ vậy player vẫn rõ khi P.y gần 2400 hoặc P.x gần biên.
+const cameraPadX=viewW*0.12;
+const cameraPadY=viewH*0.12;
+desiredX=Math.max(-cameraPadX,Math.min(world.w+cameraPadX,desiredX));
+desiredY=Math.max(-cameraPadY,Math.min(world.h+cameraPadY,desiredY));
 
-cam.x += (desiredX-cam.x)*Math.min(1,dt*7);
-cam.y += (desiredY-cam.y)*Math.min(1,dt*7);
+// Bám mượt, không giật cảnh.
+cam.x+=(desiredX-cam.x)*Math.min(1,dt*5.5);
+cam.y+=(desiredY-cam.y)*Math.min(1,dt*5.5);
 
 pickup();
 document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);

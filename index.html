@@ -232,7 +232,10 @@ ctx.clearRect(0,0,W,H);ctx.fillStyle="#32683d";ctx.fillRect(0,0,W,H);ctx.save();
 ctx.strokeStyle="#ffffff12";for(let x=0;x<=world.w;x+=160){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,world.h);ctx.stroke()}for(let y=0;y<=world.h;y+=160){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(world.w,y);ctx.stroke()}
 ctx.fillStyle="#3f91bd";ctx.beginPath();ctx.moveTo(0,1650);ctx.bezierCurveTo(500,1500,650,1900,1100,1750);ctx.bezierCurveTo(1450,1620,1800,1850,2200,1740);ctx.bezierCurveTo(2600,1640,2900,1800,3200,1700);ctx.lineTo(3200,2400);ctx.lineTo(0,2400);ctx.closePath();ctx.fill();
 ctx.fillStyle="#b49a68";ctx.beginPath();ctx.moveTo(0,1850);ctx.quadraticCurveTo(800,1450,1600,1700);ctx.quadraticCurveTo(2300,1900,3200,1500);ctx.lineTo(3200,1750);ctx.quadraticCurveTo(2300,2150,1600,1950);ctx.quadraticCurveTo(800,1750,0,2100);ctx.closePath();ctx.fill();
-ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-70,210,140);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+8);
+ctx.save();
+ctx.fillStyle="#214d2b55";ctx.beginPath();ctx.arc(town.x,town.y,270,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle="#f0d77a55";ctx.lineWidth=3;ctx.setLineDash([12,10]);ctx.beginPath();ctx.arc(town.x,town.y,270,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-70,210,140);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+8);ctx.font="13px sans-serif";ctx.fillStyle="#f7e9b0";ctx.fillText("KHU AN TOÀN",town.x,town.y+34);ctx.restore();
 for(const [x,y] of trees){ctx.fillStyle="#704a30";ctx.fillRect(x-9,y+28,18,50);ctx.fillStyle="#285d37";ctx.beginPath();ctx.arc(x,y,58,0,Math.PI*2);ctx.fill();ctx.fillStyle="#347447";ctx.beginPath();ctx.arc(x-20,y-18,36,0,Math.PI*2);ctx.fill()}
 for(const m of mobs)if(m.alive){
   ctx.fillStyle=m.hit?"#ffbd59":"#814237";
@@ -250,7 +253,13 @@ for(const m of mobs)if(m.alive){
 for(const d of drops){ctx.fillStyle=d.kind==="gold"?"#e8c64f":"#d7d7d7";ctx.beginPath();ctx.arc(d.x,d.y,22,0,Math.PI*2);ctx.fill();ctx.fillStyle="#111";ctx.font="16px sans-serif";ctx.fillText(d.kind==="gold"?"🪙":d.item.icon,d.x,d.y+6)}
 drawOtherPlayers();
 if(capeOn){ctx.fillStyle="#6b3fa0aa";ctx.beginPath();ctx.moveTo(P.x-30,P.y+42);ctx.quadraticCurveTo(P.x,P.y+8,P.x+30,P.y+42);ctx.lineTo(P.x+18,P.y+58);ctx.lineTo(P.x-18,P.y+58);ctx.closePath();ctx.fill()}
-if(mounted){ctx.font="34px sans-serif";ctx.fillText("🐎",P.x,P.y+30)}ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(P.x,P.y-32,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#f5f1e4";ctx.beginPath();ctx.moveTo(P.x-24,P.y+45);ctx.lineTo(P.x,P.y-8);ctx.lineTo(P.x+28,P.y+45);ctx.lineTo(P.x,P.y+60);ctx.closePath();ctx.fill();
+if(mounted){ctx.font="34px sans-serif";ctx.textAlign="center";ctx.fillText("🐎",P.x,P.y+30)}
+ctx.fillStyle="#00000055";ctx.beginPath();ctx.ellipse(P.x,P.y+48,30,9,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(P.x,P.y-32,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#f5f1e4";ctx.beginPath();ctx.moveTo(P.x-24,P.y+45);ctx.lineTo(P.x,P.y-8);ctx.lineTo(P.x+28,P.y+45);ctx.lineTo(P.x,P.y+60);ctx.closePath();ctx.fill();
+ctx.font="bold 14px sans-serif";ctx.textAlign="center";const pn="⚔️ Thiếu Hiệp";const pntw=ctx.measureText(pn).width+14;ctx.fillStyle="#08100dcc";ctx.beginPath();ctx.roundRect(P.x-pntw/2,P.y-88,pntw,20,7);ctx.fill();ctx.fillStyle="#fff";ctx.fillText(pn,P.x,P.y-73);
+ctx.font="11px sans-serif";ctx.fillStyle="#d8e7f2";ctx.fillText("Cấp 14 · "+playerClass,P.x,P.y-59);
+const near=nearest();
+if(near && Math.hypot(P.x-near.x,P.y-near.y)<190){ctx.strokeStyle="#ffd95a99";ctx.lineWidth=3;ctx.beginPath();ctx.arc(near.x,near.y,near.r+9,0,Math.PI*2);ctx.stroke();}
 ctx.restore();
 }
 

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="game-version" content="4.2">
 <title>Kiếm Thế Mobi – Bản 3.9.9</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -23,6 +24,10 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .item{background:#20282f;border-radius:15px;padding:11px 13px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}.item strong{font-size:18px}.item small{display:block;color:#ddd}.rare{color:#c47cff}.good{color:#77e36a}.normal{color:#eee}
 @media(max-width:430px){#stats{max-width:58vw;padding:10px 12px}.name{font-size:22px}.sub{font-size:15px}#town{max-width:30vw;font-size:14px}.skills{gap:8px;right:12px;bottom:132px}.btn{width:60px;height:60px;font-size:26px}#joy{left:12px;bottom:150px;width:108px;height:108px}#stick{width:48px;height:48px}}
 .action{background:#d2a44e;border:0;color:#fff;font-weight:700;border-radius:12px;padding:10px 13px;font-size:15px}
+.enhance{background:#6f4fd8;border:0;color:#fff;font-weight:800;border-radius:12px;padding:10px 13px;font-size:15px}
+.enhance:disabled{opacity:.45}
+.enhanceLv{color:#ffd95a;font-weight:800}
+
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.slot{min-height:65px;background:#1c242b;border:1px solid #3b454e;border-radius:10px;padding:7px;font-size:12px}
 @media(max-width:700px){#stats{max-width:55vw}.name{font-size:22px}#town{max-width:30vw}.modal{inset:8% 4%}.grid{grid-template-columns:repeat(4,1fr)}}
 </style>
@@ -76,6 +81,31 @@ const items=[
 {name:"Bình Hồi Khí",type:"tiêu hao",rarity:"Thường",level:1,atk:0,def:0,icon:"🧪"}];
 let bag=[...items.slice(0,5),items[5],items[5]],equip={weapon:items[3],armor:items[2]};
 const drops=[];let gold=733,last=performance.now(),attackCd=0,skillCd=0,fireCd=0;
+const ENHANCE_MAX=10;
+const ENHANCE_BASE_COST=50;
+function enhanceCost(it){
+  return ENHANCE_BASE_COST * ((it.enhance||0)+1);
+}
+function enhanceItem(i){
+  const it=bag[i];
+  if(!it || it.type==="tiêu hao"){toast("⚒️ Chỉ cường hoá trang bị");return}
+  const lv=it.enhance||0;
+  if(lv>=ENHANCE_MAX){toast("⚒️ Trang bị đã +10");return}
+  const cost=enhanceCost(it);
+  if(gold<cost){toast("🪙 Không đủ vàng · Cần "+cost);return}
+  gold-=cost;
+  it.enhance=lv+1;
+  toast("⚒️ "+it.name+" lên +"+it.enhance);
+  renderBag();
+}
+function itemPower(it){
+  const e=it?.enhance||0;
+  return {
+    atk:(it?.atk||0)+e*3,
+    def:(it?.def||0)+e*3
+  };
+}
+
 function rarityClass(r){return r==="Hiếm"?"rare":r==="Tốt"?"good":"normal"}
 function openBag(){renderBag();document.getElementById("bag").style.display="block"}
 function closeBag(){document.getElementById("bag").style.display="none"} document.getElementById("bagBtn").onclick=openBag;
@@ -86,6 +116,19 @@ document.getElementById("items").innerHTML=bag.map((it,i)=>`<div class="item"><d
 let g="";for(let i=0;i<24;i++)g+=`<div class="slot">${bag[i]?bag[i].icon+" "+bag[i].name:"—"}</div>`;document.getElementById("grid").innerHTML=g}
 function equipItem(i){const it=bag[i];if(!it)return;if(it.type==="vũ khí"){if(equip.weapon)bag.push(equip.weapon);equip.weapon=it}else if(it.type==="áo"){if(equip.armor)bag.push(equip.armor);equip.armor=it}bag.splice(i,1);clampBag();renderBag()}
 function unequip(slot){if(bag.length>=24){toast("Túi đã đầy");return}bag.push(equip[slot]);equip[slot]=null;renderBag()}
+function enhanceEquipped(slot){
+  const it=equip[slot];
+  if(!it){toast("Chưa có trang bị");return}
+  const lv=it.enhance||0;
+  if(lv>=ENHANCE_MAX){toast("⚒️ Trang bị đã +10");return}
+  const cost=enhanceCost(it);
+  if(gold<cost){toast("🪙 Không đủ vàng · Cần "+cost);return}
+  gold-=cost;
+  it.enhance=lv+1;
+  toast("⚒️ "+it.name+" lên +"+it.enhance);
+  renderBag();
+}
+
 function useItem(i){let it=bag[i];if(!it)return;if(it.name.includes("Hồi Khí")){P.mp=Math.min(P.maxMp,P.mp+30);bag.splice(i,1);toast("💧 Hồi 30 khí");renderBag()}}
 function sellItem(i){gold+=20;bag.splice(i,1);renderBag();toast("🪙 +20 vàng")}
 function clampBag(){if(bag.length>24)bag.length=24}
@@ -94,8 +137,8 @@ function spawnDrop(x,y){if(bag.length>=24){toast("🎒 Túi đầy");return}cons
 function pickup(){for(let i=drops.length-1;i>=0;i--){const d=drops[i],dist=Math.hypot(P.x-d.x,P.y-d.y);if(dist<75){if(d.kind==="gold"){gold+=d.amount;toast("🪙 +"+d.amount);drops.splice(i,1)}else if(bag.length<24){bag.push(d.item);toast("🎁 "+d.item.name);drops.splice(i,1)}else toast("🎒 Túi đầy")}}}
 function nearest(){let best=null,bd=99999;for(const m of mobs)if(m.alive){let d=Math.hypot(P.x-m.x,P.y-m.y);if(d<bd){bd=d;best=m}}return best}
 function damage(m,n){m.hp=Math.max(0,m.hp-n);m.hit=.15;if(m.hp<=0){m.alive=false;spawnDrop(m.x,m.y);document.getElementById("expText").textContent="600/600";toast("⚔️ Hạ Sơn Tặc · Có đồ rơi!")}}
-function attack(){if(attackCd>0)return;attackCd=.45;let m=nearest();const atk=P.atk+(equip.weapon?.atk||0);if(m&&Math.hypot(P.x-m.x,P.y-m.y)<150)damage(m,atk)}
-function skillFn(){if(skillCd>0)return;skillCd=2;let m=nearest();const atk=equip.weapon?.atk||0;if(m&&Math.hypot(P.x-m.x,P.y-m.y)<260)damage(m,35+atk);toast("☯️ Võ công")}
+function attack(){if(attackCd>0)return;attackCd=.45;let m=nearest();const atk=P.atk+itemPower(equip.weapon).atk;if(m&&Math.hypot(P.x-m.x,P.y-m.y)<150)damage(m,atk)}
+function skillFn(){if(skillCd>0)return;skillCd=2;let m=nearest();const atk=itemPower(equip.weapon).atk;if(m&&Math.hypot(P.x-m.x,P.y-m.y)<260)damage(m,35+atk);toast("☯️ Võ công")}
 function fireFn(){if(fireCd>0)return;fireCd=3;let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<330)damage(m,55);toast("🔥 Hỏa công")}
 document.getElementById("attack").addEventListener("touchstart",e=>{e.preventDefault();attack()},{passive:false});
 document.getElementById("skill").addEventListener("touchstart",e=>{e.preventDefault();skillFn()},{passive:false});

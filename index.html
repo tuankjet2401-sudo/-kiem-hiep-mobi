@@ -114,49 +114,70 @@ P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.
 for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330){m.x+=(P.x-m.x)/Math.max(d,1)*45*dt;m.y+=(P.y-m.y)/Math.max(d,1)*45*dt}if(d<55)m.hit=Math.max(m.hit,0.1);m.hit=Math.max(0,m.hit-dt)}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);
 
-/* 3.9.12 CAMERA FIX
-   CHỈ sửa camera. Gameplay giữ nguyên.
-   - Player luôn ở vùng nhìn rõ.
-   - Không để joystick / skill che player.
-   - Camera KHÔNG vượt khỏi WORLD.
-   - Khi ở mép WORLD, camera dừng đúng mép.
-*/
-const viewW=W/ZOOM, viewH=H/ZOOM;
-const halfW=viewW/2, halfH=viewH/2;
+/* 3.9.14 CAMERA FIX
+   CHỈ sửa camera, lấy nguyên 3.9.13 làm nền.
+   Gameplay / World / quái / đánh / rơi đồ / túi giữ nguyên.
 
-// Vùng an toàn: phần giữa màn hình, tránh HUD và điều khiển dưới.
+   FIX chính:
+   - Không để player bị dồn xuống đáy màn hình khi P gần mép WORLD.
+   - Camera được phép overscan rất nhỏ ở mép, chỉ đủ để giữ player
+     trong vùng nhìn rõ.
+   - Không dùng overscan lớn nên không tạo cảnh trống như 3.9.11.
+*/
+const viewW=W/ZOOM,viewH=H/ZOOM;
+const halfW=viewW/2,halfH=viewH/2;
+
+// Vùng an toàn của nhân vật trên màn hình.
 const safeL=Math.min(W*0.30,245);
 const safeR=Math.max(W*0.70,W-245);
 const safeT=Math.min(H*0.38,360);
 const safeB=Math.min(H*0.62,H-270);
-
-// Tâm vùng an toàn.
 const safeCX=(safeL+safeR)/2;
 const safeCY=(safeT+safeB)/2;
 
-// Camera mục tiêu đưa player vào vùng an toàn.
+// Camera mục tiêu tự nhiên.
 let targetX=P.x-(safeCX-W/2)/ZOOM;
 let targetY=P.y-(safeCY-H/2)/ZOOM;
 
-// QUAN TRỌNG: khóa camera trong WORLD.
-// Không cho camera vượt ra ngoài bản đồ.
+// Biên camera bình thường.
 const minX=halfW;
 const maxX=Math.max(minX,world.w-halfW);
 const minY=halfH;
 const maxY=Math.max(minY,world.h-halfH);
 
+// Trước tiên giữ camera trong WORLD.
 targetX=Math.max(minX,Math.min(maxX,targetX));
 targetY=Math.max(minY,Math.min(maxY,targetY));
+
+// Nếu bị ép bởi mép WORLD và player vẫn ra khỏi vùng an toàn,
+// cho camera vượt biên RẤT NHỎ để cứu vị trí player.
+// Đây là edge overscan, không phải kéo cả WORLD theo player.
+const edgePadX=70;
+const edgePadY=70;
+
+let screenPX=W/2+(P.x-targetX)*ZOOM;
+let screenPY=H/2+(P.y-targetY)*ZOOM;
+
+if(screenPX<safeL){
+  targetX-=Math.min(edgePadX,(safeL-screenPX)/ZOOM);
+}
+if(screenPX>safeR){
+  targetX+=Math.min(edgePadX,(screenPX-safeR)/ZOOM);
+}
+if(screenPY<safeT){
+  targetY-=Math.min(edgePadY,(safeT-screenPY)/ZOOM);
+}
+if(screenPY>safeB){
+  targetY+=Math.min(edgePadY,(screenPY-safeB)/ZOOM);
+}
+
+// Không bao giờ cho overscan vượt quá mức nhỏ đã định.
+targetX=Math.max(minX-edgePadX,Math.min(maxX+edgePadX,targetX));
+targetY=Math.max(minY-edgePadY,Math.min(maxY+edgePadY,targetY));
 
 // Bám mượt.
 cam.x+=(targetX-cam.x)*Math.min(1,dt*5.0);
 cam.y+=(targetY-cam.y)*Math.min(1,dt*5.0);
-
-// Ở mép WORLD, ưu tiên không vượt biên hơn việc giữ player đúng tâm.
-if(cam.x<minX)cam.x=minX;
-if(cam.x>maxX)cam.x=maxX;
-if(cam.y<minY)cam.y=minY;
-if(cam.y>maxY)cam.y=maxY;
 
 pickup();
 document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);

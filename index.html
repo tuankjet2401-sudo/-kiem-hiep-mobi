@@ -232,7 +232,13 @@ for(let i=0;i<mobs.length;i++){
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);statuses.stun=Math.max(0,statuses.stun-dt);statuses.slow=Math.max(0,statuses.slow-dt);statuses.buff=Math.max(0,statuses.buff-dt);
 if(playerClass==="Nga Mi"&&statuses.buff>0)P.hp=Math.min(P.maxHp,P.hp+12*dt);
 const viewW=W/ZOOM,viewH=H/ZOOM,halfW=viewW/2,halfH=viewH/2,safeL=Math.min(W*.30,245),safeR=Math.max(W*.70,W-245),safeT=Math.min(H*.38,360),safeB=Math.min(H*.62,H-270);
-let tx=P.x-((safeL+safeR)/2-W/2)/ZOOM,ty=P.y-((H*.56-H/2))/ZOOM;const minX=halfW,maxX=Math.max(minX,world.w-halfW),minY=halfH,maxY=Math.max(minY,world.h-halfH);tx=Math.max(minX,Math.min(maxX,tx));ty=Math.max(minY,Math.min(maxY,ty));cam.x+=(tx-cam.x)*Math.min(1,dt*5);cam.y+=(ty-cam.y)*Math.min(1,dt*5);
+const nearTown=Math.hypot(P.x-town.x,P.y-town.y)<360;
+const focusX=nearTown?town.x:P.x;
+const focusY=nearTown?town.y:P.y;
+let tx=focusX-((safeL+safeR)/2-W/2)/ZOOM,ty=focusY-((H*.56-H/2))/ZOOM;
+const minX=halfW,maxX=Math.max(minX,world.w-halfW),minY=halfH,maxY=Math.max(minY,world.h-halfH);
+tx=Math.max(minX,Math.min(maxX,tx));ty=Math.max(minY,Math.min(maxY,ty));
+cam.x+=(tx-cam.x)*Math.min(1,dt*5);cam.y+=(ty-cam.y)*Math.min(1,dt*5);
 pickup();document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("classHud").textContent=playerClass;document.getElementById("elementHud").textContent=elementIcon[elements[elementIndex]]+" "+elements[elementIndex];document.getElementById("locationName").textContent=locationName;document.getElementById("hpText").textContent=Math.round(P.hp)+"/"+P.maxHp;document.getElementById("mpText").textContent=Math.round(P.mp)+"/"+P.maxMp;document.getElementById("hp").style.width=P.hp/P.maxHp*100+"%";document.getElementById("mp").style.width=P.mp/P.maxMp*100+"%";document.getElementById("gold").textContent=gold;document.getElementById("atkText").textContent=P.atk+itemPower(equip.weapon).atk;document.getElementById("stateInfo").textContent=statuses.stun>0?"⚡ Choáng":statuses.slow>0?"❄️ Chậm":statuses.buff>0?"💚 Buff hồi phục":"Không có hiệu ứng.";
 }
 
@@ -346,7 +352,7 @@ function connectServer(){
   if(isGitHubPages){
     NET.connected=false;
     NET.id=TAB_ID;
-    setNetStatus("2 tab · Demo",true);
+    setNetStatus("2 tab · Demo · v4.11.3",true);
     return;
   }
   const url=location.protocol==="file:"?"ws://localhost:3000":NET.url;

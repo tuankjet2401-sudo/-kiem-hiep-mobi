@@ -114,49 +114,49 @@ P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.
 for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330){m.x+=(P.x-m.x)/Math.max(d,1)*45*dt;m.y+=(P.y-m.y)/Math.max(d,1)*45*dt}if(d<55)m.hit=Math.max(m.hit,0.1);m.hit=Math.max(0,m.hit-dt)}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);
 
-/* 3.9.11 CAMERA FIX
+/* 3.9.12 CAMERA FIX
    CHỈ sửa camera. Gameplay giữ nguyên.
-   Camera kiểm tra VỊ TRÍ PLAYER TRÊN MÀN HÌNH sau mỗi frame
-   và tự dịch theo đúng lượng cần thiết. Cách này không phụ thuộc
-   player đang ở giữa hay ở mép WORLD.
+   - Player luôn ở vùng nhìn rõ.
+   - Không để joystick / skill che player.
+   - Camera KHÔNG vượt khỏi WORLD.
+   - Khi ở mép WORLD, camera dừng đúng mép.
 */
-const viewW=W/ZOOM,viewH=H/ZOOM;
+const viewW=W/ZOOM, viewH=H/ZOOM;
+const halfW=viewW/2, halfH=viewH/2;
 
-// Vùng player được phép xuất hiện.
-// Chừa khoảng trống cho HUD, joystick và 3 nút kỹ năng.
-const safeL=Math.min(250,W*0.30);
-const safeR=Math.max(W-250,W*0.70);
-const safeT=Math.max(300,H*0.30);
-const safeB=Math.min(H-250,H*0.72);
+// Vùng an toàn: phần giữa màn hình, tránh HUD và điều khiển dưới.
+const safeL=Math.min(W*0.30,245);
+const safeR=Math.max(W*0.70,W-245);
+const safeT=Math.min(H*0.38,360);
+const safeB=Math.min(H*0.62,H-270);
 
-// Vị trí player hiện tại trên màn hình.
-let px=W/2+(P.x-cam.x)*ZOOM;
-let py=H/2+(P.y-cam.y)*ZOOM;
+// Tâm vùng an toàn.
+const safeCX=(safeL+safeR)/2;
+const safeCY=(safeT+safeB)/2;
 
-// Nếu player ra ngoài vùng an toàn, dịch camera NGAY LẬP TỨC
-// để đưa player trở lại vùng an toàn.
-if(px<safeL) cam.x-=(safeL-px)/ZOOM;
-if(px>safeR) cam.x+=(px-safeR)/ZOOM;
-if(py<safeT) cam.y-=(safeT-py)/ZOOM;
-if(py>safeB) cam.y+=(py-safeB)/ZOOM;
+// Camera mục tiêu đưa player vào vùng an toàn.
+let targetX=P.x-(safeCX-W/2)/ZOOM;
+let targetY=P.y-(safeCY-H/2)/ZOOM;
 
-// Bám nhẹ theo tâm vùng an toàn, nhưng không kéo player khỏi vùng.
-const centerX=(safeL+safeR)/2;
-const centerY=(safeT+safeB)/2;
-const desiredCamX=P.x-(centerX-W/2)/ZOOM;
-const desiredCamY=P.y-(centerY-H/2)/ZOOM;
+// QUAN TRỌNG: khóa camera trong WORLD.
+// Không cho camera vượt ra ngoài bản đồ.
+const minX=halfW;
+const maxX=Math.max(minX,world.w-halfW);
+const minY=halfH;
+const maxY=Math.max(minY,world.h-halfH);
 
-cam.x+=(desiredCamX-cam.x)*Math.min(1,dt*2.2);
-cam.y+=(desiredCamY-cam.y)*Math.min(1,dt*2.2);
+targetX=Math.max(minX,Math.min(maxX,targetX));
+targetY=Math.max(minY,Math.min(maxY,targetY));
 
-// Kiểm tra lại sau bước bám mượt để camera không làm player
-// rơi trở lại vùng joystick/kỹ năng.
-px=W/2+(P.x-cam.x)*ZOOM;
-py=H/2+(P.y-cam.y)*ZOOM;
-if(px<safeL) cam.x-=(safeL-px)/ZOOM;
-if(px>safeR) cam.x+=(px-safeR)/ZOOM;
-if(py<safeT) cam.y-=(safeT-py)/ZOOM;
-if(py>safeB) cam.y+=(py-safeB)/ZOOM;
+// Bám mượt.
+cam.x+=(targetX-cam.x)*Math.min(1,dt*5.0);
+cam.y+=(targetY-cam.y)*Math.min(1,dt*5.0);
+
+// Ở mép WORLD, ưu tiên không vượt biên hơn việc giữ player đúng tâm.
+if(cam.x<minX)cam.x=minX;
+if(cam.x>maxX)cam.x=maxX;
+if(cam.y<minY)cam.y=minY;
+if(cam.y>maxY)cam.y=maxY;
 
 pickup();
 document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);

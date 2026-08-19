@@ -88,7 +88,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 
 <div id="teleport" class="modal"><button class="close" onclick="closeTeleport()">×</button><h1>🐎 Xa Phu · Dịch chuyển</h1>
 <button class="action" onclick="capeOn=!capeOn;updateCapeButton();toast(capeOn?'🪽 Phi phong bật':'🪽 Phi phong tắt')">🪽 Phi phong: <span id="capeState">Bật</span></button>
-<div class="travelCard"><div><strong>🏠 Tân Thủ Thôn</strong><small>Khu an toàn · 1600,1200</small></div><button class="action" onclick="teleportTo('town')">Đi đến</button></div>
+<div class="travelCard"><div><strong>🏠 Tân Thủ Thôn</strong><small>Khu an toàn · 1600,1260</small></div><button class="action" onclick="teleportTo('town')">Đi đến</button></div>
 <div class="travelCard"><div><strong>🏙️ Thành Thị</strong><small>Thành thị · 2600,700</small></div><button class="action" onclick="teleportTo('city')">Đi đến</button></div></div>
 
 <div id="bag" class="modal"><button class="close" onclick="closeBag()">×</button><h1>🎒 Túi đồ & Trang bị</h1><h2>Trang bị</h2><div id="equip"></div><h2>🎒 Túi: <span id="count">0</span>/24</h2><div id="items"></div><h2>24 ô</h2><div id="grid" class="grid"></div></div>
@@ -103,8 +103,8 @@ addEventListener("resize",resize);resize();
 
 const world={w:3200,h:2400},ZOOM=.62;
 const P={x:1750,y:1480,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15};
-const cam={x:P.x,y:P.y},town={x:1600,y:1200},city={x:2600,y:700},xaPhu={x:1460,y:1080};
-const SAFE_RADIUS=220;
+const cam={x:P.x,y:P.y},town={x:1600,y:1260},city={x:2600,y:700},xaPhu={x:1460,y:1140};
+const SAFE_RADIUS=165;
 function inSafeZone(x,y,pad=0){return Math.hypot(x-town.x,y-town.y)<=SAFE_RADIUS+pad;}
 let mounted=false,capeOn=true,locationName="Tân Thủ Thôn",gold=733;
 const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"],elementIcon={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};
@@ -232,7 +232,7 @@ for(let i=0;i<mobs.length;i++){
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);statuses.stun=Math.max(0,statuses.stun-dt);statuses.slow=Math.max(0,statuses.slow-dt);statuses.buff=Math.max(0,statuses.buff-dt);
 if(playerClass==="Nga Mi"&&statuses.buff>0)P.hp=Math.min(P.maxHp,P.hp+12*dt);
 const viewW=W/ZOOM,viewH=H/ZOOM,halfW=viewW/2,halfH=viewH/2,safeL=Math.min(W*.30,245),safeR=Math.max(W*.70,W-245),safeT=Math.min(H*.38,360),safeB=Math.min(H*.62,H-270);
-let tx=P.x-((safeL+safeR)/2-W/2)/ZOOM,ty=P.y-((safeT+safeB)/2-H/2)/ZOOM;const minX=halfW,maxX=Math.max(minX,world.w-halfW),minY=halfH,maxY=Math.max(minY,world.h-halfH);tx=Math.max(minX,Math.min(maxX,tx));ty=Math.max(minY,Math.min(maxY,ty));cam.x+=(tx-cam.x)*Math.min(1,dt*5);cam.y+=(ty-cam.y)*Math.min(1,dt*5);
+let tx=P.x-((safeL+safeR)/2-W/2)/ZOOM,ty=P.y-((H*.56-H/2))/ZOOM;const minX=halfW,maxX=Math.max(minX,world.w-halfW),minY=halfH,maxY=Math.max(minY,world.h-halfH);tx=Math.max(minX,Math.min(maxX,tx));ty=Math.max(minY,Math.min(maxY,ty));cam.x+=(tx-cam.x)*Math.min(1,dt*5);cam.y+=(ty-cam.y)*Math.min(1,dt*5);
 pickup();document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("classHud").textContent=playerClass;document.getElementById("elementHud").textContent=elementIcon[elements[elementIndex]]+" "+elements[elementIndex];document.getElementById("locationName").textContent=locationName;document.getElementById("hpText").textContent=Math.round(P.hp)+"/"+P.maxHp;document.getElementById("mpText").textContent=Math.round(P.mp)+"/"+P.maxMp;document.getElementById("hp").style.width=P.hp/P.maxHp*100+"%";document.getElementById("mp").style.width=P.mp/P.maxMp*100+"%";document.getElementById("gold").textContent=gold;document.getElementById("atkText").textContent=P.atk+itemPower(equip.weapon).atk;document.getElementById("stateInfo").textContent=statuses.stun>0?"⚡ Choáng":statuses.slow>0?"❄️ Chậm":statuses.buff>0?"💚 Buff hồi phục":"Không có hiệu ứng.";
 }
 
@@ -244,7 +244,7 @@ ctx.fillStyle="#b49a68";ctx.beginPath();ctx.moveTo(0,1850);ctx.quadraticCurveTo(
 ctx.save();
 ctx.fillStyle="#214d2b55";ctx.beginPath();ctx.arc(town.x,town.y,SAFE_RADIUS,0,Math.PI*2);ctx.fill();
 ctx.strokeStyle="#f0d77a55";ctx.lineWidth=3;ctx.setLineDash([12,10]);ctx.beginPath();ctx.arc(town.x,town.y,SAFE_RADIUS,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
-ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-70,210,140);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+8);ctx.font="13px sans-serif";ctx.fillStyle="#f7e9b0";ctx.fillText("KHU AN TOÀN",town.x,town.y+34);ctx.restore();
+ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-62,210,124);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+6);ctx.font="13px sans-serif";ctx.fillStyle="#f7e9b0";ctx.fillText("KHU AN TOÀN",town.x,town.y+31);ctx.restore();
 for(const [x,y] of trees){ctx.fillStyle="#704a30";ctx.fillRect(x-9,y+28,18,50);ctx.fillStyle="#285d37";ctx.beginPath();ctx.arc(x,y,58,0,Math.PI*2);ctx.fill();ctx.fillStyle="#347447";ctx.beginPath();ctx.arc(x-20,y-18,36,0,Math.PI*2);ctx.fill()}
 for(const m of mobs)if(m.alive){
   ctx.fillStyle=m.hit?"#ffbd59":"#814237";
@@ -384,7 +384,7 @@ if(m.player){P.x=+m.player.x||P.x;P.y=+m.player.y||P.y;if(typeof m.player.hp==="
 if(!Array.isArray(m.players))return;
 const next=[];for(const p of m.players){const id=p&&(p.id??p.playerId??p.uid);if(!id||NET.id&&String(id)===String(NET.id))continue;let o=otherPlayers.find(x=>String(x.id)===String(id));if(!o)o={id:String(id),x:+p.x||0,y:+p.y||0,tx:+p.x||0,ty:+p.y||0,hp:+(p.hp??100),maxHp:+(p.maxHp??100),name:p.name||p.character||"Thiếu Hiệp",level:+(p.level??p.lv??14),className:p.className||p.class||"Võ Đang",element:p.element||"Kim",mounted:!!p.mounted,cape:!!p.cape};else{o.tx=+p.x||o.tx;o.ty=+p.y||o.ty;o.hp=+(p.hp??o.hp);o.maxHp=+(p.maxHp??o.maxHp);o.name=p.name||p.character||o.name;o.level=+(p.level??p.lv??o.level);o.className=p.className||p.class||o.className;o.element=p.element||o.element;if(typeof p.mounted==="boolean")o.mounted=p.mounted;if(typeof p.cape==="boolean")o.cape=p.cape}next.push(o)}otherPlayers=next}
 function updateOtherPlayers(dt){const k=Math.min(1,dt*12);for(const p of otherPlayers){p.x+=(p.tx-p.x)*k;p.y+=(p.ty-p.y)*k}}
-function drawOtherPlayers(){for(const op of otherPlayers){if(Math.hypot(op.x-P.x,op.y-P.y)>1100)continue;if(op.cape){ctx.fillStyle="#6b3fa0dd";ctx.beginPath();ctx.moveTo(op.x-34,op.y+10);ctx.quadraticCurveTo(op.x,op.y+42,op.x+34,op.y+10);ctx.lineTo(op.x+22,op.y+58);ctx.lineTo(op.x-22,op.y+58);ctx.closePath();ctx.fill()}if(op.mounted){ctx.font="34px sans-serif";ctx.textAlign="center";ctx.fillText("🐎",op.x,op.y+30)}ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(op.x,op.y-34,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#c9d8f0";ctx.beginPath();ctx.moveTo(op.x-25,op.y+45);ctx.lineTo(op.x,op.y-10);ctx.lineTo(op.x+28,op.y+45);ctx.lineTo(op.x,op.y+60);ctx.closePath();ctx.fill();ctx.fillStyle="#fff";ctx.font="bold 14px sans-serif";ctx.fillText((elementIcon[op.element]||"⚙️")+" "+op.name,op.x,op.y-62);ctx.font="11px sans-serif";ctx.fillStyle="#c8d8e8";ctx.fillText("Cấp "+op.level+" · "+op.className,op.x,op.y-47);const hp=Math.max(0,Math.min(1,op.hp/Math.max(1,op.maxHp)));ctx.fillStyle="#18221a";ctx.fillRect(op.x-32,op.y+66,64,6);ctx.fillStyle="#e45b56";ctx.fillRect(op.x-32,op.y+66,64*hp,6)}}
+function drawOtherPlayers(){for(const op of otherPlayers){if(Math.hypot(op.x-P.x,op.y-P.y)>1100)continue;if(op.cape){ctx.fillStyle="#6b3fa0dd";ctx.beginPath();ctx.moveTo(op.x-34,op.y+10);ctx.quadraticCurveTo(op.x,op.y+42,op.x+34,op.y+10);ctx.lineTo(op.x+22,op.y+58);ctx.lineTo(op.x-22,op.y+58);ctx.closePath();ctx.fill()}if(op.mounted){ctx.font="34px sans-serif";ctx.textAlign="center";ctx.fillText("🐎",op.x,op.y+30)}ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(op.x,op.y-34,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#c9d8f0";ctx.beginPath();ctx.moveTo(op.x-25,op.y+45);ctx.lineTo(op.x,op.y-10);ctx.lineTo(op.x+28,op.y+45);ctx.lineTo(op.x,op.y+60);ctx.closePath();ctx.fill();ctx.fillStyle="#08100dcc";ctx.beginPath();ctx.roundRect(op.x-48,op.y-78,96,20,7);ctx.fill();ctx.fillStyle="#fff";ctx.font="bold 13px sans-serif";ctx.fillText((elementIcon[op.element]||"⚙️")+" "+op.name.slice(0,14),op.x,op.y-63);ctx.font="11px sans-serif";ctx.fillStyle="#c8d8e8";ctx.fillText("Cấp "+op.level+" · "+op.className,op.x,op.y-47);const hp=Math.max(0,Math.min(1,op.hp/Math.max(1,op.maxHp)));ctx.fillStyle="#18221a";ctx.fillRect(op.x-32,op.y+66,64,6);ctx.fillStyle="#e45b56";ctx.fillRect(op.x-32,op.y+66,64*hp,6)}}
 
 let lastNetSend=0;
 function frame(t){const dt=Math.min(.035,(t-last)/1000);last=t;update(dt);updateOtherPlayers(dt);sendLocalPlayer(t);if(t-lastNetSend>50){lastNetSend=t;sendInput()}draw();requestAnimationFrame(frame)}

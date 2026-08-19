@@ -8,15 +8,17 @@
 
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<meta name="game-version" content="4.11.4">
+<meta name="game-version" content="4.12">
 
-<meta name="game-protocol" content="4.11.1">
+<meta name="game-protocol" content="4.12">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<title>Kiếm Thế Mobi – Bản 4.11.4 FINAL</title>
+<meta name="theme-color" content="#17351f">
+
+<title>Kiếm Thế Mobi – Bản 4.12</title>
 
 <style>
 
@@ -70,6 +72,18 @@ canvas{
 
 }
 
+button,input{
+
+  font-family:inherit;
+
+}
+
+button{
+
+  cursor:pointer;
+
+}
+
 .hud{
 
   position:absolute;
@@ -86,13 +100,15 @@ canvas{
 
   justify-content:space-between;
 
+  gap:12px;
+
   pointer-events:none;
 
 }
 
 .box{
 
-  background:rgba(7,16,22,.93);
+  background:rgba(7,16,22,.94);
 
   border:1px solid #33404a;
 
@@ -110,7 +126,7 @@ canvas{
 
   width:430px;
 
-  max-width:54vw;
+  max-width:58vw;
 
 }
 
@@ -158,11 +174,19 @@ canvas{
 
 }
 
+.exp{
+
+  height:100%;
+
+  background:#e6c85c;
+
+}
+
 #town{
 
   width:250px;
 
-  max-width:31vw;
+  max-width:32vw;
 
   text-align:right;
 
@@ -178,7 +202,7 @@ canvas{
 
   border:2px solid #68727d;
 
-  background:#0d141bdf;
+  background:#0d141bed;
 
   color:#fff;
 
@@ -228,7 +252,7 @@ canvas{
 
 }
 
-#qingBtn{
+#capeBtn{
 
   top:395px;
 
@@ -244,15 +268,13 @@ canvas{
 
 }
 
-.qingOn{
-
-  border-color:#8eeaff;
+.capeOn{
 
   box-shadow:
 
-    0 0 0 3px #63dfff55,
+    0 0 0 3px #b9a1ff,
 
-    0 0 30px #63dfff88;
+    0 8px 20px #0005;
 
 }
 
@@ -278,23 +300,27 @@ canvas{
 
 }
 
-#skillCdText,
-
-#fireCdText{
+.cool{
 
   position:absolute;
 
-  bottom:4px;
+  inset:0;
 
-  right:7px;
+  display:none;
 
-  font-size:13px;
+  align-items:center;
 
-  font-weight:900;
+  justify-content:center;
 
-  color:#ffd95a;
+  border-radius:50%;
 
-  text-shadow:0 2px 4px #000;
+  background:#0009;
+
+  color:#fff;
+
+  font-size:20px;
+
+  font-weight:800;
 
 }
 
@@ -368,47 +394,7 @@ canvas{
 
   white-space:nowrap;
 
-  box-shadow:0 0 30px #0008;
-
-}
-
-#cinematic{
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:90;
-
-  pointer-events:none;
-
-  display:none;
-
-  background:
-
-    radial-gradient(circle at center,
-
-      transparent 20%,
-
-      #0003 70%,
-
-      #0009 100%);
-
-}
-
-#cinematic.active{
-
-  display:block;
-
-  animation:cinematicFlash .42s ease-out;
-
-}
-
-@keyframes cinematicFlash{
-
-  0%{opacity:1}
-
-  100%{opacity:.25}
+  box-shadow:0 5px 20px #0008;
 
 }
 
@@ -440,9 +426,9 @@ canvas{
 
   z-index:80;
 
-  inset:8% 4%;
+  inset:7% 4%;
 
-  background:#101820f5;
+  background:#101820f7;
 
   border:1px solid #3c4650;
 
@@ -464,7 +450,7 @@ canvas{
 
   margin:0 0 12px;
 
-  font-size:30px;
+  font-size:29px;
 
 }
 
@@ -482,7 +468,7 @@ canvas{
 
   font-size:28px;
 
-  padding:8px 14px;
+  padding:7px 14px;
 
 }
 
@@ -532,7 +518,7 @@ canvas{
 
   right:18px;
 
-  top:475px;
+  top:395px;
 
   display:flex;
 
@@ -556,6 +542,8 @@ canvas{
 
   font-weight:700;
 
+  font-size:15px;
+
 }
 
 .communityBtn{
@@ -566,7 +554,7 @@ canvas{
 
   right:18px;
 
-  top:525px;
+  top:445px;
 
 }
 
@@ -631,8 +619,6 @@ canvas{
 .classIcon{
 
   font-size:34px;
-
-  margin-bottom:5px;
 
 }
 
@@ -734,11 +720,23 @@ canvas{
 
 }
 
-.rare{color:#c47cff}
+.rare{
 
-.good{color:#77e36a}
+  color:#c47cff;
 
-.normal{color:#eee}
+}
+
+.good{
+
+  color:#77e36a;
+
+}
+
+.normal{
+
+  color:#eee;
+
+}
 
 .enhanceBtn{
 
@@ -755,12 +753,6 @@ canvas{
   padding:9px 10px;
 
   font-size:14px;
-
-}
-
-.enhanceBtn:disabled{
-
-  opacity:.45;
 
 }
 
@@ -810,7 +802,7 @@ canvas{
 
 .travelModal{
 
-  inset:20% 8%;
+  inset:18% 8%;
 
   max-width:520px;
 
@@ -839,6 +831,20 @@ canvas{
   gap:12px;
 
   justify-content:space-between;
+
+}
+
+.travelCard strong{
+
+  font-size:19px;
+
+}
+
+.travelCard small{
+
+  color:#cfd5da;
+
+  display:block;
 
 }
 
@@ -982,11 +988,53 @@ canvas{
 
 }
 
+.saveInfo{
+
+  color:#9ed8ff;
+
+  font-size:13px;
+
+}
+
+.skillInfo{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:8px;
+
+}
+
+.skillCard{
+
+  background:#182126;
+
+  padding:10px;
+
+  border-radius:12px;
+
+}
+
+.skillCard strong{
+
+  display:block;
+
+  margin-bottom:4px;
+
+}
+
+.danger{
+
+  background:#8c3d3d;
+
+}
+
 @media(max-width:700px){
 
   #stats{
 
-    max-width:58vw;
+    max-width:60vw;
 
     padding:10px 12px;
 
@@ -1050,7 +1098,7 @@ canvas{
 
     right:10px;
 
-    top:455px;
+    top:390px;
 
   }
 
@@ -1058,7 +1106,7 @@ canvas{
 
     right:10px;
 
-    top:510px;
+    top:445px;
 
   }
 
@@ -1081,6 +1129,12 @@ canvas{
     margin-top:7px;
 
     justify-content:flex-start;
+
+  }
+
+  .grid{
+
+    grid-template-columns:repeat(4,1fr);
 
   }
 
@@ -1118,13 +1172,19 @@ canvas{
 
     <div class="bar">
 
-      <div id="hp" class="hp" style="width:82%"></div>
+      <div id="hp" class="hp"></div>
 
     </div>
 
     <div class="bar">
 
-      <div id="mp" class="mp" style="width:55%"></div>
+      <div id="mp" class="mp"></div>
+
+    </div>
+
+    <div class="bar">
+
+      <div id="expBar" class="exp"></div>
 
     </div>
 
@@ -1162,7 +1222,7 @@ canvas{
 
 <button id="teleBtn" class="btn travelBtn">🌀</button>
 
-<button id="qingBtn" class="btn travelBtn">🪽</button>
+<button id="capeBtn" class="btn travelBtn">🪽</button>
 
 <div id="joy">
 
@@ -1182,7 +1242,7 @@ canvas{
 
     ☯️
 
-    <span id="skillCdText"></span>
+    <span id="skillCool" class="cool"></span>
 
   </button>
 
@@ -1190,7 +1250,7 @@ canvas{
 
     🔥
 
-    <span id="fireCdText"></span>
+    <span id="fireCool" class="cool"></span>
 
   </button>
 
@@ -1198,19 +1258,25 @@ canvas{
 
 <div id="msg"></div>
 
-<div id="cinematic"></div>
-
 <div id="netStatus">
 
-  🔴 Offline
+  🔴 Offline · Chế độ local
 
 </div>
 
 <div class="gameMenu">
 
-  <button id="classBtn">🥋 Môn phái</button>
+  <button id="classBtn">
 
-  <button id="activityBtn">🏆 Hoạt động</button>
+    🥋 Môn phái
+
+  </button>
+
+  <button id="activityBtn">
+
+    🏆 Hoạt động
+
+  </button>
 
 </div>
 
@@ -1220,397 +1286,479 @@ canvas{
 
 </button>
 
-<!-- MÔN PHÁI -->
+<!-- ================= MÔN PHÁI ================= -->
 
 <div id="classModal" class="modal">
 
-<button class="close" onclick="closeClassModal()">×</button>
+  <button class="close" onclick="closeClassModal()">×</button>
 
-<h1>🥋 Chọn Môn Phái Nổi Bật</h1>
+  <h1>🥋 Môn Phái Nổi Bật</h1>
 
-<div id="selectedClassInfo">
+  <div id="selectedClassInfo">
 
-<strong>Đang chọn:</strong>
+    <strong>Đang chọn:</strong>
 
-<span id="selectedClassName">Võ Đang</span>
+    <span id="selectedClassName">
 
-<br>
+      Võ Đang
 
-<small id="selectedClassDesc">
+    </span>
 
-Kiếm khí bay lượn, hiệu ứng nghệ thuật.
+    <br>
 
-</small>
+    <small id="selectedClassDesc">
+
+      Kiếm khí bay lượn.
+
+    </small>
+
+  </div>
+
+  <div id="classGrid" class="classGrid"></div>
+
+  <br>
+
+  <button class="action" onclick="confirmClass()">
+
+    ⚔️ Chọn môn phái này
+
+  </button>
 
 </div>
 
-<div id="classGrid" class="classGrid"></div>
-
-<br>
-
-<button class="action" onclick="confirmClass()">
-
-⚔️ Chọn môn phái này
-
-</button>
-
-</div>
-
-<!-- NGŨ HÀNH -->
+<!-- ================= NGŨ HÀNH ================= -->
 
 <div id="elementModal" class="modal">
 
-<button class="close" onclick="closeElement()">×</button>
+  <button class="close" onclick="closeElement()">×</button>
 
-<h1>☯️ Ngũ hành</h1>
+  <h1>☯️ Ngũ hành</h1>
 
-<div class="card">
+  <div class="card">
 
-<div class="elem">
+    <div class="elem">
 
-<span>⚙️ Kim</span>
+      <span>⚙️ Kim</span>
 
-<span>🌳 Mộc</span>
+      <span>🌳 Mộc</span>
 
-<span>💧 Thủy</span>
+      <span>💧 Thủy</span>
 
-<span>🔥 Hỏa</span>
+      <span>🔥 Hỏa</span>
 
-<span>⛰️ Thổ</span>
+      <span>⛰️ Thổ</span>
+
+    </div>
+
+    <p>
+
+      Hành hiện tại:
+
+      <strong id="elementName">Thổ</strong>
+
+    </p>
+
+    <button class="action" onclick="cycleElement()">
+
+      Đổi hành
+
+    </button>
+
+  </div>
 
 </div>
 
-<p>
-
-Hành hiện tại:
-
-<strong id="elementName">Thổ</strong>
-
-</p>
-
-<button class="action" onclick="cycleElement()">
-
-Đổi hành
-
-</button>
-
-</div>
-
-</div>
-
-<!-- HOẠT ĐỘNG -->
+<!-- ================= HOẠT ĐỘNG ================= -->
 
 <div id="activityModal" class="modal">
 
-<button class="close" onclick="closeActivity()">×</button>
+  <button class="close" onclick="closeActivity()">×</button>
 
-<h1>🏆 Hoạt động kinh điển</h1>
+  <h1>🏆 Hoạt động</h1>
 
-<div class="card">
+  <div class="card">
 
-<strong>⚔️ Tống Kim</strong>
+    <strong>⚔️ Tống Kim</strong>
 
-<br>
+    <small>
 
-<small>Chiến trường phe phái.</small>
+      Chiến trường phe phái.
 
-<br><br>
+    </small>
 
-<button class="action"
+    <button
 
-onclick="joinActivity('Tống Kim')">
+      class="action"
 
-Tham gia
+      style="width:100%;margin-top:8px"
 
-</button>
+      onclick="joinActivity('Tống Kim')">
+
+      Tham gia
+
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <strong>🥋 Liên Đấu</strong>
+
+    <small>
+
+      Đối kháng nhanh.
+
+    </small>
+
+    <button
+
+      class="action"
+
+      style="width:100%;margin-top:8px"
+
+      onclick="joinActivity('Liên Đấu')">
+
+      Tham gia
+
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <strong>👑 Săn Boss Hoàng Kim</strong>
+
+    <small>
+
+      Boss mạnh, phần thưởng hiếm.
+
+    </small>
+
+    <button
+
+      class="action"
+
+      style="width:100%;margin-top:8px"
+
+      onclick="joinActivity('Săn Boss Hoàng Kim')">
+
+      Tham gia
+
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <strong>🏯 Vượt ải</strong>
+
+    <small>
+
+      Đánh quái theo từng cửa ải.
+
+    </small>
+
+    <button
+
+      class="action"
+
+      style="width:100%;margin-top:8px"
+
+      onclick="joinActivity('Vượt ải')">
+
+      Tham gia
+
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <strong>✨ Kỹ năng</strong>
+
+    <div class="skillInfo">
+
+      <div class="skillCard">
+
+        <strong>⚔️ Công kích</strong>
+
+        <small>Đánh mục tiêu gần.</small>
+
+      </div>
+
+      <div class="skillCard">
+
+        <strong>☯️ Tuyệt kỹ</strong>
+
+        <small>AOE theo môn phái.</small>
+
+      </div>
+
+      <div class="skillCard">
+
+        <strong>🔥 Võ công</strong>
+
+        <small>Đòn đặc biệt.</small>
+
+      </div>
+
+      <div class="skillCard">
+
+        <strong>🐎 Khinh công</strong>
+
+        <small>Di chuyển nhanh.</small>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 
-<div class="card">
-
-<strong>🥋 Liên Đấu</strong>
-
-<br>
-
-<small>Đối kháng nhanh.</small>
-
-<br><br>
-
-<button class="action"
-
-onclick="joinActivity('Liên Đấu')">
-
-Tham gia
-
-</button>
-
-</div>
-
-<div class="card">
-
-<strong>👑 Săn Boss Hoàng Kim</strong>
-
-<br>
-
-<small>Boss mạnh, phần thưởng hiếm.</small>
-
-<br><br>
-
-<button class="action"
-
-onclick="joinActivity('Săn Boss Hoàng Kim')">
-
-Tham gia
-
-</button>
-
-</div>
-
-<div class="card">
-
-<strong>🏯 Vượt ải</strong>
-
-<br>
-
-<small>Đánh quái theo từng cửa ải.</small>
-
-<br><br>
-
-<button class="action"
-
-onclick="joinActivity('Vượt ải')">
-
-Tham gia
-
-</button>
-
-</div>
-
-</div>
-
-<!-- CỘNG ĐỒNG -->
+<!-- ================= CỘNG ĐỒNG ================= -->
 
 <div id="communityModal" class="modal">
 
-<button class="close" onclick="closeCommunity()">×</button>
+  <button class="close" onclick="closeCommunity()">×</button>
 
-<h1>👥 Cộng đồng giang hồ</h1>
+  <h1>👥 Cộng đồng giang hồ</h1>
 
-<div class="communityGrid">
+  <div class="communityGrid">
 
-<div class="communityCard">
+    <div class="communityCard">
 
-<h3>🏯 Bang hội chiến</h3>
+      <h3>🏯 Bang hội chiến</h3>
 
-<small>
+      <small>
 
-Tham gia chiến bang.
+        Tham gia chiến bang.
 
-</small>
+      </small>
 
-<p>
+      <p>
 
-Bang:
+        Bang:
 
-<span class="guildBadge">
+        <span class="guildBadge">
 
-Thiên Kiếm
+          Thiên Kiếm
 
-</span>
+        </span>
 
-</p>
+      </p>
 
-<p>
+      <p>
 
-Điểm bang:
+        Điểm bang:
 
-<strong id="guildScore">1,280</strong>
+        <strong id="guildScore">1,280</strong>
 
-</p>
+      </p>
 
-<button class="action" onclick="guildWar()">
+      <button class="action" onclick="guildWar()">
 
-⚔️ Đăng ký
+        ⚔️ Đăng ký
 
-</button>
+      </button>
+
+    </div>
+
+    <div class="communityCard">
+
+      <h3>⚔️ Tống Kim</h3>
+
+      <small>
+
+        Chọn phe chiến đấu.
+
+      </small>
+
+      <p>
+
+        Trạng thái:
+
+        <strong id="tongKimState">
+
+          Chưa tham gia
+
+        </strong>
+
+      </p>
+
+      <button class="action"
+
+        onclick="joinTongKim('Kim')">
+
+        ⚙️ Phe Kim
+
+      </button>
+
+      <button class="action"
+
+        onclick="joinTongKim('Tống')">
+
+        🏯 Phe Tống
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="communityCard">
+
+    <h3>🌎 Kênh thế giới</h3>
+
+    <div id="worldChat" class="chatBox"></div>
+
+    <div class="chatInput">
+
+      <input
+
+        id="chatInput"
+
+        maxlength="80"
+
+        placeholder="Nhập tin nhắn..."
+
+      >
+
+      <button
+
+        class="action"
+
+        onclick="sendWorldChat()">
+
+        Gửi
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="communityCard">
+
+    <h3>🛒 Giao dịch</h3>
+
+    <div id="marketList"></div>
+
+  </div>
 
 </div>
 
-<div class="communityCard">
-
-<h3>⚔️ Tống Kim</h3>
-
-<small>
-
-Chọn phe chiến đấu.
-
-</small>
-
-<p>
-
-Trạng thái:
-
-<strong id="tongKimState">
-
-Chưa tham gia
-
-</strong>
-
-</p>
-
-<button class="action"
-
-onclick="joinTongKim('Kim')">
-
-⚙️ Phe Kim
-
-</button>
-
-<button class="action"
-
-onclick="joinTongKim('Tống')">
-
-🏯 Phe Tống
-
-</button>
-
-</div>
-
-</div>
-
-<div class="communityCard">
-
-<h3>🌎 Kênh thế giới</h3>
-
-<div id="worldChat" class="chatBox"></div>
-
-<div class="chatInput">
-
-<input
-
-id="chatInput"
-
-maxlength="80"
-
-placeholder="Nhập tin nhắn..."
-
->
-
-<button class="action"
-
-onclick="sendWorldChat()">
-
-Gửi
-
-</button>
-
-</div>
-
-</div>
-
-<div class="communityCard">
-
-<h3>🛒 Giao dịch</h3>
-
-<div id="marketList"></div>
-
-</div>
-
-</div>
-
-<!-- DỊCH CHUYỂN -->
+<!-- ================= DỊCH CHUYỂN ================= -->
 
 <div id="teleport" class="modal travelModal">
 
-<button class="close" onclick="closeTeleport()">×</button>
+  <button class="close" onclick="closeTeleport()">×</button>
 
-<h1>🐎 Xa Phu · Dịch chuyển</h1>
+  <h1>🌀 Dịch chuyển</h1>
 
-<button class="action"
+  <div class="travelCard">
 
-onclick="
+    <div>
 
-capeOn=!capeOn;
+      <strong>🏠 Tân Thủ Thôn</strong>
 
-updateMountUI();
+      <small>1600,1200</small>
 
-toast(capeOn?'🪽 Phi phong bật':'🪽 Phi phong tắt');
+    </div>
 
-">
+    <button class="action"
 
-🪽 Phi phong:
+      onclick="teleportTo('town')">
 
-<span id="capeState">Bật</span>
+      Đi
 
-</button>
+    </button>
 
-<div class="travelCard">
+  </div>
 
-<div>
+  <div class="travelCard">
 
-<strong>🏠 Tân Thủ Thôn</strong>
+    <div>
 
-<small>1600,1200</small>
+      <strong>🏙️ Thành Thị</strong>
+
+      <small>2600,700</small>
+
+    </div>
+
+    <button class="action"
+
+      onclick="teleportTo('city')">
+
+      Đi
+
+    </button>
+
+  </div>
+
+  <div class="travelCard">
+
+    <div>
+
+      <strong>🌊 Hồ Kiếm</strong>
+
+      <small>800,1850</small>
+
+    </div>
+
+    <button class="action"
+
+      onclick="teleportTo('lake')">
+
+      Đi
+
+    </button>
+
+  </div>
 
 </div>
 
-<button class="action"
-
-onclick="teleportTo('town')">
-
-Đi
-
-</button>
-
-</div>
-
-<div class="travelCard">
-
-<div>
-
-<strong>🏙️ Thành Thị</strong>
-
-<small>2600,700</small>
-
-</div>
-
-<button class="action"
-
-onclick="teleportTo('city')">
-
-Đi
-
-</button>
-
-</div>
-
-</div>
-
-<!-- TÚI -->
+<!-- ================= TÚI ================= -->
 
 <div id="bag" class="modal">
 
-<button class="close" onclick="closeBag()">×</button>
+  <button class="close" onclick="closeBag()">×</button>
 
-<h1>🎒 Túi đồ & Trang bị</h1>
+  <h1>🎒 Túi đồ & Trang bị</h1>
 
-<h2>Trang bị</h2>
+  <p class="saveInfo">
 
-<div id="equip"></div>
+    💾 Dữ liệu được lưu tự động trên iPhone.
 
-<h2>
+  </p>
 
-🎒 Túi:
+  <h2>Trang bị</h2>
 
-<span id="count">0</span>/24
+  <div id="equip"></div>
 
-</h2>
+  <h2>
 
-<div id="items"></div>
+    🎒 Túi:
 
-<h2>24 ô</h2>
+    <span id="count">0</span>/24
 
-<div id="grid" class="grid"></div>
+  </h2>
+
+  <div id="items"></div>
+
+  <h2>24 ô</h2>
+
+  <div id="grid" class="grid"></div>
+
+  <br>
+
+  <button class="action danger"
+
+    onclick="resetSave()">
+
+    🗑️ Xóa dữ liệu lưu
+
+  </button>
 
 </div>
 
@@ -1694,7 +1842,13 @@ const P={
 
   maxMp:60,
 
+  exp:519,
+
+  maxExp:600,
+
   atk:15,
+
+  level:14,
 
   dead:false
 
@@ -1724,11 +1878,11 @@ const city={
 
 };
 
-const xaPhu={
+const lake={
 
-  x:1460,
+  x:800,
 
-  y:1080
+  y:1850
 
 };
 
@@ -1736,209 +1890,7 @@ let mounted=false;
 
 let capeOn=true;
 
-let qinggong=false;
-
 let locationName="Tân Thủ Thôn";
-
-/* =========================================================
-
-   KHINH CÔNG / TERRAIN
-
-========================================================= */
-
-let qingEnergy=100;
-
-const maxQingEnergy=100;
-
-let qingTrail=[];
-
-let skillFx=[];
-
-let damageTexts=[];
-
-let screenShake=0;
-
-let cinematicTimer=0;
-
-const waterRegions=[
-
-  {
-
-    x:0,
-
-    y:1650,
-
-    w:3200,
-
-    h:750
-
-  }
-
-];
-
-/* Mái nhà */
-
-const roofs=[
-
-  {
-
-    x:1420,
-
-    y:1080,
-
-    w:360,
-
-    h:210,
-
-    name:"Mái nhà Tân Thủ"
-
-  },
-
-  {
-
-    x:2420,
-
-    y:570,
-
-    w:380,
-
-    h:220,
-
-    name:"Mái nhà Thành Thị"
-
-  }
-
-];
-
-function isWater(x,y){
-
-  return (
-
-    y>1650 &&
-
-    x>=0 &&
-
-    x<=world.w
-
-  );
-
-}
-
-function roofAt(x,y){
-
-  for(const r of roofs){
-
-    if(
-
-      x>=r.x &&
-
-      x<=r.x+r.w &&
-
-      y>=r.y &&
-
-      y<=r.y+r.h
-
-    )
-
-      return r;
-
-  }
-
-  return null;
-
-}
-
-function terrainName(){
-
-  if(roofAt(P.x,P.y))
-
-    return "Mái nhà";
-
-  if(isWater(P.x,P.y))
-
-    return "Mặt nước";
-
-  return locationName;
-
-}
-
-function toggleQinggong(){
-
-  if(qinggong){
-
-    qinggong=false;
-
-    toast("🪽 Khinh công tắt");
-
-    updateQingUI();
-
-    return;
-
-  }
-
-  if(qingEnergy<10){
-
-    toast("🪽 Khinh công chưa đủ khí");
-
-    return;
-
-  }
-
-  qinggong=true;
-
-  toast(
-
-    isWater(P.x,P.y)
-
-      ?"🌊 Lướt trên mặt nước!"
-
-      :roofAt(P.x,P.y)
-
-        ?"🏯 Khinh công trên mái nhà!"
-
-        :"🪽 Khinh công!"
-
-  );
-
-  updateQingUI();
-
-}
-
-function updateQingUI(){
-
-  const b=document.getElementById("qingBtn");
-
-  b.classList.toggle(
-
-    "qingOn",
-
-    qinggong
-
-  );
-
-}
-
-function addTrail(){
-
-  if(!qinggong)
-
-    return;
-
-  qingTrail.push({
-
-    x:P.x,
-
-    y:P.y,
-
-    life:.55
-
-  });
-
-  if(qingTrail.length>30)
-
-    qingTrail.shift();
-
-}
 
 /* =========================================================
 
@@ -1976,11 +1928,829 @@ const elementIcon={
 
 let elementIndex=2;
 
-/* FIX 4.11.3:
+/* =========================================================
 
-   Trả về đúng hệ số Ngũ Hành */
+   14 NHÁNH MÔN PHÁI
 
-function elementAdvantage(attacker,defender){
+========================================================= */
+
+const classData={
+
+  "Thiếu Lâm":{
+
+    icon:"🥋",
+
+    group:"Thiếu Lâm",
+
+    type:"Kim hệ · Cận chiến",
+
+    element:"Kim",
+
+    desc:"Ngoại hình oai phong, phòng thủ cao và áp sát mạnh.",
+
+    effect:"✨ Kim hệ sáng chói · Quyền cước vàng",
+
+    atkBonus:5,
+
+    color:"#f3d46b",
+
+    skill:"Kim Cang"
+
+  },
+
+  "Thiên Vương":{
+
+    icon:"🛡️",
+
+    group:"Thiên Vương",
+
+    type:"Kim hệ · Chiến sĩ",
+
+    element:"Kim",
+
+    desc:"Thân hình mạnh mẽ, đánh áp sát và chịu đòn tốt.",
+
+    effect:"⚡ Kim quang · Giáp chiến sáng",
+
+    atkBonus:6,
+
+    color:"#f5d66d",
+
+    skill:"Thiên Vương Trảm"
+
+  },
+
+  "Võ Đang":{
+
+    icon:"⚔️",
+
+    group:"Võ Đang",
+
+    type:"Thổ hệ · Kiếm khí",
+
+    element:"Thổ",
+
+    desc:"Kiếm khí bay lượn, tốc độ và khống chế cân bằng.",
+
+    effect:"🌪️ Kiếm khí · Vòng sáng đạo pháp",
+
+    atkBonus:4,
+
+    color:"#bca7ff",
+
+    skill:"Kiếm Trận"
+
+  },
+
+  "Nga Mi":{
+
+    icon:"🌸",
+
+    group:"Nga Mi",
+
+    type:"Thủy hệ · Hỗ trợ",
+
+    element:"Thủy",
+
+    desc:"Thanh nhã, hồi phục và hỗ trợ đồng đội.",
+
+    effect:"💧 Thủy quang · Hoa sen",
+
+    atkBonus:2,
+
+    color:"#8ddcff",
+
+    skill:"Từ Hàng Phổ Độ"
+
+  },
+
+  "Đường Môn":{
+
+    icon:"🏹",
+
+    group:"Đường Môn",
+
+    type:"Độc · Ám khí",
+
+    element:"Mộc",
+
+    desc:"Ám khí tầm xa, độc tố và sát thương bất ngờ.",
+
+    effect:"🟣 Độc khí · Ám tiễn",
+
+    atkBonus:7,
+
+    color:"#a66cff",
+
+    skill:"Bạo Vũ Lê Hoa"
+
+  },
+
+  "Ngũ Độc":{
+
+    icon:"🦂",
+
+    group:"Ngũ Độc",
+
+    type:"Độc · Khống chế",
+
+    element:"Mộc",
+
+    desc:"Độc thuật huyền bí, gây hiệu ứng khó chịu.",
+
+    effect:"☠️ Độc vụ · Bóng tối",
+
+    atkBonus:6,
+
+    color:"#8fdb62",
+
+    skill:"Độc Trận"
+
+  },
+
+  "Côn Lôn Đao":{
+
+    icon:"🗡️",
+
+    group:"Côn Lôn",
+
+    type:"Đao · Nội/ngoại công",
+
+    element:"Kim",
+
+    desc:"Sát thương vật lý nội ngoại kết hợp, mạnh khi solo và đông người.",
+
+    effect:"🌩️ Đao khí · Sấm kiếm",
+
+    atkBonus:9,
+
+    color:"#e9e9ff",
+
+    skill:"Sấm Đao"
+
+  },
+
+  "Côn Lôn Kiếm":{
+
+    icon:"⚔️",
+
+    group:"Côn Lôn",
+
+    type:"Kiếm · Đạo pháp",
+
+    element:"Thổ",
+
+    desc:"Tốc độ đánh cao, thiên về làm chậm và khống chế.",
+
+    effect:"🌪️ Kiếm trận · Giảm tốc",
+
+    atkBonus:6,
+
+    color:"#c9b7ff",
+
+    skill:"Thiên Ngoại Phi Tiên"
+
+  },
+
+  "Cái Bang Chưởng":{
+
+    icon:"🐉",
+
+    group:"Cái Bang",
+
+    type:"Chưởng pháp",
+
+    element:"Hỏa",
+
+    desc:"Giáng Long Thập Bát Chưởng, sát thương diện rộng xuyên mục tiêu.",
+
+    effect:"🐉 Rồng bay · Chưởng lực diện rộng",
+
+    atkBonus:10,
+
+    color:"#ff9d4d",
+
+    skill:"Giáng Long Thập Bát Chưởng"
+
+  },
+
+  "Cái Bang Bổng":{
+
+    icon:"🪵",
+
+    group:"Cái Bang",
+
+    type:"Côn pháp · Solo",
+
+    element:"Hỏa",
+
+    desc:"Đả Cẩu Bổng Pháp, chuyên trị 1v1 cận chiến.",
+
+    effect:"🔥 Côn ảnh · Áp sát",
+
+    atkBonus:8,
+
+    color:"#ffbd63",
+
+    skill:"Đả Cẩu Bổng Pháp"
+
+  },
+
+  "Thiên Nhẫn Kích/Mác":{
+
+    icon:"🔱",
+
+    group:"Thiên Nhẫn",
+
+    type:"Ngoại công · Bùng nổ",
+
+    element:"Hỏa",
+
+    desc:"Sát thương ngoại công bùng nổ nhanh.",
+
+    effect:"🔥 Hỏa kích · Bạo kích",
+
+    atkBonus:9,
+
+    color:"#ff654f",
+
+    skill:"Thiên Nhẫn Kích"
+
+  },
+
+  "Thiên Nhẫn Hỏa Tiễn":{
+
+    icon:"🚀",
+
+    group:"Thiên Nhẫn",
+
+    type:"Nội công · Tầm xa",
+
+    element:"Hỏa",
+
+    desc:"Đứng từ xa phóng hỏa tiễn cấu rỉa đối phương.",
+
+    effect:"🔥 Hỏa tiễn · Tầm đánh xa",
+
+    atkBonus:8,
+
+    color:"#ff7a55",
+
+    skill:"Hỏa Tiễn"
+
+  },
+
+  "Thúy Yên Đao":{
+
+    icon:"🌊",
+
+    group:"Thúy Yên",
+
+    type:"Đao · Nữ hiệp",
+
+    element:"Thủy",
+
+    desc:"Đao pháp thanh thoát, tốc độ và sát thương ổn định.",
+
+    effect:"🌊 Thủy đao · Hoa nước",
+
+    atkBonus:7,
+
+    color:"#70d9ff",
+
+    skill:"Thủy Đao"
+
+  },
+
+  "Thúy Yên Song Đao":{
+
+    icon:"⚔️",
+
+    group:"Thúy Yên",
+
+    type:"Song đao · Tốc độ",
+
+    element:"Thủy",
+
+    desc:"Hai lưỡi đao liên kích, tốc độ đánh rất cao.",
+
+    effect:"💠 Song đao · Liên kích",
+
+    atkBonus:9,
+
+    color:"#8be7ff",
+
+    skill:"Song Đao Liên Kích"
+
+  }
+
+};
+
+let playerClass="Võ Đang";
+
+let pendingClass="Võ Đang";
+
+/* =========================================================
+
+   TRẠNG THÁI
+
+========================================================= */
+
+let statuses={
+
+  stun:0,
+
+  slow:0,
+
+  buff:0,
+
+  poison:0
+
+};
+
+let effects=[];
+
+/* =========================================================
+
+   MAP
+
+========================================================= */
+
+const trees=[
+
+ [250,300],[600,420],[940,250],[1260,500],
+
+ [1760,350],[2180,300],[2700,450],
+
+ [380,900],[800,850],[1150,760],
+
+ [2050,800],[2500,850],[2950,950],
+
+ [260,1450],[720,1320],[1080,1550],
+
+ [2150,1420],[2680,1510],[3000,1350],
+
+ [500,2050],[950,1900],[1450,2100],
+
+ [2050,2000],[2500,2050],[2900,1900]
+
+];
+
+/* =========================================================
+
+   QUÁI
+
+========================================================= */
+
+const mobs=[];
+
+function createMob(x,y,boss=false){
+
+  return {
+
+    x,
+
+    y,
+
+    r:boss?34:24,
+
+    hp:boss?220:65,
+
+    maxHp:boss?220:65,
+
+    alive:true,
+
+    hit:0,
+
+    attack:0,
+
+    element:boss?"Hỏa":elements[Math.floor(Math.random()*5)],
+
+    boss,
+
+    name:boss?"Boss Sơn Tặc":"Sơn Tặc"
+
+  };
+
+}
+
+for(let i=0;i<14;i++){
+
+  mobs.push(
+
+    createMob(
+
+      500+(i*211)%2100,
+
+      650+(i*157)%1200
+
+    )
+
+  );
+
+}
+
+mobs.push(
+
+  createMob(2150,1250,true)
+
+);
+
+/* =========================================================
+
+   ITEM
+
+========================================================= */
+
+const items=[
+
+ {
+
+  name:"Kiếm Tân Thủ+",
+
+  type:"vũ khí",
+
+  rarity:"Thường",
+
+  level:1,
+
+  atk:5,
+
+  def:0,
+
+  icon:"🗡️"
+
+ },
+
+ {
+
+  name:"Đao Bào",
+
+  type:"áo",
+
+  rarity:"Thường",
+
+  level:1,
+
+  atk:0,
+
+  def:5,
+
+  icon:"🥋"
+
+ },
+
+ {
+
+  name:"Giáp Tinh Anh",
+
+  type:"áo",
+
+  rarity:"Tốt",
+
+  level:2,
+
+  atk:0,
+
+  def:13,
+
+  icon:"🛡️"
+
+ },
+
+ {
+
+  name:"Đao Tinh Anh",
+
+  type:"vũ khí",
+
+  rarity:"Hiếm",
+
+  level:2,
+
+  atk:18,
+
+  def:0,
+
+  icon:"⚔️"
+
+ },
+
+ {
+
+  name:"Đao Sơn Tặc",
+
+  type:"vũ khí",
+
+  rarity:"Thường",
+
+  level:1,
+
+  atk:9,
+
+  def:0,
+
+  icon:"🗡️"
+
+ },
+
+ {
+
+  name:"Bình Hồi Khí",
+
+  type:"tiêu hao",
+
+  rarity:"Thường",
+
+  level:1,
+
+  atk:0,
+
+  def:0,
+
+  icon:"🧪"
+
+ }
+
+];
+
+let bag=[
+
+  {...items[0]},
+
+  {...items[1]},
+
+  {...items[2]},
+
+  {...items[3]},
+
+  {...items[4]},
+
+  {...items[5]},
+
+  {...items[5]}
+
+];
+
+let equip={
+
+  weapon:{...items[3]},
+
+  armor:{...items[2]}
+
+};
+
+const drops=[];
+
+let gold=733;
+
+const ENHANCE_MAX=10;
+
+const ENHANCE_BASE_COST=50;
+
+/* =========================================================
+
+   LƯU GAME
+
+========================================================= */
+
+const SAVE_KEY="kiemthe_mobi_4_12_save";
+
+function saveGame(){
+
+  try{
+
+    const data={
+
+      P:{
+
+        x:P.x,
+
+        y:P.y,
+
+        hp:P.hp,
+
+        mp:P.mp,
+
+        exp:P.exp,
+
+        level:P.level
+
+      },
+
+      gold,
+
+      mounted,
+
+      capeOn,
+
+      locationName,
+
+      playerClass,
+
+      elementIndex,
+
+      bag,
+
+      equip,
+
+      guildScore,
+
+      tongKimSide
+
+    };
+
+    localStorage.setItem(
+
+      SAVE_KEY,
+
+      JSON.stringify(data)
+
+    );
+
+  }
+
+  catch(err){
+
+    console.warn(
+
+      "Không thể lưu game",
+
+      err
+
+    );
+
+  }
+
+}
+
+function loadGame(){
+
+  try{
+
+    const raw=
+
+      localStorage.getItem(SAVE_KEY);
+
+    if(!raw)
+
+      return;
+
+    const d=
+
+      JSON.parse(raw);
+
+    if(d.P){
+
+      if(Number.isFinite(d.P.x))
+
+        P.x=d.P.x;
+
+      if(Number.isFinite(d.P.y))
+
+        P.y=d.P.y;
+
+      if(Number.isFinite(d.P.hp))
+
+        P.hp=d.P.hp;
+
+      if(Number.isFinite(d.P.mp))
+
+        P.mp=d.P.mp;
+
+      if(Number.isFinite(d.P.exp))
+
+        P.exp=d.P.exp;
+
+      if(Number.isFinite(d.P.level))
+
+        P.level=d.P.level;
+
+    }
+
+    if(Number.isFinite(d.gold))
+
+      gold=d.gold;
+
+    if(typeof d.mounted==="boolean")
+
+      mounted=d.mounted;
+
+    if(typeof d.capeOn==="boolean")
+
+      capeOn=d.capeOn;
+
+    if(typeof d.locationName==="string")
+
+      locationName=d.locationName;
+
+    if(
+
+      typeof d.playerClass==="string" &&
+
+      classData[d.playerClass]
+
+    )
+
+      playerClass=d.playerClass;
+
+    if(Number.isFinite(d.elementIndex))
+
+      elementIndex=d.elementIndex;
+
+    if(Array.isArray(d.bag))
+
+      bag=d.bag.slice(0,24);
+
+    if(d.equip)
+
+      equip=d.equip;
+
+    if(Number.isFinite(d.guildScore))
+
+      guildScore=d.guildScore;
+
+    if(typeof d.tongKimSide==="string")
+
+      tongKimSide=d.tongKimSide;
+
+  }
+
+  catch(err){
+
+    console.warn(
+
+      "Save lỗi",
+
+      err
+
+    );
+
+  }
+
+}
+
+function resetSave(){
+
+  if(
+
+    !confirm(
+
+      "Xóa toàn bộ dữ liệu Bản 4.12?"
+
+    )
+
+  )
+
+    return;
+
+  localStorage.removeItem(SAVE_KEY);
+
+  location.reload();
+
+}
+
+/* =========================================================
+
+   CƯỜNG HÓA
+
+========================================================= */
+
+function enhanceCost(it){
+
+  return ENHANCE_BASE_COST*
+
+    ((it?.enhance||0)+1);
+
+}
+
+function itemPower(it){
+
+  const e=it?.enhance||0;
+
+  return {
+
+    atk:(it?.atk||0)+e*3,
+
+    def:(it?.def||0)+e*3
+
+  };
+
+}
+
+/* =========================================================
+
+   NGŨ HÀNH - ĐÃ SỬA LỖI
+
+========================================================= */
+
+function elementAdvantage(
+
+  attacker,
+
+  defender
+
+){
 
   const order=[
 
@@ -1996,9 +2766,13 @@ function elementAdvantage(attacker,defender){
 
   ];
 
-  const ai=order.indexOf(attacker);
+  const ai=
 
-  const di=order.indexOf(defender);
+    order.indexOf(attacker);
+
+  const di=
+
+    order.indexOf(defender);
 
   if(ai<0 || di<0)
 
@@ -2018,7 +2792,7 @@ function elementAdvantage(attacker,defender){
 
   )
 
-    return .8;
+    return 0.8;
 
   return 1;
 
@@ -2028,659 +2802,155 @@ function cycleElement(){
 
   elementIndex=
 
-    (elementIndex+1)%elements.length;
+    (elementIndex+1)%
 
-  const e=elements[elementIndex];
+    elements.length;
 
-  document.getElementById(
-
-    "elementName"
-
-  ).textContent=e;
+  updateUI();
 
   toast(
 
-    elementIcon[e]+
+    elementIcon[
+
+      elements[elementIndex]
+
+    ]+
 
     " Hành: "+
 
-    e
+    elements[elementIndex]
 
   );
 
-}
-
-/* =========================================================
-
-   14 MÔN PHÁI
-
-========================================================= */
-
-const classData={
-
-"Thiếu Lâm":{
-
-icon:"🥋",
-
-group:"Thiếu Lâm",
-
-type:"Kim hệ · Cận chiến",
-
-element:"Kim",
-
-desc:"Ngoại hình oai phong, phòng thủ cao và áp sát mạnh.",
-
-effect:"✨ Kim hệ sáng chói · Quyền cước vàng",
-
-atkBonus:5,
-
-color:"#f3d46b"
-
-},
-
-"Thiên Vương":{
-
-icon:"🛡️",
-
-group:"Thiên Vương",
-
-type:"Kim hệ · Chiến sĩ",
-
-element:"Kim",
-
-desc:"Thân hình mạnh mẽ, đánh áp sát và chịu đòn tốt.",
-
-effect:"⚡ Kim quang · Giáp chiến sáng",
-
-atkBonus:6,
-
-color:"#f5d66d"
-
-},
-
-"Võ Đang":{
-
-icon:"⚔️",
-
-group:"Võ Đang",
-
-type:"Thổ hệ · Kiếm khí",
-
-element:"Thổ",
-
-desc:"Kiếm khí bay lượn, tốc độ và khống chế cân bằng.",
-
-effect:"🌪️ Kiếm khí · Vòng sáng đạo pháp",
-
-atkBonus:4,
-
-color:"#bca7ff"
-
-},
-
-"Nga Mi":{
-
-icon:"🌸",
-
-group:"Nga Mi",
-
-type:"Thủy hệ · Hỗ trợ",
-
-element:"Thủy",
-
-desc:"Thanh nhã, hồi phục và hỗ trợ đồng đội.",
-
-effect:"💧 Thủy quang · Hoa sen",
-
-atkBonus:2,
-
-color:"#8ddcff"
-
-},
-
-"Đường Môn":{
-
-icon:"🏹",
-
-group:"Đường Môn",
-
-type:"Độc · Ám khí",
-
-element:"Mộc",
-
-desc:"Ám khí tầm xa, độc tố và sát thương bất ngờ.",
-
-effect:"🟣 Độc khí · Ám tiễn",
-
-atkBonus:7,
-
-color:"#a66cff"
-
-},
-
-"Ngũ Độc":{
-
-icon:"🦂",
-
-group:"Ngũ Độc",
-
-type:"Độc · Khống chế",
-
-element:"Mộc",
-
-desc:"Độc thuật huyền bí, gây hiệu ứng khó chịu.",
-
-effect:"☠️ Độc vụ · Bóng tối",
-
-atkBonus:6,
-
-color:"#8fdb62"
-
-},
-
-"Côn Lôn Đao":{
-
-icon:"🗡️",
-
-group:"Côn Lôn",
-
-type:"Đao · Nội/ngoại công",
-
-element:"Kim",
-
-desc:"Sát thương vật lý nội ngoại kết hợp, mạnh khi solo và đông người.",
-
-effect:"🌩️ Đao khí · Sấm kiếm",
-
-atkBonus:9,
-
-color:"#e9e9ff"
-
-},
-
-"Côn Lôn Kiếm":{
-
-icon:"⚔️",
-
-group:"Côn Lôn",
-
-type:"Kiếm · Đạo pháp",
-
-element:"Thổ",
-
-desc:"Tốc độ đánh cao, thiên về làm chậm và khống chế.",
-
-effect:"🌪️ Kiếm trận · Giảm tốc",
-
-atkBonus:6,
-
-color:"#c9b7ff"
-
-},
-
-"Cái Bang Chưởng":{
-
-icon:"🐉",
-
-group:"Cái Bang",
-
-type:"Chưởng pháp",
-
-element:"Hỏa",
-
-desc:"Giáng Long Thập Bát Chưởng, sát thương diện rộng xuyên mục tiêu.",
-
-effect:"🐉 Rồng bay · Chưởng lực diện rộng",
-
-atkBonus:10,
-
-color:"#ff9d4d"
-
-},
-
-"Cái Bang Bổng":{
-
-icon:"🪵",
-
-group:"Cái Bang",
-
-type:"Côn pháp · Solo",
-
-element:"Hỏa",
-
-desc:"Đả Cẩu Bổng Pháp, chuyên trị 1v1 cận chiến.",
-
-effect:"🔥 Côn ảnh · Áp sát",
-
-atkBonus:8,
-
-color:"#ffbd63"
-
-},
-
-"Thiên Nhẫn Kích/Mác":{
-
-icon:"🔱",
-
-group:"Thiên Nhẫn",
-
-type:"Ngoại công · Bùng nổ",
-
-element:"Hỏa",
-
-desc:"Sát thương ngoại công bùng nổ nhanh.",
-
-effect:"🔥 Hỏa kích · Bạo kích",
-
-atkBonus:9,
-
-color:"#ff654f"
-
-},
-
-"Thiên Nhẫn Hỏa Tiễn":{
-
-icon:"🚀",
-
-group:"Thiên Nhẫn",
-
-type:"Nội công · Tầm xa",
-
-element:"Hỏa",
-
-desc:"Đứng từ xa phóng hỏa tiễn cấu rỉa đối phương.",
-
-effect:"🔥 Hỏa tiễn · Tầm đánh xa",
-
-atkBonus:8,
-
-color:"#ff7a55"
-
-},
-
-"Thúy Yên Đao":{
-
-icon:"🌊",
-
-group:"Thúy Yên",
-
-type:"Đao · Nữ hiệp",
-
-element:"Thủy",
-
-desc:"Đao pháp thanh thoát, tốc độ và sát thương ổn định.",
-
-effect:"🌊 Thủy đao · Hoa nước",
-
-atkBonus:7,
-
-color:"#70d9ff"
-
-},
-
-"Thúy Yên Song Đao":{
-
-icon:"⚔️",
-
-group:"Thúy Yên",
-
-type:"Song đao · Tốc độ",
-
-element:"Thủy",
-
-desc:"Hai lưỡi đao liên kích, tốc độ đánh rất cao.",
-
-effect:"💠 Song đao · Liên kích",
-
-atkBonus:9,
-
-color:"#8be7ff"
-
-}
-
-};
-
-let playerClass="Võ Đang";
-
-let pendingClass=playerClass;
-
-/* =========================================================
-
-   STATUS
-
-========================================================= */
-
-let statuses={
-
-  stun:0,
-
-  slow:0,
-
-  buff:0,
-
-  poison:0
-
-};
-
-/* =========================================================
-
-   MAP
-
-========================================================= */
-
-const trees=[
-
-[250,300],[600,420],[940,250],[1260,500],
-
-[1760,350],[2180,300],[2700,450],
-
-[380,900],[800,850],[1150,760],
-
-[2050,800],[2500,850],[2950,950],
-
-[260,1450],[720,1320],[1080,1550],
-
-[2150,1420],[2680,1510],[3000,1350],
-
-[500,2050],[950,1900],[1450,2100],
-
-[2050,2000],[2500,2050],[2900,1900]
-
-];
-
-/* =========================================================
-
-   QUÁI
-
-========================================================= */
-
-const mobs=[];
-
-for(let i=0;i<12;i++){
-
-  mobs.push({
-
-    x:700+(i*211)%1900,
-
-    y:650+(i*157)%1300,
-
-    r:24,
-
-    hp:65,
-
-    maxHp:65,
-
-    alive:true,
-
-    hit:0,
-
-    element:elements[i%5]
-
-  });
+  saveGame();
 
 }
 
 /* =========================================================
 
-   ITEMS
-
-========================================================= */
-
-const items=[
-
-{
-
-name:"Kiếm Tân Thủ+",
-
-type:"vũ khí",
-
-rarity:"Thường",
-
-level:1,
-
-atk:5,
-
-def:0,
-
-icon:"🗡️"
-
-},
-
-{
-
-name:"Đao Bào",
-
-type:"áo",
-
-rarity:"Thường",
-
-level:1,
-
-atk:0,
-
-def:5,
-
-icon:"🥋"
-
-},
-
-{
-
-name:"Giáp Tinh Anh",
-
-type:"áo",
-
-rarity:"Tốt",
-
-level:2,
-
-atk:0,
-
-def:13,
-
-icon:"🛡️"
-
-},
-
-{
-
-name:"Đao Tinh Anh",
-
-type:"vũ khí",
-
-rarity:"Hiếm",
-
-level:2,
-
-atk:18,
-
-def:0,
-
-icon:"⚔️"
-
-},
-
-{
-
-name:"Đao Sơn Tặc",
-
-type:"vũ khí",
-
-rarity:"Thường",
-
-level:1,
-
-atk:9,
-
-def:0,
-
-icon:"🗡️"
-
-},
-
-{
-
-name:"Bình Hồi Khí",
-
-type:"tiêu hao",
-
-rarity:"Thường",
-
-level:1,
-
-atk:0,
-
-def:0,
-
-icon:"🧪"
-
-}
-
-];
-
-let bag=[
-
-...items.slice(0,5),
-
-items[5],
-
-items[5]
-
-];
-
-let equip={
-
-weapon:items[3],
-
-armor:items[2]
-
-};
-
-const drops=[];
-
-let gold=733;
-
-let attackCd=0;
-
-let skillCd=0;
-
-let fireCd=0;
-
-/* =========================================================
-
-   CƯỜNG HÓA
-
-========================================================= */
-
-const ENHANCE_MAX=10;
-
-const ENHANCE_BASE_COST=50;
-
-function enhanceCost(it){
-
-  return ENHANCE_BASE_COST*((it?.enhance||0)+1);
-
-}
-
-function itemPower(it){
-
-  const e=it?.enhance||0;
-
-  return{
-
-    atk:(it?.atk||0)+e*3,
-
-    def:(it?.def||0)+e*3
-
-  };
-
-}
-
-/* =========================================================
-
-   CLASS UI
+   UI MÔN PHÁI
 
 ========================================================= */
 
 function renderClassGrid(){
 
-  const grid=document.getElementById("classGrid");
+  const grid=
+
+    document.getElementById(
+
+      "classGrid"
+
+    );
 
   grid.innerHTML="";
 
-  Object.entries(classData).forEach(
+  Object.entries(classData)
 
-    ([name,data])=>{
+    .forEach(
 
-      const div=document.createElement("div");
+      ([name,data])=>{
 
-      div.className=
+        const div=
 
-        "classCard"+
+          document.createElement(
 
-        (name===pendingClass?" selected":"");
+            "div"
 
-      div.innerHTML=`
+          );
 
-        <div class="classIcon">
+        div.className=
 
-          ${data.icon}
+          "classCard"+
 
-        </div>
+          (
 
-        <div class="className">
+            name===pendingClass
 
-          ${name}
+              ?" selected"
 
-        </div>
+              :""
 
-        <div class="classType">
+          );
 
-          ${data.type}
+        div.innerHTML=`
 
-        </div>
+          <div class="classIcon">
 
-        <div class="classDesc">
+            ${data.icon}
 
-          ${data.desc}
+          </div>
 
-        </div>
+          <div class="className">
 
-        <div class="classEffect">
+            ${name}
 
-          ${data.effect}
+          </div>
 
-        </div>
+          <div class="classType">
 
-      `;
+            ${data.type}
 
-      div.onclick=()=>{
+          </div>
 
-        pendingClass=name;
+          <div class="classDesc">
 
-        updateSelectedClass();
+            ${data.desc}
 
-        renderClassGrid();
+          </div>
 
-      };
+          <div class="classEffect">
 
-      grid.appendChild(div);
+            ${data.effect}
 
-    }
+          </div>
 
-  );
+          <div style="
+
+            margin-top:7px;
+
+            color:#ffd95a;
+
+            font-size:12px;
+
+          ">
+
+            ⚡ ${data.skill}
+
+          </div>
+
+        `;
+
+        div.onclick=()=>{
+
+          pendingClass=name;
+
+          updateSelectedClass();
+
+          renderClassGrid();
+
+        };
+
+        grid.appendChild(div);
+
+      }
+
+    );
 
 }
 
 function updateSelectedClass(){
 
-  const data=classData[pendingClass];
+  const data=
+
+    classData[pendingClass];
 
   document.getElementById(
 
     "selectedClassName"
 
-  ).textContent=pendingClass;
+  ).textContent=
+
+    pendingClass;
 
   document.getElementById(
 
@@ -2726,39 +2996,23 @@ function confirmClass(){
 
   playerClass=pendingClass;
 
-  const data=classData[playerClass];
+  const data=
 
-  elementIndex=Math.max(
+    classData[playerClass];
 
-    0,
+  elementIndex=
 
-    elements.indexOf(data.element)
+    elements.indexOf(
 
-  );
+      data.element
 
-  document.getElementById(
+    );
 
-    "classHud"
+  if(elementIndex<0)
 
-  ).textContent=playerClass;
+    elementIndex=0;
 
-  document.getElementById(
-
-    "elementHud"
-
-  ).textContent=
-
-    elementIcon[data.element]+
-
-    " "+
-
-    data.element;
-
-  document.getElementById(
-
-    "elementName"
-
-  ).textContent=data.element;
+  updateUI();
 
   toast(
 
@@ -2772,127 +3026,47 @@ function confirmClass(){
 
   closeClassModal();
 
-  sendInput();
+  saveGame();
 
 }
 
 /* =========================================================
 
-   FX ENGINE
+   ACTIVITY
 
 ========================================================= */
 
-function addSkillFX(
+function openActivity(){
 
-  x,
+  document.getElementById(
 
-  y,
+    "activityModal"
 
-  type,
-
-  radius=220,
-
-  color="#fff",
-
-  duration=.7
-
-){
-
-  skillFx.push({
-
-    x,
-
-    y,
-
-    type,
-
-    radius,
-
-    color,
-
-    life:duration,
-
-    maxLife:duration,
-
-    angle:0,
-
-    seed:Math.random()*100
-
-  });
-
-  screenShake=
-
-    Math.max(
-
-      screenShake,
-
-      type==="dragon"
-
-        ?13
-
-        :7
-
-    );
+  ).style.display="block";
 
 }
 
-function addDamageText(
+function closeActivity(){
 
-  x,
+  document.getElementById(
 
-  y,
+    "activityModal"
 
-  text,
-
-  color="#fff"
-
-){
-
-  damageTexts.push({
-
-    x,
-
-    y,
-
-    text,
-
-    color,
-
-    life:.75,
-
-    maxLife:.75
-
-  });
+  ).style.display="none";
 
 }
 
-function startCinematic(){
+function joinActivity(name){
 
-  cinematicTimer=.45;
+  closeActivity();
 
-  const el=
+  toast(
 
-    document.getElementById(
+    "🏆 "+
 
-      "cinematic"
+    name+
 
-    );
-
-  el.classList.remove("active");
-
-  void el.offsetWidth;
-
-  el.classList.add("active");
-
-  setTimeout(
-
-    ()=>{
-
-      el.classList.remove("active");
-
-    },
-
-    450
+    " · Đã đăng ký"
 
   );
 
@@ -2900,109 +3074,1385 @@ function startCinematic(){
 
 /* =========================================================
 
-   SIMPLE WEB AUDIO
+   COMMUNITY
 
 ========================================================= */
 
-let audioCtx=null;
+const worldChat=[
 
-let musicOn=false;
+ {
 
-function initAudio(){
+  name:"Lãng Khách",
 
-  if(!audioCtx){
+  text:"Có ai lập đội săn Boss Hoàng Kim không?"
 
-    try{
+ },
 
-      audioCtx=
+ {
 
-        new (
+  name:"Thiếu Lâm",
 
-          window.AudioContext||
+  text:"Bang chiến tối nay mở đăng ký!"
 
-          window.webkitAudioContext
+ },
 
-        )();
+ {
+
+  name:"Nga Mi",
+
+  text:"Có buff và trị liệu, ai cần lập đội?"
+
+ }
+
+];
+
+let guildScore=1280;
+
+let tongKimSide="";
+
+const market=[
+
+ {
+
+  id:1,
+
+  name:"Đao Tinh Anh +2",
+
+  icon:"⚔️",
+
+  rarity:"Hiếm",
+
+  price:180,
+
+  owner:"Độc Cô"
+
+ },
+
+ {
+
+  id:2,
+
+  name:"Giáp Tinh Anh +1",
+
+  icon:"🛡️",
+
+  rarity:"Tốt",
+
+  price:120,
+
+  owner:"Nga Mi"
+
+ },
+
+ {
+
+  id:3,
+
+  name:"Bình Hồi Khí",
+
+  icon:"🧪",
+
+  rarity:"Thường",
+
+  price:35,
+
+  owner:"Tiểu Long"
+
+ }
+
+];
+
+function openCommunity(){
+
+  renderCommunity();
+
+  document.getElementById(
+
+    "communityModal"
+
+  ).style.display="block";
+
+}
+
+function closeCommunity(){
+
+  document.getElementById(
+
+    "communityModal"
+
+  ).style.display="none";
+
+}
+
+function guildWar(){
+
+  guildScore+=50;
+
+  document.getElementById(
+
+    "guildScore"
+
+  ).textContent=
+
+    guildScore.toLocaleString(
+
+      "vi-VN"
+
+    );
+
+  toast(
+
+    "🏯 Thiên Kiếm · Đã đăng ký"
+
+  );
+
+  saveGame();
+
+}
+
+function joinTongKim(side){
+
+  tongKimSide=side;
+
+  document.getElementById(
+
+    "tongKimState"
+
+  ).textContent=
+
+    "Đã vào phe "+
+
+    side;
+
+  toast(
+
+    "⚔️ Tống Kim · Phe "+
+
+    side
+
+  );
+
+  saveGame();
+
+}
+
+function renderChat(){
+
+  const box=
+
+    document.getElementById(
+
+      "worldChat"
+
+    );
+
+  if(!box)
+
+    return;
+
+  box.innerHTML=
+
+    worldChat
+
+      .map(
+
+        m=>`
+
+        <div class="chatLine">
+
+          <strong>${m.name}:</strong>
+
+          ${m.text}
+
+        </div>
+
+        `
+
+      )
+
+      .join("");
+
+  box.scrollTop=
+
+    box.scrollHeight;
+
+}
+
+function sendWorldChat(){
+
+  const input=
+
+    document.getElementById(
+
+      "chatInput"
+
+    );
+
+  const text=
+
+    input.value.trim();
+
+  if(!text)
+
+    return;
+
+  worldChat.push({
+
+    name:PLAYER_NAME,
+
+    text
+
+  });
+
+  if(worldChat.length>30)
+
+    worldChat.shift();
+
+  input.value="";
+
+  renderChat();
+
+  toast("🌎 Đã gửi");
+
+}
+
+function rarityClass(r){
+
+  if(r==="Hiếm")
+
+    return "rare";
+
+  if(r==="Tốt")
+
+    return "good";
+
+  return "normal";
+
+}
+
+function renderMarket(){
+
+  const box=
+
+    document.getElementById(
+
+      "marketList"
+
+    );
+
+  if(!box)
+
+    return;
+
+  box.innerHTML=
+
+    market
+
+      .map(
+
+        m=>`
+
+        <div class="marketRow">
+
+          <div>
+
+            ${m.icon}
+
+            <strong
+
+              class="${rarityClass(m.rarity)}">
+
+              ${m.name}
+
+            </strong>
+
+            <small>
+
+              ${m.rarity}
+
+              · ${m.owner}
+
+              · 🪙 ${m.price}
+
+            </small>
+
+          </div>
+
+          <button
+
+            class="action"
+
+            onclick="buyMarket(${m.id})">
+
+            Mua
+
+          </button>
+
+        </div>
+
+        `
+
+      )
+
+      .join("");
+
+}
+
+function buyMarket(id){
+
+  const m=
+
+    market.find(
+
+      x=>x.id===id
+
+    );
+
+  if(!m)
+
+    return;
+
+  if(gold<m.price){
+
+    toast(
+
+      "🪙 Không đủ vàng"
+
+    );
+
+    return;
+
+  }
+
+  if(bag.length>=24){
+
+    toast(
+
+      "🎒 Túi đầy"
+
+    );
+
+    return;
+
+  }
+
+  gold-=m.price;
+
+  const base=
+
+    items.find(
+
+      x=>m.name.startsWith(x.name)
+
+    ) ||
+
+    items[0];
+
+  const match=
+
+    m.name.match(
+
+      /\+(\d+)$/
+
+    );
+
+  bag.push({
+
+    ...base,
+
+    enhance:Number(
+
+      match?.[1]||0
+
+    )
+
+  });
+
+  const i=
+
+    market.indexOf(m);
+
+  if(i>=0)
+
+    market.splice(i,1);
+
+  renderBag();
+
+  renderMarket();
+
+  toast(
+
+    "🛍️ Đã mua "+
+
+    m.name
+
+  );
+
+  saveGame();
+
+}
+
+function renderCommunity(){
+
+  renderChat();
+
+  renderMarket();
+
+  const state=
+
+    document.getElementById(
+
+      "tongKimState"
+
+    );
+
+  if(state){
+
+    state.textContent=
+
+      tongKimSide
+
+        ?"Đã vào phe "+tongKimSide
+
+        :"Chưa tham gia";
+
+  }
+
+}
+
+/* =========================================================
+
+   BAG
+
+========================================================= */
+
+function openBag(){
+
+  renderBag();
+
+  document.getElementById(
+
+    "bag"
+
+  ).style.display="block";
+
+}
+
+function closeBag(){
+
+  document.getElementById(
+
+    "bag"
+
+  ).style.display="none";
+
+}
+
+function enhanceItem(i){
+
+  const it=bag[i];
+
+  if(
+
+    !it ||
+
+    it.type==="tiêu hao"
+
+  ){
+
+    toast(
+
+      "⚒️ Chỉ cường hóa trang bị"
+
+    );
+
+    return;
+
+  }
+
+  const lv=
+
+    it.enhance||0;
+
+  if(lv>=ENHANCE_MAX){
+
+    toast(
+
+      "⚒️ Đã +10"
+
+    );
+
+    return;
+
+  }
+
+  const cost=
+
+    enhanceCost(it);
+
+  if(gold<cost){
+
+    toast(
+
+      "🪙 Cần "+
+
+      cost
+
+    );
+
+    return;
+
+  }
+
+  gold-=cost;
+
+  it.enhance=
+
+    lv+1;
+
+  toast(
+
+    "⚒️ "+
+
+    it.name+
+
+    " lên +"+
+
+    it.enhance
+
+  );
+
+  renderBag();
+
+  saveGame();
+
+}
+
+function enhanceEquipped(slot){
+
+  const it=equip[slot];
+
+  if(!it){
+
+    toast(
+
+      "Chưa có trang bị"
+
+    );
+
+    return;
+
+  }
+
+  const lv=
+
+    it.enhance||0;
+
+  if(lv>=ENHANCE_MAX){
+
+    toast("Đã +10");
+
+    return;
+
+  }
+
+  const cost=
+
+    enhanceCost(it);
+
+  if(gold<cost){
+
+    toast(
+
+      "🪙 Cần "+
+
+      cost
+
+    );
+
+    return;
+
+  }
+
+  gold-=cost;
+
+  it.enhance=
+
+    lv+1;
+
+  renderBag();
+
+  toast(
+
+    "⚒️ "+
+
+    it.name+
+
+    " +"+
+
+    it.enhance
+
+  );
+
+  saveGame();
+
+}
+
+function equipItem(i){
+
+  const it=bag[i];
+
+  if(!it)
+
+    return;
+
+  if(it.type==="vũ khí"){
+
+    if(equip.weapon)
+
+      bag.push(equip.weapon);
+
+    equip.weapon=it;
+
+  }
+
+  else if(it.type==="áo"){
+
+    if(equip.armor)
+
+      bag.push(equip.armor);
+
+    equip.armor=it;
+
+  }
+
+  bag.splice(i,1);
+
+  if(bag.length>24)
+
+    bag.length=24;
+
+  renderBag();
+
+  saveGame();
+
+}
+
+function unequip(slot){
+
+  if(bag.length>=24){
+
+    toast("🎒 Túi đầy");
+
+    return;
+
+  }
+
+  if(!equip[slot])
+
+    return;
+
+  bag.push(
+
+    equip[slot]
+
+  );
+
+  equip[slot]=null;
+
+  renderBag();
+
+  saveGame();
+
+}
+
+function useItem(i){
+
+  const it=bag[i];
+
+  if(!it)
+
+    return;
+
+  if(
+
+    it.name.includes(
+
+      "Hồi Khí"
+
+    )
+
+  ){
+
+    P.mp=
+
+      Math.min(
+
+        P.maxMp,
+
+        P.mp+30
+
+      );
+
+    bag.splice(i,1);
+
+    toast(
+
+      "💧 Hồi 30 khí"
+
+    );
+
+    renderBag();
+
+    saveGame();
+
+  }
+
+}
+
+function sellItem(i){
+
+  if(!bag[i])
+
+    return;
+
+  gold+=20;
+
+  toast(
+
+    "🪙 +20 vàng"
+
+  );
+
+  bag.splice(i,1);
+
+  renderBag();
+
+  saveGame();
+
+}
+
+function renderBag(){
+
+  document.getElementById(
+
+    "count"
+
+  ).textContent=
+
+    bag.length;
+
+  document.getElementById(
+
+    "gold"
+
+  ).textContent=
+
+    gold;
+
+  document.getElementById(
+
+    "equip"
+
+  ).innerHTML=[
+
+    [
+
+      "weapon",
+
+      "⚔️",
+
+      "Vũ khí"
+
+    ],
+
+    [
+
+      "armor",
+
+      "🛡️",
+
+      "Áo giáp"
+
+    ]
+
+  ]
+
+  .map(
+
+    ([slot,icon,label])=>{
+
+      const it=equip[slot];
+
+      if(!it){
+
+        return `
+
+          <div class="item">
+
+            ${icon}
+
+            <strong>
+
+              ${label}: Trống
+
+            </strong>
+
+          </div>
+
+        `;
+
+      }
+
+      const lv=
+
+        it.enhance||0;
+
+      const p=
+
+        itemPower(it);
+
+      const cost=
+
+        enhanceCost(it);
+
+      return `
+
+        <div class="item">
+
+          <div>
+
+            ${icon}
+
+            <strong
+
+              class="${rarityClass(it.rarity)}">
+
+              ${it.name}
+
+              <span class="enhanceLv">
+
+                +${lv}
+
+              </span>
+
+            </strong>
+
+            <small>
+
+              ${it.rarity}
+
+              · ⚔️ ${p.atk}
+
+              · 🛡️ ${p.def}
+
+            </small>
+
+          </div>
+
+          <div class="itemActions">
+
+            <button
+
+              class="enhanceBtn"
+
+              onclick="enhanceEquipped('${slot}')">
+
+              ⚒️ +${Math.min(
+
+                lv+1,
+
+                ENHANCE_MAX
+
+              )}
+
+              <br>
+
+              <span class="enhanceCost">
+
+                🪙 ${cost}
+
+              </span>
+
+            </button>
+
+            <button
+
+              class="action"
+
+              onclick="unequip('${slot}')">
+
+              Tháo
+
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
 
     }
 
-    catch(e){
+  )
 
-      return;
+  .join("");
+
+  document.getElementById(
+
+    "items"
+
+  ).innerHTML=
+
+    bag.map(
+
+      (it,i)=>{
+
+        const lv=
+
+          it.enhance||0;
+
+        const p=
+
+          itemPower(it);
+
+        const cost=
+
+          enhanceCost(it);
+
+        let actions="";
+
+        if(
+
+          it.type==="tiêu hao"
+
+        ){
+
+          actions=`
+
+            <button
+
+              class="action"
+
+              onclick="useItem(${i})">
+
+              Dùng
+
+            </button>
+
+          `;
+
+        }
+
+        else{
+
+          actions=`
+
+            <button
+
+              class="enhanceBtn"
+
+              onclick="enhanceItem(${i})">
+
+              ⚒️ +${Math.min(
+
+                lv+1,
+
+                ENHANCE_MAX
+
+              )}
+
+              <br>
+
+              <span class="enhanceCost">
+
+                🪙 ${cost}
+
+              </span>
+
+            </button>
+
+            <button
+
+              class="action"
+
+              onclick="equipItem(${i})">
+
+              Trang bị
+
+            </button>
+
+          `;
+
+        }
+
+        return `
+
+          <div class="item">
+
+            <div>
+
+              ${it.icon}
+
+              <strong
+
+                class="${rarityClass(it.rarity)}">
+
+                ${it.name}
+
+                <span class="enhanceLv">
+
+                  +${lv}
+
+                </span>
+
+              </strong>
+
+              <small>
+
+                ${it.rarity}
+
+                · ${it.type}
+
+                · Cấp ${it.level}
+
+                · ⚔️ ${p.atk}
+
+                · 🛡️ ${p.def}
+
+              </small>
+
+            </div>
+
+            <div class="itemActions">
+
+              ${actions}
+
+              <button
+
+                class="action"
+
+                onclick="sellItem(${i})">
+
+                Bán
+
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+    )
+
+    .join("");
+
+  let g="";
+
+  for(
+
+    let i=0;
+
+    i<24;
+
+    i++
+
+  ){
+
+    const it=bag[i];
+
+    g+=`
+
+      <div class="slot">
+
+        ${
+
+          it
+
+            ?it.icon+
+
+             " "+
+
+             it.name+
+
+             " +"+
+
+             (it.enhance||0)
+
+            :"—"
+
+        }
+
+      </div>
+
+    `;
+
+  }
+
+  document.getElementById(
+
+    "grid"
+
+  ).innerHTML=g;
+
+}
+
+/* =========================================================
+
+   DROP
+
+========================================================= */
+
+function spawnDrop(x,y,boss=false){
+
+  const r=Math.random();
+
+  let source;
+
+  if(boss){
+
+    source=
+
+      r<.55
+
+        ?items[3]
+
+        :items[2];
+
+  }
+
+  else{
+
+    source=
+
+      r<.12
+
+        ?items[3]
+
+        :
+
+      r<.35
+
+        ?items[2]
+
+        :
+
+        items[
+
+          Math.floor(
+
+            Math.random()*5
+
+          )
+
+        ];
+
+  }
+
+  const dropItem={
+
+    ...source,
+
+    enhance:
+
+      Math.random()<.2
+
+        ?1
+
+        :0
+
+  };
+
+  drops.push({
+
+    x,
+
+    y,
+
+    item:dropItem,
+
+    born:performance.now(),
+
+    kind:"item"
+
+  });
+
+  drops.push({
+
+    x:x+25,
+
+    y:y+15,
+
+    kind:"gold",
+
+    amount:
+
+      boss
+
+        ?100+
+
+         Math.floor(
+
+           Math.random()*100
+
+         )
+
+        :
+
+        10+
+
+        Math.floor(
+
+          Math.random()*35
+
+        ),
+
+    born:performance.now()
+
+  });
+
+  if(
+
+    Math.random()<.18
+
+  ){
+
+    drops.push({
+
+      x:x-25,
+
+      y:y+20,
+
+      kind:"potion",
+
+      amount:1,
+
+      born:performance.now()
+
+    });
+
+  }
+
+}
+
+function pickup(){
+
+  for(
+
+    let i=drops.length-1;
+
+    i>=0;
+
+    i--
+
+  ){
+
+    const d=drops[i];
+
+    const dist=
+
+      Math.hypot(
+
+        P.x-d.x,
+
+        P.y-d.y
+
+      );
+
+    if(dist<75){
+
+      if(
+
+        d.kind==="gold"
+
+      ){
+
+        gold+=d.amount;
+
+        toast(
+
+          "🪙 +"+
+
+          d.amount
+
+        );
+
+        drops.splice(i,1);
+
+      }
+
+      else if(
+
+        d.kind==="potion"
+
+      ){
+
+        if(
+
+          bag.length<24
+
+        ){
+
+          bag.push({
+
+            ...items[5]
+
+          });
+
+          toast(
+
+            "🧪 Nhặt Bình Hồi Khí"
+
+          );
+
+          drops.splice(i,1);
+
+        }
+
+      }
+
+      else if(
+
+        bag.length<24
+
+      ){
+
+        bag.push(d.item);
+
+        toast(
+
+          "🎁 "+
+
+          d.item.rarity+
+
+          " · "+
+
+          d.item.name+
+
+          (
+
+            d.item.enhance
+
+              ? " +"+d.item.enhance
+
+              :""
+
+          )
+
+        );
+
+        drops.splice(i,1);
+
+        renderBag();
+
+      }
 
     }
 
   }
-
-  if(
-
-    audioCtx.state==="suspended"
-
-  )
-
-    audioCtx.resume();
-
-}
-
-function fxSound(freq=440,duration=.08,type="sine"){
-
-  initAudio();
-
-  if(!audioCtx)
-
-    return;
-
-  const osc=
-
-    audioCtx.createOscillator();
-
-  const gain=
-
-    audioCtx.createGain();
-
-  osc.type=type;
-
-  osc.frequency.value=freq;
-
-  gain.gain.setValueAtTime(
-
-    .0001,
-
-    audioCtx.currentTime
-
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-
-    .05,
-
-    audioCtx.currentTime+.01
-
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-
-    .0001,
-
-    audioCtx.currentTime+duration
-
-  );
-
-  osc.connect(gain);
-
-  gain.connect(audioCtx.destination);
-
-  osc.start();
-
-  osc.stop(
-
-    audioCtx.currentTime+
-
-    duration+
-
-    .02
-
-  );
 
 }
 
@@ -3018,7 +4468,13 @@ function nearest(){
 
   let bd=Infinity;
 
-  for(const m of mobs){
+  for(
+
+    const m
+
+    of mobs
+
+  ){
 
     if(!m.alive)
 
@@ -3048,7 +4504,45 @@ function nearest(){
 
 }
 
-function damage(m,n,effect){
+function addEffect(
+
+  x,
+
+  y,
+
+  type,
+
+  color
+
+){
+
+  effects.push({
+
+    x,
+
+    y,
+
+    type,
+
+    color,
+
+    born:performance.now(),
+
+    life:0.65
+
+  });
+
+}
+
+function damage(
+
+  m,
+
+  n,
+
+  effect
+
+){
 
   if(!m || !m.alive)
 
@@ -3056,13 +4550,15 @@ function damage(m,n,effect){
 
   const atkElement=
 
-    classData[playerClass]?.element||
+    classData[playerClass]
+
+      ?.element ||
 
     elements[elementIndex];
 
   const mobElement=
 
-    m.element||
+    m.element ||
 
     "Mộc";
 
@@ -3076,31 +4572,41 @@ function damage(m,n,effect){
 
     );
 
-  n=Math.round(n*mult);
+  n=Math.max(
 
-  m.hp=Math.max(
+    1,
 
-    0,
+    Math.round(
 
-    m.hp-n
+      n*mult
+
+    )
 
   );
 
-  m.hit=.15;
+  m.hp=
 
-  addDamageText(
+    Math.max(
+
+      0,
+
+      m.hp-n
+
+    );
+
+  m.hit=.18;
+
+  addEffect(
 
     m.x,
 
-    m.y-45,
+    m.y,
 
-    "-"+n,
+    "hit",
 
-    mult>1
+    classData[playerClass]?.color ||
 
-      ?" #ffd95a".trim()
-
-      :"#fff"
+      "#fff"
 
   );
 
@@ -3108,59 +4614,17 @@ function damage(m,n,effect){
 
     statuses.stun=.8;
 
-    addSkillFX(
-
-      m.x,
-
-      m.y,
-
-      "stun",
-
-      100,
-
-      "#ffe96b"
-
-    );
-
   }
 
   if(effect==="slow"){
 
     statuses.slow=2;
 
-    addSkillFX(
-
-      m.x,
-
-      m.y,
-
-      "ice",
-
-      110,
-
-      "#91e8ff"
-
-    );
-
   }
 
   if(effect==="poison"){
 
     statuses.poison=3;
-
-    addSkillFX(
-
-      m.x,
-
-      m.y,
-
-      "poison",
-
-      120,
-
-      "#80ef62"
-
-    );
 
   }
 
@@ -3172,25 +4636,123 @@ function damage(m,n,effect){
 
       m.x,
 
-      m.y
+      m.y,
+
+      m.boss
 
     );
 
-    document.getElementById(
+    P.exp+=
 
-      "expText"
+      m.boss
 
-    ).textContent="600/600";
+        ?120
 
-    toast(
+        :30;
 
-      "⚔️ Hạ Sơn Tặc · Có đồ rơi!"
+    if(
 
-    );
+      P.exp>=P.maxExp
+
+    ){
+
+      P.exp-=P.maxExp;
+
+      P.level++;
+
+      P.maxHp+=15;
+
+      P.maxMp+=5;
+
+      P.hp=P.maxHp;
+
+      P.mp=P.maxMp;
+
+      toast(
+
+        "🎉 LÊN CẤP "+
+
+        P.level
+
+      );
+
+    }
+
+    else{
+
+      toast(
+
+        m.boss
+
+          ?"👑 Hạ Boss · Đồ Hiếm!"
+
+          :"⚔️ Hạ Sơn Tặc · Có đồ rơi!"
+
+      );
+
+    }
+
+    saveGame();
 
   }
 
 }
+
+/* =========================================================
+
+   SKILL EFFECT
+
+========================================================= */
+
+function skillEffect(){
+
+  const data=
+
+    classData[playerClass];
+
+  const colors={
+
+    Kim:"#ffe477",
+
+    Mộc:"#83db69",
+
+    Thổ:"#c9b7ff",
+
+    Thủy:"#70dfff",
+
+    Hỏa:"#ff684d"
+
+  };
+
+  const color=
+
+    colors[data.element]||
+
+    "#fff";
+
+  effects.push({
+
+    x:P.x,
+
+    y:P.y,
+
+    type:"aoe",
+
+    color,
+
+    born:performance.now(),
+
+    life:0.9
+
+  });
+
+}
+
+/* =========================================================
+
+   CÔNG KÍCH
+
+========================================================= */
 
 function attack(){
 
@@ -3199,10 +4761,6 @@ function attack(){
     return;
 
   attackCd=.45;
-
-  initAudio();
-
-  fxSound(520,.07,"sawtooth");
 
   const m=nearest();
 
@@ -3294,29 +4852,13 @@ function attack(){
 
     );
 
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "slash",
-
-      120,
-
-      data.color,
-
-      .25
-
-    );
-
   }
 
 }
 
 /* =========================================================
 
-   ĐẠI CHIÊU AOE 4.11.4
+   AOE TUYỆT KỸ
 
 ========================================================= */
 
@@ -3326,13 +4868,27 @@ function skillFn(){
 
     return;
 
-  skillCd=2;
+  skillCd=2.4;
 
   const data=
 
     classData[playerClass];
 
-  let range=260;
+  skillEffect();
+
+  toast(
+
+    data.icon+
+
+    " "+
+
+    data.skill+
+
+    "!"
+
+  );
+
+  let range=280;
 
   let damageValue=
 
@@ -3346,207 +4902,121 @@ function skillFn(){
 
     data.atkBonus;
 
-  let effect=null;
+  if(
 
-  /* THIẾU LÂM */
+    playerClass==="Cái Bang Chưởng"
 
-  if(playerClass==="Thiếu Lâm"){
+  ){
 
-    range=300;
+    range=480;
 
-    damageValue+=35;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "goldRing",
-
-      300,
-
-      "#ffe36d",
-
-      .9
-
-    );
-
-    toast("⚡ Kim Cang · Kim quang!");
-
-    startCinematic();
-
-    fxSound(180,.22,"triangle");
-
-    for(const mob of mobs){
-
-      if(!mob.alive)
-
-        continue;
-
-      if(
-
-        Math.hypot(
-
-          P.x-mob.x,
-
-          P.y-mob.y
-
-        )<range
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "stun"
-
-        );
-
-      }
-
-    }
-
-    return;
+    damageValue+=45;
 
   }
 
-  /* THIÊN VƯƠNG */
+  else if(
 
-  if(playerClass==="Thiên Vương"){
+    playerClass==="Thiên Nhẫn Hỏa Tiễn"
 
-    range=300;
+  ){
 
-    damageValue+=40;
+    range=550;
 
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "metalBurst",
-
-      300,
-
-      "#f6d96b",
-
-      .85
-
-    );
-
-    toast(
-
-      "🛡️ Thiên Vương · Kim Giáp!"
-
-    );
-
-    startCinematic();
-
-    fxSound(160,.25,"square");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "stun"
-
-        );
-
-      }
-
-    }
-
-    return;
+    damageValue+=30;
 
   }
 
-  /* VÕ ĐANG */
+  else if(
 
-  if(playerClass==="Võ Đang"){
+    playerClass==="Đường Môn"
 
-    range=340;
+  ){
 
-    damageValue+=35;
+    range=400;
 
-    effect="slow";
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "swordStorm",
-
-      340,
-
-      "#c9b7ff",
-
-      1.05
-
-    );
-
-    toast(
-
-      "🌪️ Võ Đang · Vạn Kiếm Quy Tông!"
-
-    );
-
-    startCinematic();
-
-    fxSound(760,.25,"sine");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          effect
-
-        );
-
-      }
-
-    }
-
-    return;
+    damageValue+=25;
 
   }
 
-  /* NGA MI */
+  else if(
 
-  if(playerClass==="Nga Mi"){
+    playerClass==="Ngũ Độc"
 
-    range=320;
+  ){
 
-    statuses.buff=5;
+    range=380;
+
+  }
+
+  for(
+
+    const m
+
+    of mobs
+
+  ){
+
+    if(!m.alive)
+
+      continue;
+
+    const d=
+
+      Math.hypot(
+
+        P.x-m.x,
+
+        P.y-m.y
+
+      );
+
+    if(d>range)
+
+      continue;
+
+    let effect=null;
+
+    if(
+
+      playerClass==="Thiếu Lâm"
+
+    )
+
+      effect="stun";
+
+    if(
+
+      playerClass==="Côn Lôn Kiếm"
+
+    )
+
+      effect="slow";
+
+    if(
+
+      playerClass==="Ngũ Độc"
+
+    )
+
+      effect="poison";
+
+    damage(
+
+      m,
+
+      damageValue,
+
+      effect
+
+    );
+
+  }
+
+  if(
+
+    playerClass==="Nga Mi"
+
+  ){
 
     P.hp=
 
@@ -3564,687 +5034,15 @@ function skillFn(){
 
         P.maxMp,
 
-        P.mp+25
+        P.mp+15
 
       );
 
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "lotus",
-
-      260,
-
-      "#8ddcff",
-
-      1.1
-
-    );
-
     toast(
 
-      "🌸 Nga Mi · Thủy Liên Hoa!"
+      "💧 Nga Mi · Hồi phục"
 
     );
-
-    fxSound(620,.3,"sine");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          30+
-
-          damageValue,
-
-          "slow"
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* ĐƯỜNG MÔN */
-
-  if(playerClass==="Đường Môn"){
-
-    range=420;
-
-    damageValue+=45;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "darkDaggers",
-
-      420,
-
-      "#bd76ff",
-
-      .9
-
-    );
-
-    toast(
-
-      "🏹 Đường Môn · Vạn Tiễn Xuyên Tâm!"
-
-    );
-
-    startCinematic();
-
-    fxSound(900,.16,"sawtooth");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "poison"
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* NGŨ ĐỘC */
-
-  if(playerClass==="Ngũ Độc"){
-
-    range=360;
-
-    damageValue+=40;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "poison",
-
-      360,
-
-      "#80ef62",
-
-      1.15
-
-    );
-
-    toast(
-
-      "☠️ Ngũ Độc · Vạn Độc Trận!"
-
-    );
-
-    startCinematic();
-
-    fxSound(130,.35,"sawtooth");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "poison"
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* CÔN LÔN ĐAO */
-
-  if(playerClass==="Côn Lôn Đao"){
-
-    range=330;
-
-    damageValue+=55;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "thunderBlade",
-
-      330,
-
-      "#f2f2ff",
-
-      .85
-
-    );
-
-    toast(
-
-      "🌩️ Côn Lôn Đao · Thiên Lôi Đao!"
-
-    );
-
-    startCinematic();
-
-    fxSound(110,.25,"square");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* CÔN LÔN KIẾM */
-
-  if(playerClass==="Côn Lôn Kiếm"){
-
-    range=370;
-
-    damageValue+=38;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "swordStorm",
-
-      370,
-
-      "#c9b7ff",
-
-      1
-
-    );
-
-    toast(
-
-      "🌪️ Côn Lôn · Kiếm Trận!"
-
-    );
-
-    startCinematic();
-
-    fxSound(700,.3,"sine");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "slow"
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* CÁI BANG CHƯỞNG */
-
-  if(playerClass==="Cái Bang Chưởng"){
-
-    range=460;
-
-    damageValue+=70;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "dragon",
-
-      460,
-
-      "#ff9d4d",
-
-      1.2
-
-    );
-
-    toast(
-
-      "🐉 Giáng Long Thập Bát Chưởng!"
-
-    );
-
-    startCinematic();
-
-    fxSound(90,.35,"triangle");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* CÁI BANG BỔNG */
-
-  if(playerClass==="Cái Bang Bổng"){
-
-    range=280;
-
-    damageValue+=50;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "staff",
-
-      range,
-
-      "#ffbd63",
-
-      .75
-
-    );
-
-    toast(
-
-      "🪵 Đả Cẩu Bổng Pháp!"
-
-    );
-
-    startCinematic();
-
-    fxSound(260,.18,"square");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "stun"
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* THIÊN NHẪN KÍCH */
-
-  if(
-
-    playerClass==="Thiên Nhẫn Kích/Mác"
-
-  ){
-
-    range=300;
-
-    damageValue+=70;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "fireBurst",
-
-      range,
-
-      "#ff654f",
-
-      .8
-
-    );
-
-    toast(
-
-      "🔱 Thiên Nhẫn Kích · Bạo Liệt!"
-
-    );
-
-    startCinematic();
-
-    fxSound(100,.28,"sawtooth");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* THIÊN NHẪN HỎA TIỄN */
-
-  if(
-
-    playerClass==="Thiên Nhẫn Hỏa Tiễn"
-
-  ){
-
-    range=600;
-
-    damageValue+=60;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "fireArrow",
-
-      range,
-
-      "#ff704d",
-
-      .9
-
-    );
-
-    toast(
-
-      "🔥 Hỏa Tiễn · Liệt Hỏa!"
-
-    );
-
-    startCinematic();
-
-    fxSound(420,.2,"sawtooth");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* THÚY YÊN ĐAO */
-
-  if(
-
-    playerClass==="Thúy Yên Đao"
-
-  ){
-
-    range=330;
-
-    damageValue+=48;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "waterBlade",
-
-      range,
-
-      "#70d9ff",
-
-      .95
-
-    );
-
-    toast(
-
-      "🌊 Thúy Yên · Hải Nguyệt Đao!"
-
-    );
-
-    startCinematic();
-
-    fxSound(580,.25,"sine");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue,
-
-          "slow"
-
-        );
-
-      }
-
-    }
-
-    return;
-
-  }
-
-  /* THÚY YÊN SONG ĐAO */
-
-  if(
-
-    playerClass==="Thúy Yên Song Đao"
-
-  ){
-
-    range=350;
-
-    damageValue+=65;
-
-    addSkillFX(
-
-      P.x,
-
-      P.y,
-
-      "doubleBlade",
-
-      range,
-
-      "#8be7ff",
-
-      .85
-
-    );
-
-    toast(
-
-      "💠 Thúy Yên · Song Đao Liên Kích!"
-
-    );
-
-    startCinematic();
-
-    fxSound(680,.25,"sine");
-
-    for(const mob of mobs){
-
-      if(
-
-        mob.alive &&
-
-        dWithin(mob,range)
-
-      ){
-
-        damage(
-
-          mob,
-
-          damageValue
-
-        );
-
-      }
-
-    }
-
-    return;
 
   }
 
@@ -4252,7 +5050,7 @@ function skillFn(){
 
 /* =========================================================
 
-   FIRE SKILL
+   SKILL 3
 
 ========================================================= */
 
@@ -4262,11 +5060,13 @@ function fireFn(){
 
     return;
 
-  fireCd=3;
+  fireCd=3.2;
 
   const data=
 
     classData[playerClass];
+
+  const m=nearest();
 
   if(
 
@@ -4274,37 +5074,39 @@ function fireFn(){
 
   ){
 
-    addSkillFX(
+    if(
 
-      P.x,
+      m &&
 
-      P.y,
+      dWithin(m,190)
 
-      "staff",
-
-      200,
-
-      "#ffbd63",
-
-      .7
-
-    );
-
-    const m=nearest();
-
-    if(m&&dWithin(m,220)){
+    ){
 
       damage(
 
         m,
 
-        65+data.atkBonus,
+        75+
+
+        data.atkBonus,
 
         "stun"
 
       );
 
     }
+
+    addEffect(
+
+      P.x,
+
+      P.y,
+
+      "aoe",
+
+      "#ffbd63"
+
+    );
 
     toast(
 
@@ -4322,31 +5124,21 @@ function fireFn(){
 
   ){
 
-    addSkillFX(
+    if(
 
-      P.x,
+      m &&
 
-      P.y,
+      dWithin(m,240)
 
-      "fireBurst",
-
-      230,
-
-      "#ff654f",
-
-      .65
-
-    );
-
-    const m=nearest();
-
-    if(m&&dWithin(m,260)){
+    ){
 
       damage(
 
         m,
 
-        85+data.atkBonus
+        95+
+
+        data.atkBonus
 
       );
 
@@ -4368,31 +5160,49 @@ function fireFn(){
 
   ){
 
-    addSkillFX(
+    if(
 
-      P.x,
+      m &&
 
-      P.y,
+      dWithin(m,240)
 
-      "doubleBlade",
-
-      230,
-
-      "#8be7ff",
-
-      .7
-
-    );
-
-    const m=nearest();
-
-    if(m&&dWithin(m,240)){
+    ){
 
       damage(
 
         m,
 
-        75+data.atkBonus
+        85+
+
+        data.atkBonus
+
+      );
+
+      setTimeout(
+
+        ()=>{
+
+          if(
+
+            m &&
+
+            m.alive
+
+          )
+
+            damage(
+
+              m,
+
+              55+
+
+              data.atkBonus
+
+            );
+
+        },
+
+        100
 
       );
 
@@ -4408,7 +5218,43 @@ function fireFn(){
 
   }
 
-  const m=nearest();
+  if(
+
+    playerClass==="Nga Mi"
+
+  ){
+
+    P.hp=
+
+      Math.min(
+
+        P.maxHp,
+
+        P.hp+35
+
+      );
+
+    P.mp=
+
+      Math.min(
+
+        P.maxMp,
+
+        P.mp+20
+
+      );
+
+    statuses.buff=4;
+
+    toast(
+
+      "🌸 Nga Mi · Hồi phục!"
+
+    );
+
+    return;
+
+  }
 
   if(
 
@@ -4420,7 +5266,7 @@ function fireFn(){
 
       playerClass==="Thiên Nhẫn Hỏa Tiễn"
 
-        ?550
+        ?600
 
         :330
 
@@ -4432,11 +5278,13 @@ function fireFn(){
 
       m,
 
-      55+data.atkBonus,
+      60+
 
-      playerClass==="Nga Mi"
+      data.atkBonus,
 
-        ?"buff"
+      playerClass==="Ngũ Độc"
+
+        ?"poison"
 
         :null
 
@@ -4444,885 +5292,35 @@ function fireFn(){
 
   }
 
-  addSkillFX(
+  toast(
 
-    P.x,
-
-    P.y,
-
-    "fireBurst",
-
-    180,
-
-    data.color,
-
-    .55
+    "🔥 Võ công!"
 
   );
 
-  toast("🔥 Võ công!");
+}
+
+function dWithin(
+
+  m,
+
+  range
+
+){
+
+  return Math.hypot(
+
+    P.x-m.x,
+
+    P.y-m.y
+
+  )<range;
 
 }
 
 /* =========================================================
 
-   DRAW FX
-
-========================================================= */
-
-function drawSkillFX(){
-
-  for(let i=skillFx.length-1;i>=0;i--){
-
-    const f=skillFx[i];
-
-    const alpha=
-
-      Math.max(
-
-        0,
-
-        f.life/f.maxLife
-
-      );
-
-    ctx.save();
-
-    ctx.globalAlpha=alpha;
-
-    ctx.translate(
-
-      f.x,
-
-      f.y
-
-    );
-
-    f.angle+=.08;
-
-    const p=
-
-      1-alpha;
-
-    const r=
-
-      f.radius*
-
-      Math.min(
-
-        1.25,
-
-        .25+p
-
-      );
-
-    ctx.strokeStyle=f.color;
-
-    ctx.fillStyle=f.color;
-
-    ctx.lineWidth=5;
-
-    if(f.type==="goldRing"){
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r,
-
-        0,
-
-        Math.PI*2
-
-      );
-
-      ctx.stroke();
-
-      ctx.lineWidth=2;
-
-      for(let k=0;k<8;k++){
-
-        const a=
-
-          f.angle+
-
-          k*Math.PI/4;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          Math.cos(a)*30,
-
-          Math.sin(a)*30
-
-        );
-
-        ctx.lineTo(
-
-          Math.cos(a)*r,
-
-          Math.sin(a)*r
-
-        );
-
-        ctx.stroke();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="metalBurst"
-
-    ){
-
-      for(let k=0;k<12;k++){
-
-        const a=
-
-          k*Math.PI/6+
-
-          f.angle;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          Math.cos(a)*35,
-
-          Math.sin(a)*35
-
-        );
-
-        ctx.lineTo(
-
-          Math.cos(a)*r,
-
-          Math.sin(a)*r
-
-        );
-
-        ctx.stroke();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="swordStorm"
-
-    ){
-
-      for(let k=0;k<12;k++){
-
-        const a=
-
-          f.angle+
-
-          k*Math.PI/6;
-
-        ctx.save();
-
-        ctx.rotate(a);
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          0,
-
-          -20
-
-        );
-
-        ctx.lineTo(
-
-          15,
-
-          -r
-
-        );
-
-        ctx.lineTo(
-
-          -8,
-
-          -r*.72
-
-        );
-
-        ctx.closePath();
-
-        ctx.stroke();
-
-        ctx.restore();
-
-      }
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r*.65,
-
-        0,
-
-        Math.PI*2
-
-      );
-
-      ctx.stroke();
-
-    }
-
-    else if(f.type==="dragon"){
-
-      ctx.font=
-
-        `${Math.max(
-
-          30,
-
-          r*.45
-
-        )}px sans-serif`;
-
-      ctx.textAlign="center";
-
-      ctx.textBaseline="middle";
-
-      ctx.fillText(
-
-        "🐉",
-
-        Math.cos(f.angle)*r*.55,
-
-        Math.sin(f.angle)*r*.25
-
-      );
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r*.75,
-
-        f.angle,
-
-        f.angle+
-
-        Math.PI*1.6
-
-      );
-
-      ctx.stroke();
-
-    }
-
-    else if(
-
-      f.type==="poison"
-
-    ){
-
-      for(let k=0;k<14;k++){
-
-        const a=
-
-          k*Math.PI/7+
-
-          f.angle*.4;
-
-        const rr=
-
-          r*(.35+
-
-          .65*
-
-          ((k%4)/4));
-
-        ctx.beginPath();
-
-        ctx.arc(
-
-          Math.cos(a)*rr,
-
-          Math.sin(a)*rr,
-
-          5+
-
-          (k%3)*2,
-
-          0,
-
-          Math.PI*2
-
-        );
-
-        ctx.fill();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="darkDaggers"
-
-    ){
-
-      for(let k=0;k<16;k++){
-
-        const a=
-
-          f.angle+
-
-          k*Math.PI/8;
-
-        ctx.save();
-
-        ctx.rotate(a);
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          0,
-
-          -25
-
-        );
-
-        ctx.lineTo(
-
-          7,
-
-          -r
-
-        );
-
-        ctx.lineTo(
-
-          -7,
-
-          -r
-
-        );
-
-        ctx.closePath();
-
-        ctx.fill();
-
-        ctx.restore();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="thunderBlade"
-
-    ){
-
-      for(let k=0;k<6;k++){
-
-        const a=
-
-          f.angle+
-
-          k*Math.PI/3;
-
-        ctx.beginPath();
-
-        ctx.moveTo(0,0);
-
-        let px=0;
-
-        let py=0;
-
-        for(let q=0;q<6;q++){
-
-          const rr=
-
-            r*q/5;
-
-          px=
-
-            Math.cos(a)*rr+
-
-            (q%2?8:-8);
-
-          py=
-
-            Math.sin(a)*rr+
-
-            (q%2?-8:8);
-
-          ctx.lineTo(
-
-            px,
-
-            py
-
-          );
-
-        }
-
-        ctx.stroke();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="lotus"
-
-    ){
-
-      for(let k=0;k<8;k++){
-
-        const a=
-
-          k*Math.PI/4+
-
-          f.angle*.2;
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-
-          Math.cos(a)*r*.35,
-
-          Math.sin(a)*r*.35,
-
-          r*.18,
-
-          r*.4,
-
-          a,
-
-          0,
-
-          Math.PI*2
-
-        );
-
-        ctx.stroke();
-
-      }
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r*.15,
-
-        0,
-
-        Math.PI*2
-
-      );
-
-      ctx.fill();
-
-    }
-
-    else if(
-
-      f.type==="fireBurst"
-
-    ){
-
-      for(let k=0;k<14;k++){
-
-        const a=
-
-          f.angle+
-
-          k*Math.PI/7;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          Math.cos(a)*20,
-
-          Math.sin(a)*20
-
-        );
-
-        ctx.lineTo(
-
-          Math.cos(a)*r,
-
-          Math.sin(a)*r
-
-        );
-
-        ctx.stroke();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="fireArrow"
-
-    ){
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r*.8,
-
-        f.angle,
-
-        f.angle+.35
-
-      );
-
-      ctx.stroke();
-
-      ctx.font="34px sans-serif";
-
-      ctx.textAlign="center";
-
-      ctx.fillText(
-
-        "🔥",
-
-        Math.cos(f.angle)*r*.55,
-
-        Math.sin(f.angle)*r*.55
-
-      );
-
-    }
-
-    else if(
-
-      f.type==="waterBlade"
-
-    ){
-
-      for(let k=0;k<7;k++){
-
-        ctx.beginPath();
-
-        ctx.arc(
-
-          Math.cos(
-
-            f.angle+
-
-            k*.9
-
-          )*r*.55,
-
-          Math.sin(
-
-            f.angle+
-
-            k*.9
-
-          )*r*.55,
-
-          22,
-
-          0,
-
-          Math.PI
-
-        );
-
-        ctx.stroke();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="doubleBlade"
-
-    ){
-
-      for(let k=0;k<2;k++){
-
-        ctx.save();
-
-        ctx.rotate(
-
-          f.angle+
-
-          k*Math.PI
-
-        );
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          0,
-
-          -20
-
-        );
-
-        ctx.quadraticCurveTo(
-
-          r*.5,
-
-          -r*.8,
-
-          0,
-
-          -r
-
-        );
-
-        ctx.stroke();
-
-        ctx.restore();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="staff"
-
-    ){
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r,
-
-        f.angle,
-
-        f.angle+
-
-        Math.PI*1.3
-
-      );
-
-      ctx.stroke();
-
-      ctx.lineWidth=10;
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-
-        -r*.6,
-
-        r*.6
-
-      );
-
-      ctx.lineTo(
-
-        r*.6,
-
-        -r*.6
-
-      );
-
-      ctx.stroke();
-
-    }
-
-    else if(
-
-      f.type==="stun"
-
-    ){
-
-      ctx.font="32px sans-serif";
-
-      ctx.textAlign="center";
-
-      ctx.fillText(
-
-        "⚡",
-
-        0,
-
-        -r*.4
-
-      );
-
-    }
-
-    else if(
-
-      f.type==="ice"
-
-    ){
-
-      for(let k=0;k<8;k++){
-
-        const a=
-
-          k*Math.PI/4;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-
-          0,
-
-          0
-
-        );
-
-        ctx.lineTo(
-
-          Math.cos(a)*r*.7,
-
-          Math.sin(a)*r*.7
-
-        );
-
-        ctx.stroke();
-
-      }
-
-    }
-
-    else if(
-
-      f.type==="slash"
-
-    ){
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        0,
-
-        0,
-
-        r,
-
-        -.8,
-
-        .8
-
-      );
-
-      ctx.stroke();
-
-    }
-
-    f.life-=.016;
-
-    ctx.restore();
-
-    if(f.life<=0)
-
-      skillFx.splice(i,1);
-
-  }
-
-}
-
-function drawDamageTexts(){
-
-  for(
-
-    let i=damageTexts.length-1;
-
-    i>=0;
-
-    i--
-
-  ){
-
-    const d=damageTexts[i];
-
-    ctx.save();
-
-    ctx.globalAlpha=
-
-      Math.max(
-
-        0,
-
-        d.life/d.maxLife
-
-      );
-
-    ctx.fillStyle=d.color;
-
-    ctx.font=
-
-      "bold 20px sans-serif";
-
-    ctx.textAlign="center";
-
-    ctx.fillText(
-
-      d.text,
-
-      d.x,
-
-      d.y
-
-    );
-
-    ctx.restore();
-
-    d.y-=.8;
-
-    d.life-=.016;
-
-    if(d.life<=0)
-
-      damageTexts.splice(i,1);
-
-  }
-
-}
-
-/* =========================================================
-
-   TOUCH
+   TOUCH SKILL
 
 ========================================================= */
 
@@ -5406,10 +5404,6 @@ addEventListener(
 
     ]=true;
 
-    if(e.key===" ")
-
-      toggleQinggong();
-
   }
 
 );
@@ -5442,11 +5436,19 @@ let joy={
 
 const joyEl=
 
-  document.getElementById("joy");
+  document.getElementById(
+
+    "joy"
+
+  );
 
 const stick=
 
-  document.getElementById("stick");
+  document.getElementById(
+
+    "stick"
+
+  );
 
 function setJoy(e){
 
@@ -5476,7 +5478,13 @@ function setJoy(e){
 
   const d=
 
-    Math.hypot(dx,dy);
+    Math.hypot(
+
+      dx,
+
+      dy
+
+    );
 
   if(d>lim){
 
@@ -5486,9 +5494,13 @@ function setJoy(e){
 
   }
 
-  joy.x=dx/lim;
+  joy.x=
 
-  joy.y=dy/lim;
+    dx/lim;
+
+  joy.y=
+
+    dy/lim;
 
   stick.style.transform=
 
@@ -5560,7 +5572,7 @@ joyEl.addEventListener(
 
 /* =========================================================
 
-   NGỰA
+   NGỰA / PHI PHONG
 
 ========================================================= */
 
@@ -5580,15 +5592,15 @@ function updateMountUI(){
 
   document.getElementById(
 
-    "capeState"
+    "capeBtn"
 
-  ).textContent=
+  ).classList.toggle(
+
+    "capeOn",
 
     capeOn
 
-      ?"Bật"
-
-      :"Tắt";
+  );
 
 }
 
@@ -5596,13 +5608,7 @@ function toggleMount(){
 
   mounted=!mounted;
 
-  if(mounted)
-
-    qinggong=false;
-
   updateMountUI();
-
-  updateQingUI();
 
   toast(
 
@@ -5614,7 +5620,27 @@ function toggleMount(){
 
   );
 
-  sendInput();
+  saveGame();
+
+}
+
+function toggleCape(){
+
+  capeOn=!capeOn;
+
+  updateMountUI();
+
+  toast(
+
+    capeOn
+
+      ?"🪽 Phi phong bật"
+
+      :"🪽 Phi phong tắt"
+
+  );
+
+  saveGame();
 
 }
 
@@ -5625,18 +5651,6 @@ function toggleMount(){
 ========================================================= */
 
 function openTeleport(){
-
-  document.getElementById(
-
-    "capeState"
-
-  ).textContent=
-
-    capeOn
-
-      ?"Bật"
-
-      :"Tắt";
 
   document.getElementById(
 
@@ -5658,13 +5672,25 @@ function closeTeleport(){
 
 function teleportTo(where){
 
-  const dest=
+  let dest=town;
 
-    where==="city"
+  let name="Tân Thủ Thôn";
 
-      ?city
+  if(where==="city"){
 
-      :town;
+    dest=city;
+
+    name="Thành Thị";
+
+  }
+
+  if(where==="lake"){
+
+    dest=lake;
+
+    name="Hồ Kiếm";
+
+  }
 
   P.x=dest.x;
 
@@ -5674,13 +5700,7 @@ function teleportTo(where){
 
   cam.y=P.y;
 
-  locationName=
-
-    where==="city"
-
-      ?"Thành Thị"
-
-      :"Tân Thủ Thôn";
+  locationName=name;
 
   closeTeleport();
 
@@ -5688,11 +5708,11 @@ function teleportTo(where){
 
     "🌀 Đã dịch chuyển đến "+
 
-    locationName
+    name
 
   );
 
-  sendInput();
+  saveGame();
 
 }
 
@@ -5710,7 +5730,11 @@ c.addEventListener(
 
     const bag=
 
-      document.getElementById("bag");
+      document.getElementById(
+
+        "bag"
+
+      );
 
     if(
 
@@ -5719,60 +5743,6 @@ c.addEventListener(
     )
 
       return;
-
-    initAudio();
-
-    const r=
-
-      c.getBoundingClientRect();
-
-    const tx=
-
-      (e.touches[0].clientX-
-
-       r.left-
-
-       W/2)/ZOOM+
-
-       cam.x;
-
-    const ty=
-
-      (e.touches[0].clientY-
-
-       r.top-
-
-       H/2)/ZOOM+
-
-       cam.y;
-
-    if(
-
-      Math.hypot(
-
-        P.x-xaPhu.x,
-
-        P.y-xaPhu.y
-
-      )<120 &&
-
-      Math.hypot(
-
-        tx-xaPhu.x,
-
-        ty-xaPhu.y
-
-      )<120
-
-    ){
-
-      openTeleport();
-
-      toast("🐎 Xa Phu");
-
-      return;
-
-    }
 
     pickup();
 
@@ -5792,13 +5762,21 @@ function toast(t){
 
   const m=
 
-    document.getElementById("msg");
+    document.getElementById(
+
+      "msg"
+
+    );
 
   m.textContent=t;
 
   m.style.display="block";
 
-  clearTimeout(toast.timer);
+  clearTimeout(
+
+    toast.timer
+
+  );
 
   toast.timer=
 
@@ -5810,7 +5788,7 @@ function toast(t){
 
       },
 
-      1100
+      1200
 
     );
 
@@ -5818,7 +5796,209 @@ function toast(t){
 
 /* =========================================================
 
-   UPDATE
+   UPDATE UI
+
+========================================================= */
+
+function updateUI(){
+
+  const data=
+
+    classData[playerClass];
+
+  const pAtk=
+
+    P.atk+
+
+    itemPower(
+
+      equip.weapon
+
+    ).atk+
+
+    data.atkBonus;
+
+  document.getElementById(
+
+    "playerNameHud"
+
+  ).textContent=
+
+    PLAYER_NAME;
+
+  document.getElementById(
+
+    "lv"
+
+  ).textContent=
+
+    P.level;
+
+  document.getElementById(
+
+    "classHud"
+
+  ).textContent=
+
+    playerClass;
+
+  document.getElementById(
+
+    "elementHud"
+
+  ).textContent=
+
+    elementIcon[data.element]+
+
+    " "+
+
+    data.element;
+
+  document.getElementById(
+
+    "elementName"
+
+  ).textContent=
+
+    data.element;
+
+  document.getElementById(
+
+    "coord"
+
+  ).textContent=
+
+    Math.round(P.x)+
+
+    ","+
+
+    Math.round(P.y);
+
+  document.getElementById(
+
+    "locationName"
+
+  ).textContent=
+
+    locationName;
+
+  document.getElementById(
+
+    "hpText"
+
+  ).textContent=
+
+    Math.round(P.hp)+
+
+    "/"+
+
+    P.maxHp;
+
+  document.getElementById(
+
+    "mpText"
+
+  ).textContent=
+
+    Math.round(P.mp)+
+
+    "/"+
+
+    P.maxMp;
+
+  document.getElementById(
+
+    "expText"
+
+  ).textContent=
+
+    Math.round(P.exp)+
+
+    "/"+
+
+    P.maxExp;
+
+  document.getElementById(
+
+    "atkText"
+
+  ).textContent=
+
+    pAtk;
+
+  document.getElementById(
+
+    "hp"
+
+  ).style.width=
+
+    Math.max(
+
+      0,
+
+      Math.min(
+
+        100,
+
+        P.hp/P.maxHp*100
+
+      )
+
+    )+"%";
+
+  document.getElementById(
+
+    "mp"
+
+  ).style.width=
+
+    Math.max(
+
+      0,
+
+      Math.min(
+
+        100,
+
+        P.mp/P.maxMp*100
+
+      )
+
+    )+"%";
+
+  document.getElementById(
+
+    "expBar"
+
+  ).style.width=
+
+    Math.max(
+
+      0,
+
+      Math.min(
+
+        100,
+
+        P.exp/P.maxExp*100
+
+      )
+
+    )+"%";
+
+  document.getElementById(
+
+    "gold"
+
+  ).textContent=
+
+    gold;
+
+}
+
+/* =========================================================
+
+   UPDATE GAME
 
 ========================================================= */
 
@@ -5828,19 +6008,19 @@ function update(dt){
 
   let dy=joy.y;
 
-  if(keys.w||keys.arrowup)
+  if(keys.w || keys.arrowup)
 
     dy-=1;
 
-  if(keys.s||keys.arrowdown)
+  if(keys.s || keys.arrowdown)
 
     dy+=1;
 
-  if(keys.a||keys.arrowleft)
+  if(keys.a || keys.arrowleft)
 
     dx-=1;
 
-  if(keys.d||keys.arrowright)
+  if(keys.d || keys.arrowright)
 
     dx+=1;
 
@@ -5848,71 +6028,15 @@ function update(dt){
 
     Math.hypot(dx,dy)||1;
 
-  if(
+  if(dx || dy){
 
-    !NET.connected &&
-
-    (dx||dy)
-
-  ){
-
-    let speed=
+    const speed=
 
       mounted
 
-        ?330
+        ?380
 
         :230;
-
-    if(qinggong){
-
-      speed=520;
-
-      qingEnergy=
-
-        Math.max(
-
-          0,
-
-          qingEnergy-
-
-          18*dt
-
-        );
-
-      if(qingEnergy<=0){
-
-        qinggong=false;
-
-        updateQingUI();
-
-        toast(
-
-          "🪽 Khinh công hết khí"
-
-        );
-
-      }
-
-      addTrail();
-
-    }
-
-    else{
-
-      qingEnergy=
-
-        Math.min(
-
-          maxQingEnergy,
-
-          qingEnergy+
-
-          8*dt
-
-        );
-
-    }
 
     P.x+=
 
@@ -5929,22 +6053,6 @@ function update(dt){
       speed*
 
       dt;
-
-  }
-
-  if(!qinggong){
-
-    qingEnergy=
-
-      Math.min(
-
-        maxQingEnergy,
-
-        qingEnergy+
-
-        8*dt
-
-      );
 
   }
 
@@ -5982,7 +6090,13 @@ function update(dt){
 
   /* QUÁI */
 
-  for(const m of mobs){
+  for(
+
+    const m
+
+    of mobs
+
+  ){
 
     if(!m.alive)
 
@@ -6018,7 +6132,13 @@ function update(dt){
 
         (P.x-m.x)/
 
-        Math.max(d,1)*
+        Math.max(
+
+          d,
+
+          1
+
+        )*
 
         ms*
 
@@ -6028,11 +6148,91 @@ function update(dt){
 
         (P.y-m.y)/
 
-        Math.max(d,1)*
+        Math.max(
+
+          d,
+
+          1
+
+        )*
 
         ms*
 
         dt;
+
+    }
+
+    if(d<55){
+
+      m.attack=
+
+        Math.max(
+
+          0,
+
+          m.attack-dt
+
+        );
+
+      if(
+
+        m.attack<=0 &&
+
+        P.hp>0
+
+      ){
+
+        m.attack=.9;
+
+        const def=
+
+          itemPower(
+
+            equip.armor
+
+          ).def;
+
+        const hit=
+
+          Math.max(
+
+            1,
+
+            5+
+
+            m.boss*4-
+
+            Math.floor(
+
+              def/5
+
+            )
+
+          );
+
+        P.hp=
+
+          Math.max(
+
+            0,
+
+            P.hp-hit
+
+          );
+
+        addEffect(
+
+          P.x,
+
+          P.y,
+
+          "hit",
+
+          "#e45b56"
+
+        );
+
+      }
 
     }
 
@@ -6045,6 +6245,68 @@ function update(dt){
         m.hit-dt
 
       );
+
+  }
+
+  /* HỒI PHỤC */
+
+  if(
+
+    P.hp<P.maxHp &&
+
+    locationName==="Tân Thủ Thôn"
+
+  ){
+
+    P.hp=
+
+      Math.min(
+
+        P.maxHp,
+
+        P.hp+3*dt
+
+      );
+
+  }
+
+  if(
+
+    statuses.buff>0
+
+  ){
+
+    P.hp=
+
+      Math.min(
+
+        P.maxHp,
+
+        P.hp+5*dt
+
+      );
+
+  }
+
+  /* DEAD */
+
+  if(P.hp<=0){
+
+    P.hp=1;
+
+    P.x=town.x;
+
+    P.y=town.y;
+
+    locationName=
+
+      "Tân Thủ Thôn";
+
+    toast(
+
+      "💀 Bạn đã bị hạ · Hồi sinh"
+
+    );
 
   }
 
@@ -6118,63 +6380,41 @@ function update(dt){
 
     );
 
-  if(
+  /* EFFECTS */
 
-    playerClass==="Nga Mi" &&
+  const now=
 
-    statuses.buff>0
+    performance.now();
 
-  ){
+  effects=
 
-    P.hp=
+    effects.filter(
 
-      Math.min(
+      e=>
 
-        P.maxHp,
+        now-e.born<
 
-        P.hp+
-
-        12*dt
-
-      );
-
-  }
-
-  /* FX */
-
-  for(const t of qingTrail)
-
-    t.life-=dt;
-
-  qingTrail=
-
-    qingTrail.filter(
-
-      x=>x.life>0
-
-    );
-
-  screenShake=
-
-    Math.max(
-
-      0,
-
-      screenShake-
-
-      dt*25
+        e.life*1000
 
     );
 
   /* CAMERA */
 
-  const viewW=W/ZOOM;
+  const viewW=
 
-  const viewH=H/ZOOM;
+    W/ZOOM;
 
-  const halfW=viewW/2;
+  const viewH=
 
-  const halfH=viewH/2;
+    H/ZOOM;
+
+  const halfW=
+
+    viewW/2;
+
+  const halfH=
+
+    viewH/2;
 
   let targetX=P.x;
 
@@ -6262,1329 +6502,265 @@ function update(dt){
 
   pickup();
 
-  /* HUD */
+  updateUI();
 
-  const data=
-
-    classData[playerClass];
-
-  document.getElementById(
-
-    "coord"
-
-  ).textContent=
-
-    Math.round(P.x)+
-
-    ","+
-
-    Math.round(P.y);
-
-  document.getElementById(
-
-    "classHud"
-
-  ).textContent=
-
-    playerClass;
-
-  document.getElementById(
-
-    "elementHud"
-
-  ).textContent=
-
-    elementIcon[data.element]+
-
-    " "+
-
-    data.element;
-
-  document.getElementById(
-
-    "locationName"
-
-  ).textContent=
-
-    terrainName();
-
-  document.getElementById(
-
-    "hpText"
-
-  ).textContent=
-
-    Math.round(P.hp)+
-
-    "/"+
-
-    P.maxHp;
-
-  document.getElementById(
-
-    "mpText"
-
-  ).textContent=
-
-    Math.round(P.mp)+
-
-    "/"+
-
-    P.maxMp;
-
-  document.getElementById(
-
-    "hp"
-
-  ).style.width=
-
-    (P.hp/P.maxHp*100)+
-
-    "%";
-
-  document.getElementById(
-
-    "mp"
-
-  ).style.width=
-
-    (P.mp/P.maxMp*100)+
-
-    "%";
-
-  document.getElementById(
-
-    "gold"
-
-  ).textContent=
-
-    gold;
-
-  document.getElementById(
-
-    "skillCdText"
-
-  ).textContent=
-
-    skillCd>0
-
-      ?skillCd.toFixed(1)
-
-      :"";
-
-  document.getElementById(
-
-    "fireCdText"
-
-  ).textContent=
-
-    fireCd>0
-
-      ?fireCd.toFixed(1)
-
-      :"";
+  updateCooldownUI();
 
 }
 
 /* =========================================================
 
-   DROP
+   COOLDOWN UI
 
 ========================================================= */
 
-function spawnDrop(x,y){
+function updateCooldownUI(){
 
-  const r=Math.random();
+  const s=
 
-  const it=
+    document.getElementById(
 
-    r<.12
+      "skillCool"
 
-      ?items[3]
+    );
 
-      :
+  const f=
 
-    r<.35
+    document.getElementById(
 
-      ?items[2]
+      "fireCool"
 
-      :
+    );
 
-      items[
+  if(skillCd>0){
 
-        Math.floor(
+    s.style.display="flex";
 
-          Math.random()*5
+    s.textContent=
 
-        )
+      skillCd.toFixed(1);
 
-      ];
+  }
 
-  drops.push({
+  else{
 
-    x,
+    s.style.display="none";
 
-    y,
+  }
 
-    item:it,
+  if(fireCd>0){
 
-    born:performance.now(),
+    f.style.display="flex";
 
-    kind:"item"
+    f.textContent=
 
-  });
+      fireCd.toFixed(1);
 
-  if(Math.random()<.3){
+  }
 
-    drops.push({
+  else{
 
-      x:x+25,
-
-      y:y+15,
-
-      kind:"gold",
-
-      amount:
-
-        10+
-
-        Math.floor(
-
-          Math.random()*35
-
-        ),
-
-      born:performance.now()
-
-    });
+    f.style.display="none";
 
   }
 
 }
 
-function pickup(){
+/* =========================================================
+
+   VẼ HIỆU ỨNG
+
+========================================================= */
+
+function drawEffects(){
+
+  const now=
+
+    performance.now();
 
   for(
 
-    let i=drops.length-1;
+    const e
 
-    i>=0;
-
-    i--
+    of effects
 
   ){
 
-    const d=drops[i];
+    const age=
 
-    const dist=
+      (now-e.born)/1000;
 
-      Math.hypot(
-
-        P.x-d.x,
-
-        P.y-d.y
-
-      );
-
-    if(dist<75){
-
-      if(d.kind==="gold"){
-
-        gold+=d.amount;
-
-        toast(
-
-          "🪙 +"+
-
-          d.amount
-
-        );
-
-        drops.splice(i,1);
-
-      }
-
-      else if(bag.length<24){
-
-        bag.push(d.item);
-
-        toast(
-
-          "🎁 "+
-
-          d.item.name
-
-        );
-
-        drops.splice(i,1);
-
-        renderBag();
-
-      }
-
-    }
-
-  }
-
-}
-
-/* =========================================================
-
-   BAG
-
-========================================================= */
-
-function openBag(){
-
-  renderBag();
-
-  document.getElementById(
-
-    "bag"
-
-  ).style.display="block";
-
-}
-
-function closeBag(){
-
-  document.getElementById(
-
-    "bag"
-
-  ).style.display="none";
-
-}
-
-function enhanceCost2(it){
-
-  return ENHANCE_BASE_COST*
-
-    ((it?.enhance||0)+1);
-
-}
-
-function enhanceItem(i){
-
-  const it=bag[i];
-
-  if(
-
-    !it ||
-
-    it.type==="tiêu hao"
-
-  ){
-
-    toast(
-
-      "⚒️ Chỉ cường hoá trang bị"
-
-    );
-
-    return;
-
-  }
-
-  const lv=it.enhance||0;
-
-  if(lv>=ENHANCE_MAX){
-
-    toast("⚒️ Đã +10");
-
-    return;
-
-  }
-
-  const cost=enhanceCost2(it);
-
-  if(gold<cost){
-
-    toast(
-
-      "🪙 Cần "+
-
-      cost
-
-    );
-
-    return;
-
-  }
-
-  gold-=cost;
-
-  it.enhance=lv+1;
-
-  toast(
-
-    "⚒️ "+
-
-    it.name+
-
-    " lên +"+
-
-    it.enhance
-
-  );
-
-  renderBag();
-
-}
-
-function enhanceEquipped(slot){
-
-  const it=equip[slot];
-
-  if(!it){
-
-    toast("Chưa có trang bị");
-
-    return;
-
-  }
-
-  const lv=it.enhance||0;
-
-  if(lv>=ENHANCE_MAX){
-
-    toast("Đã +10");
-
-    return;
-
-  }
-
-  const cost=enhanceCost2(it);
-
-  if(gold<cost){
-
-    toast(
-
-      "🪙 Cần "+
-
-      cost
-
-    );
-
-    return;
-
-  }
-
-  gold-=cost;
-
-  it.enhance=lv+1;
-
-  renderBag();
-
-  toast(
-
-    "⚒️ "+
-
-    it.name+
-
-    " +"+
-
-    it.enhance
-
-  );
-
-}
-
-function equipItem(i){
-
-  const it=bag[i];
-
-  if(!it)
-
-    return;
-
-  if(it.type==="vũ khí"){
-
-    if(equip.weapon)
-
-      bag.push(equip.weapon);
-
-    equip.weapon=it;
-
-  }
-
-  else if(it.type==="áo"){
-
-    if(equip.armor)
-
-      bag.push(equip.armor);
-
-    equip.armor=it;
-
-  }
-
-  bag.splice(i,1);
-
-  if(bag.length>24)
-
-    bag.length=24;
-
-  renderBag();
-
-}
-
-function unequip(slot){
-
-  if(bag.length>=24){
-
-    toast("🎒 Túi đầy");
-
-    return;
-
-  }
-
-  if(!equip[slot])
-
-    return;
-
-  bag.push(
-
-    equip[slot]
-
-  );
-
-  equip[slot]=null;
-
-  renderBag();
-
-}
-
-function useItem(i){
-
-  const it=bag[i];
-
-  if(!it)
-
-    return;
-
-  if(
-
-    it.name.includes("Hồi Khí")
-
-  ){
-
-    P.mp=
+    const p=
 
       Math.min(
 
-        P.maxMp,
+        1,
 
-        P.mp+30
+        age/e.life
 
       );
 
-    bag.splice(i,1);
+    ctx.save();
 
-    toast(
+    ctx.globalAlpha=
 
-      "💧 Hồi 30 khí"
+      1-p;
 
-    );
+    if(
 
-    renderBag();
+      e.type==="aoe"
 
-  }
+    ){
 
-}
+      const radius=
 
-function sellItem(i){
+        40+
 
-  if(!bag[i])
+        p*190;
 
-    return;
+      ctx.strokeStyle=
 
-  gold+=20;
+        e.color;
 
-  toast(
+      ctx.lineWidth=
 
-    "🪙 +20 vàng"
+        7*(1-p)+2;
 
-  );
+      ctx.beginPath();
 
-  bag.splice(i,1);
+      ctx.arc(
 
-  renderBag();
+        e.x,
 
-}
+        e.y,
 
-function rarityClass(r){
+        radius,
 
-  return r==="Hiếm"
+        0,
 
-    ?"rare"
+        Math.PI*2
 
-    :
+      );
 
-    r==="Tốt"
+      ctx.stroke();
 
-      ?"good"
+      for(
 
-      :"normal";
+        let i=0;
 
-}
+        i<8;
 
-function renderBag(){
+        i++
 
-  document.getElementById(
+      ){
 
-    "count"
+        const a=
 
-  ).textContent=
+          i*Math.PI/4+
 
-    bag.length;
+          age*3;
 
-  document.getElementById(
+        ctx.beginPath();
 
-    "gold"
+        ctx.moveTo(
 
-  ).textContent=
+          e.x+
 
-    gold;
+          Math.cos(a)*
 
-  document.getElementById(
+          radius*.4,
 
-    "equip"
+          e.y+
 
-  ).innerHTML=[
+          Math.sin(a)*
 
-    ["weapon","⚔️","Vũ khí"],
+          radius*.4
 
-    ["armor","🛡️","Áo giáp"]
+        );
 
-  ].map(
+        ctx.lineTo(
 
-    ([slot,icon,label])=>{
+          e.x+
 
-      const it=equip[slot];
+          Math.cos(a)*
 
-      if(!it){
+          radius,
 
-        return `
+          e.y+
 
-          <div class="item">
+          Math.sin(a)*
 
-            ${icon}
+          radius
 
-            <strong>
+        );
 
-              ${label}: Trống
-
-            </strong>
-
-          </div>
-
-        `;
+        ctx.stroke();
 
       }
-
-      const lv=it.enhance||0;
-
-      const p=itemPower(it);
-
-      const cost=enhanceCost2(it);
-
-      return `
-
-        <div class="item">
-
-          <div>
-
-            ${icon}
-
-            <strong class="${rarityClass(it.rarity)}">
-
-              ${it.name}
-
-              <span class="enhanceLv">
-
-                +${lv}
-
-              </span>
-
-            </strong>
-
-            <small>
-
-              ${it.rarity}
-
-              · ⚔️ ${p.atk}
-
-              · 🛡️ ${p.def}
-
-            </small>
-
-          </div>
-
-          <div class="itemActions">
-
-            <button
-
-              class="enhanceBtn"
-
-              onclick="enhanceEquipped('${slot}')">
-
-              ⚒️ +${Math.min(
-
-                lv+1,
-
-                ENHANCE_MAX
-
-              )}
-
-              <br>
-
-              <span class="enhanceCost">
-
-                🪙 ${cost}
-
-              </span>
-
-            </button>
-
-            <button
-
-              class="action"
-
-              onclick="unequip('${slot}')">
-
-              Tháo
-
-            </button>
-
-          </div>
-
-        </div>
-
-      `;
 
     }
 
-  ).join("");
+    else{
 
-  document.getElementById(
+      ctx.fillStyle=
 
-    "items"
+        e.color;
 
-  ).innerHTML=
+      for(
 
-    bag.map(
+        let i=0;
 
-      (it,i)=>{
+        i<6;
 
-        const lv=it.enhance||0;
+        i++
 
-        const p=itemPower(it);
+      ){
 
-        const cost=enhanceCost2(it);
+        const a=
 
-        let actions="";
+          i*Math.PI/3+
 
-        if(
+          age*5;
 
-          it.type==="tiêu hao"
+        ctx.beginPath();
 
-        ){
+        ctx.arc(
 
-          actions=`
+          e.x+
 
-            <button
+          Math.cos(a)*
 
-              class="action"
+          (15+p*35),
 
-              onclick="useItem(${i})">
+          e.y+
 
-              Dùng
+          Math.sin(a)*
 
-            </button>
+          (15+p*35),
 
-          `;
+          5,
 
-        }
+          0,
 
-        else{
+          Math.PI*2
 
-          actions=`
+        );
 
-            <button
-
-              class="enhanceBtn"
-
-              onclick="enhanceItem(${i})">
-
-              ⚒️ +${Math.min(
-
-                lv+1,
-
-                ENHANCE_MAX
-
-              )}
-
-              <br>
-
-              <span class="enhanceCost">
-
-                🪙 ${cost}
-
-              </span>
-
-            </button>
-
-            <button
-
-              class="action"
-
-              onclick="equipItem(${i})">
-
-              Trang bị
-
-            </button>
-
-          `;
-
-        }
-
-        return `
-
-          <div class="item">
-
-            <div>
-
-              ${it.icon}
-
-              <strong class="${rarityClass(it.rarity)}">
-
-                ${it.name}
-
-                <span class="enhanceLv">
-
-                  +${lv}
-
-                </span>
-
-              </strong>
-
-              <small>
-
-                ${it.rarity}
-
-                · ${it.type}
-
-                · Cấp ${it.level}
-
-                · ⚔️ ${p.atk}
-
-                · 🛡️ ${p.def}
-
-              </small>
-
-            </div>
-
-            <div class="itemActions">
-
-              ${actions}
-
-              <button
-
-                class="action"
-
-                onclick="sellItem(${i})">
-
-                Bán
-
-              </button>
-
-            </div>
-
-          </div>
-
-        `;
+        ctx.fill();
 
       }
 
-    ).join("");
+    }
 
-  let g="";
-
-  for(let i=0;i<24;i++){
-
-    const it=bag[i];
-
-    g+=`
-
-      <div class="slot">
-
-        ${
-
-          it
-
-            ?it.icon+
-
-             " "+
-
-             it.name+
-
-             " +"+
-
-             (it.enhance||0)
-
-            :"—"
-
-        }
-
-      </div>
-
-    `;
+    ctx.restore();
 
   }
-
-  document.getElementById(
-
-    "grid"
-
-  ).innerHTML=g;
 
 }
 
 /* =========================================================
 
-   COMMUNITY
-
-========================================================= */
-
-const worldChat=[
-
-{
-
-name:"Lãng Khách",
-
-text:"Có ai lập đội săn Boss Hoàng Kim không?"
-
-},
-
-{
-
-name:"Thiếu Lâm",
-
-text:"Bang chiến tối nay mở đăng ký!"
-
-},
-
-{
-
-name:"Nga Mi",
-
-text:"Có buff và trị liệu, ai cần lập đội?"
-
-}
-
-];
-
-let guildScore=1280;
-
-let tongKimSide="";
-
-const market=[
-
-{
-
-id:1,
-
-name:"Đao Tinh Anh +2",
-
-icon:"⚔️",
-
-rarity:"Hiếm",
-
-price:180,
-
-owner:"Độc Cô"
-
-},
-
-{
-
-id:2,
-
-name:"Giáp Tinh Anh +1",
-
-icon:"🛡️",
-
-rarity:"Tốt",
-
-price:120,
-
-owner:"Nga Mi"
-
-},
-
-{
-
-id:3,
-
-name:"Bình Hồi Khí",
-
-icon:"🧪",
-
-rarity:"Thường",
-
-price:35,
-
-owner:"Tiểu Long"
-
-}
-
-];
-
-function openCommunity(){
-
-  renderCommunity();
-
-  document.getElementById(
-
-    "communityModal"
-
-  ).style.display="block";
-
-}
-
-function closeCommunity(){
-
-  document.getElementById(
-
-    "communityModal"
-
-  ).style.display="none";
-
-}
-
-function guildWar(){
-
-  guildScore+=50;
-
-  document.getElementById(
-
-    "guildScore"
-
-  ).textContent=
-
-    guildScore.toLocaleString("vi-VN");
-
-  toast(
-
-    "🏯 Thiên Kiếm · Đã đăng ký"
-
-  );
-
-}
-
-function joinTongKim(side){
-
-  tongKimSide=side;
-
-  document.getElementById(
-
-    "tongKimState"
-
-  ).textContent=
-
-    "Đã vào phe "+side;
-
-  toast(
-
-    "⚔️ Tống Kim · Phe "+side
-
-  );
-
-}
-
-function renderChat(){
-
-  const box=
-
-    document.getElementById(
-
-      "worldChat"
-
-    );
-
-  box.innerHTML=
-
-    worldChat.map(
-
-      m=>`
-
-      <div class="chatLine">
-
-        <strong>
-
-          ${m.name}:
-
-        </strong>
-
-        ${m.text}
-
-      </div>
-
-      `
-
-    ).join("");
-
-  box.scrollTop=
-
-    box.scrollHeight;
-
-}
-
-function sendWorldChat(){
-
-  const input=
-
-    document.getElementById(
-
-      "chatInput"
-
-    );
-
-  const text=
-
-    input.value.trim();
-
-  if(!text)
-
-    return;
-
-  worldChat.push({
-
-    name:PLAYER_NAME,
-
-    text
-
-  });
-
-  if(worldChat.length>30)
-
-    worldChat.shift();
-
-  input.value="";
-
-  renderChat();
-
-  toast("🌎 Đã gửi");
-
-}
-
-function renderMarket(){
-
-  const box=
-
-    document.getElementById(
-
-      "marketList"
-
-    );
-
-  box.innerHTML=
-
-    market.map(
-
-      m=>`
-
-      <div class="marketRow">
-
-        <div>
-
-          ${m.icon}
-
-          <strong class="${rarityClass(m.rarity)}">
-
-            ${m.name}
-
-          </strong>
-
-          <small>
-
-            ${m.rarity}
-
-            · ${m.owner}
-
-            · 🪙 ${m.price}
-
-          </small>
-
-        </div>
-
-        <button
-
-          class="action"
-
-          onclick="buyMarket(${m.id})">
-
-          Mua
-
-        </button>
-
-      </div>
-
-      `
-
-    ).join("");
-
-}
-
-function buyMarket(id){
-
-  const m=
-
-    market.find(
-
-      x=>x.id===id
-
-    );
-
-  if(!m)
-
-    return;
-
-  if(gold<m.price){
-
-    toast("🪙 Không đủ vàng");
-
-    return;
-
-  }
-
-  if(bag.length>=24){
-
-    toast("🎒 Túi đầy");
-
-    return;
-
-  }
-
-  gold-=m.price;
-
-  const base=
-
-    items.find(
-
-      x=>m.name.startsWith(x.name)
-
-    )||items[0];
-
-  const match=
-
-    m.name.match(/\+(\d+)$/);
-
-  bag.push({
-
-    ...base,
-
-    enhance:
-
-      Number(
-
-        match?.[1]||0
-
-      )
-
-  });
-
-  const i=
-
-    market.indexOf(m);
-
-  if(i>=0)
-
-    market.splice(i,1);
-
-  renderBag();
-
-  renderMarket();
-
-  toast(
-
-    "🛍️ Đã mua "+
-
-    m.name
-
-  );
-
-}
-
-function renderCommunity(){
-
-  renderChat();
-
-  renderMarket();
-
-  const state=
-
-    document.getElementById(
-
-      "tongKimState"
-
-    );
-
-  state.textContent=
-
-    tongKimSide
-
-      ?"Đã vào phe "+tongKimSide
-
-      :"Chưa tham gia";
-
-}
-
-/* =========================================================
-
-   ACTIVITY
-
-========================================================= */
-
-function openActivity(){
-
-  document.getElementById(
-
-    "activityModal"
-
-  ).style.display="block";
-
-}
-
-function closeActivity(){
-
-  document.getElementById(
-
-    "activityModal"
-
-  ).style.display="none";
-
-}
-
-function joinActivity(name){
-
-  closeActivity();
-
-  toast(
-
-    "🏆 "+
-
-    name+
-
-    " · Đã đăng ký"
-
-  );
-
-}
-
-/* =========================================================
-
-   DRAW WORLD
+   DRAW
 
 ========================================================= */
 
@@ -7602,7 +6778,9 @@ function draw(){
 
   );
 
-  ctx.fillStyle="#32683d";
+  ctx.fillStyle=
+
+    "#32683d";
 
   ctx.fillRect(
 
@@ -7618,31 +6796,11 @@ function draw(){
 
   ctx.save();
 
-  let sx=0;
-
-  let sy=0;
-
-  if(screenShake>0){
-
-    sx=
-
-      (Math.random()-.5)*
-
-      screenShake;
-
-    sy=
-
-      (Math.random()-.5)*
-
-      screenShake;
-
-  }
-
   ctx.translate(
 
-    W/2+sx,
+    W/2,
 
-    H/2+sy
+    H/2
 
   );
 
@@ -7664,7 +6822,9 @@ function draw(){
 
   /* GRID */
 
-  ctx.strokeStyle="#ffffff12";
+  ctx.strokeStyle=
+
+    "#ffffff12";
 
   ctx.lineWidth=1;
 
@@ -7680,13 +6840,7 @@ function draw(){
 
     ctx.beginPath();
 
-    ctx.moveTo(
-
-      x,
-
-      0
-
-    );
+    ctx.moveTo(x,0);
 
     ctx.lineTo(
 
@@ -7712,13 +6866,7 @@ function draw(){
 
     ctx.beginPath();
 
-    ctx.moveTo(
-
-      0,
-
-      y
-
-    );
+    ctx.moveTo(0,y);
 
     ctx.lineTo(
 
@@ -7734,7 +6882,9 @@ function draw(){
 
   /* NƯỚC */
 
-  ctx.fillStyle="#3f91bd";
+  ctx.fillStyle=
+
+    "#3f91bd";
 
   ctx.beginPath();
 
@@ -7814,55 +6964,11 @@ function draw(){
 
   ctx.fill();
 
-  /* SÓNG */
-
-  ctx.strokeStyle="#9feaff55";
-
-  ctx.lineWidth=3;
-
-  for(let y=1720;y<2380;y+=90){
-
-    for(let x=80;x<3150;x+=180){
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-
-        x,
-
-        y+
-
-        Math.sin(
-
-          performance.now()/700+
-
-          x
-
-        )*4
-
-      );
-
-      ctx.quadraticCurveTo(
-
-        x+40,
-
-        y-10,
-
-        x+80,
-
-        y
-
-      );
-
-      ctx.stroke();
-
-    }
-
-  }
-
   /* ĐƯỜNG */
 
-  ctx.fillStyle="#b49a68";
+  ctx.fillStyle=
+
+    "#b49a68";
 
   ctx.beginPath();
 
@@ -7936,7 +7042,9 @@ function draw(){
 
   /* THÔN */
 
-  ctx.fillStyle="#765239";
+  ctx.fillStyle=
+
+    "#765239";
 
   ctx.fillRect(
 
@@ -7950,13 +7058,17 @@ function draw(){
 
   );
 
-  ctx.fillStyle="#ffe48b";
+  ctx.fillStyle=
+
+    "#ffe48b";
 
   ctx.font=
 
     "bold 24px sans-serif";
 
-  ctx.textAlign="center";
+  ctx.textAlign=
+
+    "center";
 
   ctx.fillText(
 
@@ -7968,91 +7080,23 @@ function draw(){
 
   );
 
-  ctx.fillStyle="#d9c09b";
+  ctx.fillStyle=
 
-  ctx.font="14px sans-serif";
+    "#d9c09b";
+
+  ctx.font=
+
+    "14px sans-serif";
 
   ctx.fillText(
 
-    "Khu an toàn",
+    "KHU AN TOÀN",
 
     town.x,
 
     town.y+34
 
   );
-
-  /* MÁI NHÀ */
-
-  for(const r of roofs){
-
-    ctx.fillStyle="#5d3d2f";
-
-    ctx.fillRect(
-
-      r.x,
-
-      r.y,
-
-      r.w,
-
-      r.h
-
-    );
-
-    ctx.strokeStyle="#d0a46a";
-
-    ctx.lineWidth=8;
-
-    for(
-
-      let x=r.x;
-
-      x<r.x+r.w;
-
-      x+=45
-
-    ){
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-
-        x,
-
-        r.y
-
-      );
-
-      ctx.lineTo(
-
-        x+20,
-
-        r.y+r.h
-
-      );
-
-      ctx.stroke();
-
-    }
-
-    ctx.fillStyle="#ffe49a";
-
-    ctx.font=
-
-      "bold 16px sans-serif";
-
-    ctx.fillText(
-
-      "🏯",
-
-      r.x+r.w/2,
-
-      r.y+30
-
-    );
-
-  }
 
   /* CÂY */
 
@@ -8064,7 +7108,9 @@ function draw(){
 
   ){
 
-    ctx.fillStyle="#704a30";
+    ctx.fillStyle=
+
+      "#704a30";
 
     ctx.fillRect(
 
@@ -8078,7 +7124,9 @@ function draw(){
 
     );
 
-    ctx.fillStyle="#285d37";
+    ctx.fillStyle=
+
+      "#285d37";
 
     ctx.beginPath();
 
@@ -8098,7 +7146,9 @@ function draw(){
 
     ctx.fill();
 
-    ctx.fillStyle="#347447";
+    ctx.fillStyle=
+
+      "#347447";
 
     ctx.beginPath();
 
@@ -8122,7 +7172,9 @@ function draw(){
 
   /* ĐẠO SĨ */
 
-  ctx.fillStyle="#78d28d";
+  ctx.fillStyle=
+
+    "#78d28d";
 
   ctx.beginPath();
 
@@ -8142,9 +7194,13 @@ function draw(){
 
   ctx.fill();
 
-  ctx.fillStyle="#fff";
+  ctx.fillStyle=
 
-  ctx.font="18px sans-serif";
+    "#fff";
+
+  ctx.font=
+
+    "18px sans-serif";
 
   ctx.fillText(
 
@@ -8155,6 +7211,64 @@ function draw(){
     1060
 
   );
+
+  /* BOSS AURA */
+
+  for(
+
+    const m
+
+    of mobs
+
+  ){
+
+    if(
+
+      !m.alive ||
+
+      !m.boss
+
+    )
+
+      continue;
+
+    ctx.save();
+
+    ctx.globalAlpha=.35;
+
+    ctx.strokeStyle=
+
+      "#ffcc4d";
+
+    ctx.lineWidth=5;
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+      m.x,
+
+      m.y,
+
+      55+
+
+      Math.sin(
+
+        performance.now()/180
+
+      )*5,
+
+      0,
+
+      Math.PI*2
+
+    );
+
+    ctx.stroke();
+
+    ctx.restore();
+
+  }
 
   /* QUÁI */
 
@@ -8174,9 +7288,13 @@ function draw(){
 
       m.hit
 
-        ?" #ffbd59".trim()
+        ?"#ffbd59"
 
-        :"#814237";
+        :m.boss
+
+          ?"#693535"
+
+          :"#814237";
 
     ctx.beginPath();
 
@@ -8196,7 +7314,9 @@ function draw(){
 
     ctx.fill();
 
-    ctx.fillStyle="#ffe58a";
+    ctx.fillStyle=
+
+      "#ffe58a";
 
     ctx.beginPath();
 
@@ -8230,15 +7350,21 @@ function draw(){
 
     ctx.fill();
 
-    ctx.fillStyle="#fff";
+    ctx.fillStyle=
 
-    ctx.font="14px sans-serif";
+      "#fff";
+
+    ctx.font=
+
+      "14px sans-serif";
 
     ctx.fillText(
 
       elementIcon[m.element]+
 
-      " Sơn Tặc",
+      " "+
+
+      m.name,
 
       m.x,
 
@@ -8246,7 +7372,9 @@ function draw(){
 
     );
 
-    ctx.fillStyle="#18221a";
+    ctx.fillStyle=
+
+      "#18221a";
 
     ctx.fillRect(
 
@@ -8260,7 +7388,9 @@ function draw(){
 
     );
 
-    ctx.fillStyle="#d95c5c";
+    ctx.fillStyle=
+
+      "#d95c5c";
 
     ctx.fillRect(
 
@@ -8270,7 +7400,13 @@ function draw(){
 
       60*
 
-      (m.hp/m.maxHp),
+      (
+
+        m.hp/
+
+        m.maxHp
+
+      ),
 
       6
 
@@ -8302,7 +7438,7 @@ function draw(){
 
       d.kind==="gold"
 
-        ?" #ffd95a".trim()
+        ?" #ffd95a"
 
         :"#aee8ff";
 
@@ -8312,7 +7448,7 @@ function draw(){
 
       d.kind==="gold"
 
-        ?" #e8c64f".trim()
+        ?" #e8c64f"
 
         :"#d7d7d7";
 
@@ -8338,15 +7474,25 @@ function draw(){
 
     ctx.fillStyle="#111";
 
-    ctx.font="16px sans-serif";
+    ctx.font=
 
-    ctx.textAlign="center";
+      "16px sans-serif";
+
+    ctx.textAlign=
+
+      "center";
 
     ctx.fillText(
 
       d.kind==="gold"
 
         ?"🪙"
+
+        :
+
+      d.kind==="potion"
+
+        ?"🧪"
 
         :d.item.icon,
 
@@ -8356,13 +7502,25 @@ function draw(){
 
     );
 
-    ctx.fillStyle="#fff";
+    ctx.fillStyle=
+
+      "#fff";
+
+    ctx.font=
+
+      "12px sans-serif";
 
     ctx.fillText(
 
       d.kind==="gold"
 
         ?"+"+d.amount
+
+        :
+
+      d.kind==="potion"
+
+        ?"HỒI KHÍ"
 
         :d.item.rarity.toUpperCase(),
 
@@ -8376,83 +7534,17 @@ function draw(){
 
   }
 
-  /* KHINH CÔNG TRAIL */
+  /* EFFECTS */
 
-  for(
+  drawEffects();
 
-    const t
+  /* NHÂN VẬT */
 
-    of qingTrail
+  const data=
 
-  ){
-
-    ctx.save();
-
-    ctx.globalAlpha=
-
-      t.life/.55;
-
-    ctx.fillStyle=
-
-      isWater(t.y)
-
-        ?" #9feaff".trim()
-
-        :" #d8c8ff".trim();
-
-    ctx.beginPath();
-
-    ctx.arc(
-
-      t.x,
-
-      t.y,
-
-      9,
-
-      0,
-
-      Math.PI*2
-
-    );
-
-    ctx.fill();
-
-    ctx.restore();
-
-  }
-
-  /* OTHER PLAYERS */
-
-  drawOtherPlayers();
-
-  /* MAIN PLAYER */
-
-  if(mounted){
-
-    ctx.font=
-
-      "38px sans-serif";
-
-    ctx.textAlign="center";
-
-    ctx.fillText(
-
-      "🐎",
-
-      P.x,
-
-      P.y+30
-
-    );
-
-  }
+    classData[playerClass];
 
   if(capeOn){
-
-    const data=
-
-      classData[playerClass];
 
     ctx.fillStyle=
 
@@ -8504,7 +7596,71 @@ function draw(){
 
   }
 
-  ctx.fillStyle="#f0d2b4";
+  if(mounted){
+
+    ctx.font=
+
+      "38px sans-serif";
+
+    ctx.textAlign=
+
+      "center";
+
+    ctx.fillText(
+
+      "🐎",
+
+      P.x,
+
+      P.y+30
+
+    );
+
+  }
+
+  /* AURA MÔN PHÁI */
+
+  ctx.save();
+
+  ctx.globalAlpha=.7;
+
+  ctx.strokeStyle=
+
+    data.color;
+
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+
+  ctx.arc(
+
+    P.x,
+
+    P.y,
+
+    34+
+
+    Math.sin(
+
+      performance.now()/220
+
+    )*4,
+
+    0,
+
+    Math.PI*2
+
+  );
+
+  ctx.stroke();
+
+  ctx.restore();
+
+  /* HEAD */
+
+  ctx.fillStyle=
+
+    "#f0d2b4";
 
   ctx.beginPath();
 
@@ -8524,7 +7680,11 @@ function draw(){
 
   ctx.fill();
 
-  ctx.fillStyle="#f5f1e4";
+  /* BODY */
+
+  ctx.fillStyle=
+
+    "#f5f1e4";
 
   ctx.beginPath();
 
@@ -8564,39 +7724,23 @@ function draw(){
 
   ctx.fill();
 
-  drawClassEffect({
+  /* TÊN */
 
-    x:P.x,
+  ctx.fillStyle=
 
-    y:P.y,
-
-    className:playerClass,
-
-    element:
-
-      classData[playerClass]?.element,
-
-    cape:false,
-
-    mounted:false
-
-  });
-
-  ctx.fillStyle="#fff";
+    "#fff";
 
   ctx.font=
 
     "bold 14px sans-serif";
 
-  ctx.textAlign="center";
+  ctx.textAlign=
+
+    "center";
 
   ctx.fillText(
 
-    elementIcon[
-
-      classData[playerClass]?.element
-
-    ]+
+    elementIcon[data.element]+
 
     " "+
 
@@ -8608,1381 +7752,33 @@ function draw(){
 
   );
 
-  /* AOE FX CUỐI */
+  ctx.font=
 
-  drawSkillFX();
+    "11px sans-serif";
 
-  drawDamageTexts();
+  ctx.fillStyle=
 
-  ctx.restore();
+    "#d9e4ee";
 
-  /* slow motion */
+  ctx.fillText(
 
-  if(
+    "Cấp "+
 
-    cinematicTimer>0
+    P.level+
 
-  ){
+    " · "+
 
-    cinematicTimer-=.016;
+    playerClass,
 
-  }
+    P.x,
 
-}
-
-/* =========================================================
-
-   OTHER PLAYERS
-
-========================================================= */
-
-let otherPlayers=[];
-
-function drawClassEffect(op){
-
-  const data=
-
-    classData[
-
-      op.className
-
-    ];
-
-  if(!data)
-
-    return;
-
-  ctx.save();
-
-  ctx.globalAlpha=.8;
-
-  if(
-
-    op.className==="Thiếu Lâm"||
-
-    op.className==="Thiên Vương"
-
-  ){
-
-    ctx.strokeStyle="#f3d46b";
-
-    ctx.lineWidth=3;
-
-    ctx.beginPath();
-
-    ctx.arc(
-
-      op.x,
-
-      op.y,
-
-      42+
-
-      Math.sin(
-
-        performance.now()/180
-
-      )*3,
-
-      0,
-
-      Math.PI*2
-
-    );
-
-    ctx.stroke();
-
-  }
-
-  else if(
-
-    op.className==="Võ Đang"||
-
-    op.className==="Côn Lôn Kiếm"
-
-  ){
-
-    ctx.strokeStyle="#c9b7ff";
-
-    ctx.lineWidth=3;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-
-      op.x-35,
-
-      op.y+5
-
-    );
-
-    ctx.quadraticCurveTo(
-
-      op.x,
-
-      op.y-55,
-
-      op.x+35,
-
-      op.y+5
-
-    );
-
-    ctx.stroke();
-
-  }
-
-  else if(
-
-    op.className==="Đường Môn"||
-
-    op.className==="Ngũ Độc"
-
-  ){
-
-    ctx.fillStyle="#8fdb62";
-
-    for(let i=0;i<4;i++){
-
-      const a=
-
-        performance.now()/600+
-
-        i*Math.PI/2;
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        op.x+
-
-        Math.cos(a)*34,
-
-        op.y+
-
-        Math.sin(a)*25,
-
-        4,
-
-        0,
-
-        Math.PI*2
-
-      );
-
-      ctx.fill();
-
-    }
-
-  }
-
-  else if(
-
-    op.className==="Cái Bang Chưởng"
-
-  ){
-
-    ctx.font="25px sans-serif";
-
-    ctx.textAlign="center";
-
-    ctx.fillText(
-
-      "🐉",
-
-      op.x,
-
-      op.y-5
-
-    );
-
-  }
-
-  else if(
-
-    op.className==="Thiên Nhẫn Hỏa Tiễn"
-
-  ){
-
-    ctx.strokeStyle="#ff704d";
-
-    ctx.beginPath();
-
-    ctx.arc(
-
-      op.x,
-
-      op.y,
-
-      38,
-
-      0,
-
-      Math.PI*2
-
-    );
-
-    ctx.stroke();
-
-  }
-
-  else if(
-
-    op.className==="Thúy Yên Đao"||
-
-    op.className==="Thúy Yên Song Đao"
-
-  ){
-
-    ctx.fillStyle="#75dfff";
-
-    for(let i=0;i<3;i++){
-
-      ctx.beginPath();
-
-      ctx.arc(
-
-        op.x+(i-1)*20,
-
-        op.y+25,
-
-        5,
-
-        0,
-
-        Math.PI*2
-
-      );
-
-      ctx.fill();
-
-    }
-
-  }
-
-  ctx.restore();
-
-}
-
-function drawOtherPlayers(){
-
-  for(
-
-    const op
-
-    of otherPlayers
-
-  ){
-
-    if(
-
-      !Number.isFinite(op.x)||
-
-      !Number.isFinite(op.y)
-
-    )
-
-      continue;
-
-    const d=
-
-      Math.hypot(
-
-        op.x-P.x,
-
-        op.y-P.y
-
-      );
-
-    if(d>1100)
-
-      continue;
-
-    drawClassEffect(op);
-
-    if(op.cape){
-
-      ctx.fillStyle="#6b3fa0dd";
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-
-        op.x-34,
-
-        op.y+10
-
-      );
-
-      ctx.quadraticCurveTo(
-
-        op.x,
-
-        op.y+42,
-
-        op.x+34,
-
-        op.y+10
-
-      );
-
-      ctx.lineTo(
-
-        op.x+22,
-
-        op.y+58
-
-      );
-
-      ctx.lineTo(
-
-        op.x-22,
-
-        op.y+58
-
-      );
-
-      ctx.closePath();
-
-      ctx.fill();
-
-    }
-
-    if(op.mounted){
-
-      ctx.font="34px sans-serif";
-
-      ctx.textAlign="center";
-
-      ctx.fillText(
-
-        "🐎",
-
-        op.x,
-
-        op.y+30
-
-      );
-
-    }
-
-    ctx.fillStyle="#f0d2b4";
-
-    ctx.beginPath();
-
-    ctx.arc(
-
-      op.x,
-
-      op.y-34,
-
-      18,
-
-      0,
-
-      Math.PI*2
-
-    );
-
-    ctx.fill();
-
-    ctx.fillStyle="#c9d8f0";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-
-      op.x-25,
-
-      op.y+45
-
-    );
-
-    ctx.lineTo(
-
-      op.x,
-
-      op.y-10
-
-    );
-
-    ctx.lineTo(
-
-      op.x+28,
-
-      op.y+45
-
-    );
-
-    ctx.lineTo(
-
-      op.x,
-
-      op.y+60
-
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.font=
-
-      "bold 14px sans-serif";
-
-    ctx.fillStyle="#fff";
-
-    ctx.textAlign="center";
-
-    const icon=
-
-      elementIcon[
-
-        op.element
-
-      ]||
-
-      "⚙️";
-
-    ctx.fillText(
-
-      icon+
-
-      " "+
-
-      op.name,
-
-      op.x,
-
-      op.y-62
-
-    );
-
-    ctx.font=
-
-      "11px sans-serif";
-
-    ctx.fillStyle="#c8d8e8";
-
-    ctx.fillText(
-
-      "Cấp "+
-
-      op.level+
-
-      " · "+
-
-      op.className,
-
-      op.x,
-
-      op.y-47
-
-    );
-
-    const hpRatio=
-
-      Math.max(
-
-        0,
-
-        Math.min(
-
-          1,
-
-          op.hp/
-
-          Math.max(
-
-            1,
-
-            op.maxHp
-
-          )
-
-        )
-
-      );
-
-    ctx.fillStyle="#18221a";
-
-    ctx.fillRect(
-
-      op.x-32,
-
-      op.y+66,
-
-      64,
-
-      6
-
-    );
-
-    ctx.fillStyle="#e45b56";
-
-    ctx.fillRect(
-
-      op.x-32,
-
-      op.y+66,
-
-      64*hpRatio,
-
-      6
-
-    );
-
-  }
-
-}
-
-/* =========================================================
-
-   MULTIPLAYER
-
-========================================================= */
-
-const NET={
-
-  ws:null,
-
-  connected:false,
-
-  id:null,
-
-  seq:0,
-
-  url:
-
-    (
-
-      location.protocol==="https:"
-
-        ?"wss://"
-
-        :"ws://"
-
-    )+
-
-    location.host
-
-};
-
-const TAB_ID=
-
-  "p_"+
-
-  Date.now().toString(36)+
-
-  "_"+
-
-  Math.random()
-
-    .toString(36)
-
-    .slice(2,9);
-
-const PLAYER_NAME=
-
-  "Thiếu Hiệp "+
-
-  TAB_ID
-
-    .slice(-4)
-
-    .toUpperCase();
-
-document.getElementById(
-
-  "playerNameHud"
-
-).textContent=
-
-  PLAYER_NAME;
-
-function setNetStatus(
-
-  text,
-
-  ok=false
-
-){
-
-  const el=
-
-    document.getElementById(
-
-      "netStatus"
-
-    );
-
-  if(el){
-
-    el.textContent=
-
-      (ok?"🟢 ":"🔴 ")+
-
-      text;
-
-  }
-
-}
-
-function connectServer(){
-
-  const url=
-
-    location.protocol==="file:"
-
-      ?"ws://localhost:3000"
-
-      :NET.url;
-
-  try{
-
-    NET.ws=
-
-      new WebSocket(url);
-
-    NET.ws.onopen=()=>{
-
-      NET.connected=true;
-
-      setNetStatus(
-
-        "Online · kết nối",
-
-        true
-
-      );
-
-      NET.ws.send(
-
-        JSON.stringify({
-
-          type:"hello",
-
-          account:TAB_ID,
-
-          character:PLAYER_NAME,
-
-          clientVersion:"4.11.4"
-
-        })
-
-      );
-
-    };
-
-    NET.ws.onmessage=
-
-      ev=>{
-
-        try{
-
-          handleServerMessage(
-
-            JSON.parse(
-
-              ev.data
-
-            )
-
-          );
-
-        }
-
-        catch(err){
-
-          console.warn(
-
-            "Bad server message",
-
-            err
-
-          );
-
-        }
-
-      };
-
-    NET.ws.onclose=()=>{
-
-      NET.connected=false;
-
-      NET.id=null;
-
-      otherPlayers=[];
-
-      setNetStatus(
-
-        "Offline"
-
-      );
-
-      setTimeout(
-
-        connectServer,
-
-        2000
-
-      );
-
-    };
-
-    NET.ws.onerror=()=>{
-
-      NET.connected=false;
-
-      setNetStatus(
-
-        "Server error"
-
-      );
-
-    };
-
-  }
-
-  catch(err){
-
-    NET.connected=false;
-
-    setNetStatus(
-
-      "Offline"
-
-    );
-
-  }
-
-}
-
-function sendInput(){
-
-  if(
-
-    !NET.connected||
-
-    !NET.ws||
-
-    NET.ws.readyState!==WebSocket.OPEN
-
-  )
-
-    return;
-
-  NET.ws.send(
-
-    JSON.stringify({
-
-      type:"input",
-
-      seq:
-
-        ++NET.seq,
-
-      x:
-
-        Number(joy.x)||0,
-
-      y:
-
-        Number(joy.y)||0,
-
-      mounted:
-
-        !!mounted,
-
-      cape:
-
-        !!capeOn,
-
-      qinggong:
-
-        !!qinggong,
-
-      name:
-
-        PLAYER_NAME,
-
-      level:
-
-        14,
-
-      className:
-
-        playerClass,
-
-      element:
-
-        classData[playerClass]?.element||
-
-        elements[elementIndex]
-
-    })
+    P.y-47
 
   );
 
-}
-
-function handleServerMessage(m){
-
-  if(
-
-    m.type==="hello_required"
-
-  )
-
-    return;
-
-  if(
-
-    m.type==="welcome"
-
-  ){
-
-    NET.id=
-
-      m.playerId||
-
-      m.id||
-
-      null;
-
-    if(m.player){
-
-      if(
-
-        Number.isFinite(
-
-          Number(m.player.x)
-
-        )
-
-      )
-
-        P.x=
-
-          Number(m.player.x);
-
-      if(
-
-        Number.isFinite(
-
-          Number(m.player.y)
-
-        )
-
-      )
-
-        P.y=
-
-          Number(m.player.y);
-
-      if(
-
-        typeof m.player.hp==="number"
-
-      )
-
-        P.hp=
-
-          m.player.hp;
-
-      if(
-
-        typeof m.player.mp==="number"
-
-      )
-
-        P.mp=
-
-          m.player.mp;
-
-      if(
-
-        typeof m.player.gold==="number"
-
-      )
-
-        gold=
-
-          m.player.gold;
-
-    }
-
-    setNetStatus(
-
-      "Online · "+
-
-      (NET.id||"player"),
-
-      true
-
-    );
-
-    return;
-
-  }
-
-  if(
-
-    m.type==="snapshot"
-
-  ){
-
-    if(m.player){
-
-      if(
-
-        Number.isFinite(
-
-          Number(m.player.x)
-
-        )
-
-      )
-
-        P.x=
-
-          Number(m.player.x);
-
-      if(
-
-        Number.isFinite(
-
-          Number(m.player.y)
-
-        )
-
-      )
-
-        P.y=
-
-          Number(m.player.y);
-
-      if(
-
-        typeof m.player.hp==="number"
-
-      )
-
-        P.hp=
-
-          m.player.hp;
-
-      if(
-
-        typeof m.player.mp==="number"
-
-      )
-
-        P.mp=
-
-          m.player.mp;
-
-      if(
-
-        typeof m.player.gold==="number"
-
-      )
-
-        gold=
-
-          m.player.gold;
-
-      if(
-
-        typeof m.player.mounted==="boolean"
-
-      ){
-
-        mounted=
-
-          m.player.mounted;
-
-        updateMountUI();
-
-      }
-
-      if(
-
-        typeof m.player.cape==="boolean"
-
-      ){
-
-        capeOn=
-
-          m.player.cape;
-
-        updateMountUI();
-
-      }
-
-      if(
-
-        typeof m.player.qinggong==="boolean"
-
-      ){
-
-        qinggong=
-
-          m.player.qinggong;
-
-        updateQingUI();
-
-      }
-
-    }
-
-    if(
-
-      Array.isArray(m.players)
-
-    ){
-
-      const now=
-
-        performance.now();
-
-      const next=[];
-
-      for(
-
-        const p
-
-        of m.players
-
-      ){
-
-        if(!p)
-
-          continue;
-
-        const id=
-
-          p.id??
-
-          p.playerId??
-
-          p.uid;
-
-        if(!id)
-
-          continue;
-
-        if(
-
-          NET.id&&
-
-          String(id)===
-
-          String(NET.id)
-
-        )
-
-          continue;
-
-        let old=
-
-          otherPlayers.find(
-
-            x=>
-
-              String(x.id)===
-
-              String(id)
-
-          );
-
-        if(!old){
-
-          old={
-
-            id:String(id),
-
-            x:Number(p.x)||0,
-
-            y:Number(p.y)||0,
-
-            tx:Number(p.x)||0,
-
-            ty:Number(p.y)||0,
-
-            hp:Number(
-
-              p.hp??100
-
-            ),
-
-            maxHp:Number(
-
-              p.maxHp??100
-
-            ),
-
-            name:
-
-              p.name||
-
-              p.character||
-
-              "Thiếu Hiệp",
-
-            level:Number(
-
-              p.level||
-
-              p.lv||
-
-              14
-
-            ),
-
-            className:
-
-              p.className||
-
-              p.class||
-
-              "Võ Đang",
-
-            element:
-
-              p.element||
-
-              "Kim",
-
-            mounted:
-
-              !!p.mounted,
-
-            cape:
-
-              !!p.cape,
-
-            lastSeen:now
-
-          };
-
-        }
-
-        else{
-
-          old.tx=
-
-            Number(p.x)||
-
-            old.tx;
-
-          old.ty=
-
-            Number(p.y)||
-
-            old.ty;
-
-          old.hp=
-
-            Number(
-
-              p.hp??
-
-              old.hp
-
-            );
-
-          old.maxHp=
-
-            Number(
-
-              p.maxHp??
-
-              old.maxHp
-
-            );
-
-          old.name=
-
-            p.name||
-
-            p.character||
-
-            old.name;
-
-          old.level=
-
-            Number(
-
-              p.level??
-
-              p.lv??
-
-              old.level
-
-            );
-
-          old.className=
-
-            p.className||
-
-            p.class||
-
-            old.className;
-
-          old.element=
-
-            p.element||
-
-            old.element;
-
-          if(
-
-            typeof p.mounted===
-
-            "boolean"
-
-          )
-
-            old.mounted=
-
-              p.mounted;
-
-          if(
-
-            typeof p.cape===
-
-            "boolean"
-
-          )
-
-            old.cape=
-
-              p.cape;
-
-          old.lastSeen=now;
-
-        }
-
-        next.push(old);
-
-      }
-
-      otherPlayers=next;
-
-    }
-
-    return;
-
-  }
-
-  if(
-
-    m.type==="inventory"
-
-  ){
-
-    if(
-
-      Array.isArray(
-
-        m.inventory
-
-      )
-
-    ){
-
-      bag=
-
-        m.inventory;
-
-      renderBag();
-
-    }
-
-    if(
-
-      typeof m.gold==="number"
-
-    )
-
-      gold=
-
-        m.gold;
-
-    return;
-
-  }
-
-  if(
-
-    m.type==="toast"
-
-  ){
-
-    toast(m.text);
-
-    return;
-
-  }
-
-  if(
-
-    m.type==="error"
-
-  ){
-
-    toast(
-
-      "⚠️ "+
-
-      m.text
-
-    );
-
-    return;
-
-  }
+  ctx.restore();
 
 }
-
-function updateOtherPlayers(dt){
-
-  const speed=
-
-    Math.min(
-
-      1,
-
-      dt*12
-
-    );
-
-  for(
-
-    const p
-
-    of otherPlayers
-
-  ){
-
-    p.x+=
-
-      (p.tx-p.x)*
-
-      speed;
-
-    p.y+=
-
-      (p.ty-p.y)*
-
-      speed;
-
-  }
-
-}
-
-let lastNetSend=0;
 
 /* =========================================================
 
@@ -10032,25 +7828,19 @@ document.getElementById(
 
 document.getElementById(
 
+  "capeBtn"
+
+).onclick=
+
+  toggleCape;
+
+document.getElementById(
+
   "teleBtn"
 
 ).onclick=
 
   openTeleport;
-
-document.getElementById(
-
-  "qingBtn"
-
-).onclick=
-
-  ()=>{
-
-    initAudio();
-
-    toggleQinggong();
-
-  };
 
 document.getElementById(
 
@@ -10072,25 +7862,27 @@ document.getElementById(
 
 /* =========================================================
 
-   CLOSE HELPERS
-
-========================================================= */
-
-function closeElement(){
-
-  document.getElementById(
-
-    "elementModal"
-
-  ).style.display="none";
-
-}
-
-/* =========================================================
-
    START
 
 ========================================================= */
+
+loadGame();
+
+const PLAYER_ID=
+
+  Math.random()
+
+    .toString(36)
+
+    .slice(2,7)
+
+    .toUpperCase();
+
+const PLAYER_NAME=
+
+  "Thiếu Hiệp "+
+
+  PLAYER_ID;
 
 renderClassGrid();
 
@@ -10100,9 +7892,49 @@ renderBag();
 
 updateMountUI();
 
-updateQingUI();
+updateUI();
 
-connectServer();
+/* =========================================================
+
+   AUTO SAVE
+
+========================================================= */
+
+setInterval(
+
+  saveGame,
+
+  5000
+
+);
+
+addEventListener(
+
+  "pagehide",
+
+  saveGame
+
+);
+
+addEventListener(
+
+  "visibilitychange",
+
+  ()=>{
+
+    if(
+
+      document.visibilityState===
+
+      "hidden"
+
+    )
+
+      saveGame();
+
+  }
+
+);
 
 /* =========================================================
 
@@ -10116,7 +7948,7 @@ let gameLast=
 
 function loop(t){
 
-  let dt=
+  const dt=
 
     Math.min(
 
@@ -10128,39 +7960,7 @@ function loop(t){
 
   gameLast=t;
 
-  /*
-
-    Slow-motion cinematic:
-
-    Khi đại chiêu đang diễn ra,
-
-    game update chậm nhẹ nhưng FX vẫn chạy.
-
-  */
-
-  if(cinematicTimer>0)
-
-    dt*=.38;
-
   update(dt);
-
-  updateOtherPlayers(dt);
-
-  const now=
-
-    performance.now();
-
-  if(
-
-    now-lastNetSend>50
-
-  ){
-
-    lastNetSend=now;
-
-    sendInput();
-
-  }
 
   draw();
 
@@ -10175,32 +7975,6 @@ function loop(t){
 requestAnimationFrame(
 
   loop
-
-);
-
-/* =========================================================
-
-   AUDIO UNLOCK SAFARI
-
-========================================================= */
-
-document.addEventListener(
-
-  "touchstart",
-
-  ()=>{
-
-    initAudio();
-
-  },
-
-  {
-
-    once:true,
-
-    passive:true
-
-  }
 
 );
 

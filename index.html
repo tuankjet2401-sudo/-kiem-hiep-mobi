@@ -8,431 +8,609 @@
 
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>Kiếm Hiệp Mobi - Bản 2.3</title>
+<title>Kiếm Hiệp Mobi - Bản 2.4</title>
 
 <style>
 
 *{
 
-box-sizing:border-box;
+  box-sizing:border-box;
 
--webkit-tap-highlight-color:transparent;
+  -webkit-tap-highlight-color:transparent;
 
-user-select:none;
+  user-select:none;
 
--webkit-user-select:none;
+  -webkit-user-select:none;
 
 }
 
 html,body{
 
-margin:0;
+  margin:0;
 
-width:100%;
+  width:100%;
 
-height:100%;
+  height:100%;
 
-overflow:hidden;
+  overflow:hidden;
 
-background:#07111b;
+  background:#07111b;
 
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 
 }
 
 #game{
 
-position:fixed;
+  position:fixed;
 
-inset:0;
+  inset:0;
 
-overflow:hidden;
+  overflow:hidden;
 
-background:#173b27;
+  background:#173b27;
 
 }
 
 canvas{
 
-position:absolute;
+  position:absolute;
 
-inset:0;
+  inset:0;
 
-width:100%;
+  width:100%;
 
-height:100%;
+  height:100%;
 
-display:block;
+  display:block;
 
 }
 
 .hud{
 
-position:absolute;
+  position:absolute;
 
-top:max(10px,env(safe-area-inset-top));
+  top:max(10px,env(safe-area-inset-top));
 
-left:10px;
+  left:10px;
 
-right:10px;
+  right:10px;
 
-z-index:10;
+  z-index:20;
 
-display:flex;
+  display:flex;
 
-justify-content:space-between;
+  justify-content:space-between;
 
-pointer-events:none;
+  pointer-events:none;
 
 }
 
 .box{
 
-min-width:150px;
+  min-width:155px;
 
-padding:9px 12px;
+  padding:9px 12px;
 
-border-radius:13px;
+  border-radius:13px;
 
-color:#fff;
+  color:#fff;
 
-background:rgba(7,14,20,.86);
+  background:rgba(7,14,20,.88);
 
-border:1px solid rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.15);
 
-box-shadow:0 5px 20px rgba(0,0,0,.25);
+  box-shadow:0 5px 20px rgba(0,0,0,.28);
 
-line-height:1.4;
+  line-height:1.4;
 
-font-size:13px;
+  font-size:13px;
 
 }
 
 .box b{
 
-font-size:17px;
+  font-size:17px;
 
 }
 
 .map{
 
-text-align:right;
+  text-align:right;
 
 }
 
 .coord{
 
-color:#ffd76a;
+  color:#ffd76a;
 
 }
 
-.hpwrap{
+.hpwrap,
 
-margin-top:5px;
+.expwrap{
 
-height:7px;
+  margin-top:5px;
 
-width:150px;
+  height:7px;
 
-border-radius:10px;
+  width:155px;
 
-background:#333;
+  border-radius:10px;
 
-overflow:hidden;
+  background:#252a2d;
+
+  overflow:hidden;
 
 }
 
 .hp{
 
-height:100%;
+  width:100%;
 
-width:100%;
+  height:100%;
 
-background:#e84b4b;
+  background:#e94a4a;
+
+  transition:width .15s;
 
 }
 
 .expwrap{
 
-margin-top:4px;
+  margin-top:4px;
 
-height:5px;
-
-width:150px;
-
-border-radius:10px;
-
-background:#333;
-
-overflow:hidden;
+  height:5px;
 
 }
 
 .exp{
 
-height:100%;
+  width:0%;
 
-width:0%;
+  height:100%;
 
-background:#6bc5ff;
+  background:#5bbcff;
+
+  transition:width .15s;
 
 }
 
 .joystick{
 
-position:absolute;
+  position:absolute;
 
-z-index:20;
+  z-index:30;
 
-left:18px;
+  left:18px;
 
-bottom:max(25px,calc(env(safe-area-inset-bottom) + 18px));
+  bottom:max(25px,calc(env(safe-area-inset-bottom) + 18px));
 
-width:132px;
+  width:132px;
 
-height:132px;
+  height:132px;
 
-border-radius:50%;
+  border-radius:50%;
 
-background:rgba(20,25,32,.48);
+  background:rgba(20,25,32,.5);
 
-border:2px solid rgba(255,255,255,.18);
+  border:2px solid rgba(255,255,255,.18);
 
-box-shadow:0 5px 25px rgba(0,0,0,.3);
+  box-shadow:0 5px 25px rgba(0,0,0,.3);
 
-touch-action:none;
+  touch-action:none;
 
 }
 
 .joystick:after{
 
-content:"";
+  content:"";
 
-position:absolute;
+  position:absolute;
 
-inset:22px;
+  inset:22px;
 
-border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.12);
 
-border-radius:50%;
+  border-radius:50%;
 
 }
 
 .stick{
 
-position:absolute;
+  position:absolute;
 
-left:41px;
+  left:41px;
 
-top:41px;
+  top:41px;
 
-width:48px;
+  width:48px;
 
-height:48px;
+  height:48px;
 
-border-radius:50%;
+  border-radius:50%;
 
-background:rgba(240,190,75,.9);
+  background:rgba(240,190,75,.9);
 
-border:3px solid rgba(255,235,150,.75);
+  border:3px solid rgba(255,235,150,.75);
 
-box-shadow:0 4px 12px rgba(0,0,0,.35);
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
 
-z-index:2;
+  z-index:2;
 
-}
-
-.help{
-
-position:absolute;
-
-z-index:15;
-
-bottom:max(8px,env(safe-area-inset-bottom));
-
-left:50%;
-
-transform:translateX(-50%);
-
-color:rgba(255,255,255,.7);
-
-font-size:12px;
-
-white-space:nowrap;
-
-pointer-events:none;
+  will-change:transform;
 
 }
 
 .skillbar{
 
-position:absolute;
+  position:absolute;
 
-z-index:25;
+  z-index:30;
 
-right:18px;
+  right:18px;
 
-bottom:max(28px,calc(env(safe-area-inset-bottom) + 20px));
+  bottom:max(28px,calc(env(safe-area-inset-bottom) + 20px));
 
-display:flex;
+  display:flex;
 
-gap:8px;
+  gap:8px;
 
 }
 
 .skill{
 
-width:54px;
+  width:54px;
 
-height:54px;
+  height:54px;
 
-border-radius:50%;
+  border-radius:50%;
 
-display:flex;
+  display:flex;
 
-align-items:center;
+  align-items:center;
 
-justify-content:center;
+  justify-content:center;
 
-font-size:24px;
+  font-size:24px;
 
-color:#fff;
+  color:#fff;
 
-background:rgba(8,14,22,.82);
+  background:rgba(8,14,22,.84);
 
-border:1px solid rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.22);
 
-box-shadow:0 4px 12px rgba(0,0,0,.3);
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
 
-touch-action:manipulation;
+  touch-action:manipulation;
 
 }
 
 .skill:active{
 
-transform:scale(.9);
+  transform:scale(.88);
 
 }
 
-#message{
+.skill.locked{
 
-position:absolute;
-
-z-index:40;
-
-left:50%;
-
-top:38%;
-
-transform:translate(-50%,-50%) scale(.8);
-
-padding:12px 22px;
-
-border-radius:15px;
-
-background:rgba(8,12,18,.92);
-
-border:1px solid rgba(255,215,100,.35);
-
-color:#ffe18a;
-
-font-weight:700;
-
-font-size:18px;
-
-opacity:0;
-
-pointer-events:none;
-
-transition:.2s;
-
-white-space:nowrap;
+  opacity:.45;
 
 }
 
-#message.show{
+.help{
 
-opacity:1;
+  position:absolute;
 
-transform:translate(-50%,-50%) scale(1);
+  z-index:15;
+
+  bottom:max(8px,env(safe-area-inset-bottom));
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  color:rgba(255,255,255,.7);
+
+  font-size:12px;
+
+  white-space:nowrap;
+
+  pointer-events:none;
 
 }
 
 #target{
 
-position:absolute;
+  position:absolute;
 
-z-index:18;
+  z-index:25;
 
-left:50%;
+  left:50%;
 
-top:42%;
+  top:43%;
 
-transform:translate(-50%,-50%);
+  transform:translate(-50%,-50%);
 
-padding:5px 12px;
+  padding:6px 13px;
 
-border-radius:10px;
+  border-radius:11px;
 
-background:rgba(0,0,0,.7);
+  background:rgba(0,0,0,.78);
 
-color:#fff;
+  color:#fff;
 
-font-size:12px;
+  font-size:12px;
 
-display:none;
+  display:none;
 
-pointer-events:none;
+  pointer-events:none;
+
+  border:1px solid rgba(255,255,255,.12);
+
+}
+
+#target .name{
+
+  color:#ff9a8c;
+
+  font-weight:700;
+
+}
+
+.targetRing{
+
+  position:absolute;
+
+  z-index:12;
+
+  width:58px;
+
+  height:58px;
+
+  border:2px solid rgba(255,215,90,.8);
+
+  border-radius:50%;
+
+  pointer-events:none;
+
+  display:none;
+
+  transform:translate(-50%,-50%);
+
+  animation:ringPulse .7s infinite alternate;
+
+}
+
+@keyframes ringPulse{
+
+  from{opacity:.45;transform:translate(-50%,-50%) scale(.92)}
+
+  to{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
+
+}
+
+#message{
+
+  position:absolute;
+
+  z-index:50;
+
+  left:50%;
+
+  top:35%;
+
+  transform:translate(-50%,-50%) scale(.8);
+
+  padding:12px 22px;
+
+  border-radius:15px;
+
+  background:rgba(8,12,18,.94);
+
+  border:1px solid rgba(255,215,100,.35);
+
+  color:#ffe18a;
+
+  font-weight:700;
+
+  font-size:17px;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:.2s;
+
+  white-space:nowrap;
+
+  box-shadow:0 8px 30px rgba(0,0,0,.4);
+
+}
+
+#message.show{
+
+  opacity:1;
+
+  transform:translate(-50%,-50%) scale(1);
+
+}
+
+#damageLayer{
+
+  position:absolute;
+
+  inset:0;
+
+  z-index:45;
+
+  pointer-events:none;
+
+}
+
+.damage{
+
+  position:absolute;
+
+  color:#fff1a1;
+
+  font-weight:800;
+
+  font-size:18px;
+
+  text-shadow:0 2px 3px #000;
+
+  animation:damageFly .75s ease-out forwards;
+
+}
+
+.damage.red{
+
+  color:#ff7b6e;
+
+}
+
+.damage.gold{
+
+  color:#ffd76a;
+
+}
+
+@keyframes damageFly{
+
+  0%{
+
+    opacity:1;
+
+    transform:translate(-50%,0) scale(1);
+
+  }
+
+  100%{
+
+    opacity:0;
+
+    transform:translate(-50%,-45px) scale(1.18);
+
+  }
+
+}
+
+#dead{
+
+  position:absolute;
+
+  z-index:60;
+
+  inset:0;
+
+  background:rgba(0,0,0,.62);
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  text-align:center;
+
+  color:white;
+
+}
+
+.deadbox{
+
+  padding:24px 30px;
+
+  border-radius:18px;
+
+  background:rgba(10,15,22,.96);
+
+  border:1px solid rgba(255,255,255,.15);
+
+}
+
+.deadbox b{
+
+  display:block;
+
+  font-size:24px;
+
+  color:#ff8a7d;
+
+  margin-bottom:8px;
+
+}
+
+.respawn{
+
+  margin-top:16px;
+
+  padding:11px 22px;
+
+  border:0;
+
+  border-radius:12px;
+
+  background:#d29b3e;
+
+  color:#fff;
+
+  font-weight:700;
+
+  font-size:15px;
 
 }
 
 @media(max-width:420px){
 
-.box{
+  .box{
 
-min-width:135px;
+    min-width:135px;
 
-padding:8px 10px;
+    padding:8px 10px;
 
-font-size:12px;
+    font-size:12px;
 
-}
+  }
 
-.box b{
+  .box b{
 
-font-size:15px;
+    font-size:15px;
 
-}
+  }
 
-.hpwrap,.expwrap{
+  .hpwrap,
 
-width:130px;
+  .expwrap{
 
-}
+    width:130px;
 
-.joystick{
+  }
 
-width:124px;
+  .joystick{
 
-height:124px;
+    width:124px;
 
-}
+    height:124px;
 
-.stick{
+  }
 
-left:37px;
+  .stick{
 
-top:37px;
+    left:37px;
 
-}
+    top:37px;
 
-.skill{
+  }
 
-width:50px;
+  .skill{
 
-height:50px;
+    width:50px;
 
-}
+    height:50px;
+
+  }
 
 }
 
@@ -448,63 +626,81 @@ height:50px;
 
 <div class="hud">
 
-<div class="box">
+  <div class="box">
 
-<b>⚔️ Thiếu Hiệp</b><br>
+    <b>⚔️ Thiếu Hiệp</b><br>
 
-Cấp <span id="level">8</span> · Võ Đang
+    Cấp <span id="level">8</span> · Võ Đang
 
-<div class="hpwrap">
+    <div class="hpwrap">
 
-<div class="hp" id="playerHp"></div>
+      <div class="hp" id="playerHp"></div>
 
-</div>
+    </div>
 
-<div class="expwrap">
+    <div class="expwrap">
 
-<div class="exp" id="expBar"></div>
+      <div class="exp" id="expBar"></div>
 
-</div>
+    </div>
 
-<span>❤️ <span id="hpText">100/100</span></span>
+    ❤️ <span id="hpText">100/100</span>
 
-&nbsp; ✨ <span id="expText">0/100</span>
+    &nbsp; ✨ <span id="expText">0/100</span>
 
-</div>
+  </div>
 
-<div class="box map">
+  <div class="box map">
 
-🗺️ Tân Thủ<br>
+    🗺️ Tân Thủ<br>
 
-📍 <span class="coord" id="coord">1600,1200</span><br>
+    📍 <span class="coord" id="coord">1600,1200</span><br>
 
-🪙 <span id="gold">0</span>
+    🪙 <span id="gold">0</span>
 
-</div>
+  </div>
 
 </div>
 
 <div id="target"></div>
 
+<div id="targetRing" class="targetRing"></div>
+
+<div id="damageLayer"></div>
+
 <div id="message"></div>
 
 <div class="skillbar">
 
-<div class="skill" id="attackBtn">⚔️</div>
+  <div class="skill" id="attackBtn">⚔️</div>
 
-<div class="skill" id="skillBtn">☯️</div>
+  <div class="skill" id="skillBtn">☯️</div>
 
-<div class="skill" id="fireBtn">🔥</div>
+  <div class="skill" id="fireBtn">🔥</div>
 
 </div>
 
 <div class="joystick" id="joystick">
 
-<div class="stick" id="stick"></div>
+  <div class="stick" id="stick"></div>
 
 </div>
 
 <div class="help">Kéo joystick để di chuyển</div>
+
+<div id="dead">
+
+  <div class="deadbox">
+
+    <b>💀 Bạn đã ngã xuống</b>
+
+    <div>Thiếu Hiệp sẽ hồi sinh tại Tân Thủ</div>
+
+    <button class="respawn" id="respawnBtn">Hồi sinh</button>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -512,33 +708,39 @@ Cấp <span id="level">8</span> · Võ Đang
 
 "use strict";
 
-const canvas=document.getElementById("canvas");
+/* =====================================================
 
-const ctx=canvas.getContext("2d");
+   KIẾM HIỆP MOBI - BẢN 2.4
 
-let W=0;
+   ===================================================== */
 
-let H=0;
+const canvas = document.getElementById("canvas");
 
-let dpr=1;
+const ctx = canvas.getContext("2d");
+
+let W = 0;
+
+let H = 0;
+
+let dpr = 1;
 
 function resize(){
 
-W=window.innerWidth;
+  W = window.innerWidth;
 
-H=window.innerHeight;
+  H = window.innerHeight;
 
-dpr=Math.min(window.devicePixelRatio||1,2);
+  dpr = Math.min(window.devicePixelRatio || 1,2);
 
-canvas.width=Math.floor(W*dpr);
+  canvas.width = Math.floor(W*dpr);
 
-canvas.height=Math.floor(H*dpr);
+  canvas.height = Math.floor(H*dpr);
 
-canvas.style.width=W+"px";
+  canvas.style.width = W+"px";
 
-canvas.style.height=H+"px";
+  canvas.style.height = H+"px";
 
-ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
 
 }
 
@@ -546,179 +748,187 @@ window.addEventListener("resize",resize);
 
 window.addEventListener("orientationchange",()=>{
 
-setTimeout(resize,100);
+  setTimeout(resize,100);
 
 });
 
 resize();
 
-/* =========================
+/* =====================================================
 
    NHÂN VẬT
 
-========================= */
+   ===================================================== */
 
-const player={
+const player = {
 
-x:1600,
+  x:1600,
 
-y:1200,
+  y:1200,
 
-speed:3.2,
+  speed:3.2,
 
-dirX:0,
+  dirX:0,
 
-dirY:0,
+  dirY:0,
 
-hp:100,
+  hp:100,
 
-maxHp:100,
+  maxHp:100,
 
-level:8,
+  level:8,
 
-exp:0,
+  exp:0,
 
-nextExp:100,
+  nextExp:100,
 
-gold:0,
+  gold:0,
 
-attackCooldown:0,
+  attackCooldown:0,
 
-hitCooldown:0
+  skillCooldown:0,
+
+  hitCooldown:0,
+
+  attackAnim:0,
+
+  skillAnim:0,
+
+  dead:false
 
 };
 
-const camera={
+const camera = {
 
-x:1600,
+  x:1600,
 
-y:1200
+  y:1200
 
 };
 
-/* =========================
+/* =====================================================
 
    JOYSTICK
 
-========================= */
+   ===================================================== */
 
-const joystick=document.getElementById("joystick");
+const joystick = document.getElementById("joystick");
 
-const stick=document.getElementById("stick");
+const stick = document.getElementById("stick");
 
-let joyActive=false;
+let joyActive = false;
 
-let joyPointer=null;
+let joyPointer = null;
 
-const joyRadius=43;
+const joyRadius = 43;
 
 function joystickMove(clientX,clientY){
 
-const r=joystick.getBoundingClientRect();
+  const r = joystick.getBoundingClientRect();
 
-const cx=r.left+r.width/2;
+  const cx = r.left+r.width/2;
 
-const cy=r.top+r.height/2;
+  const cy = r.top+r.height/2;
 
-let dx=clientX-cx;
+  let dx = clientX-cx;
 
-let dy=clientY-cy;
+  let dy = clientY-cy;
 
-const distance=Math.sqrt(dx*dx+dy*dy);
+  const distance = Math.sqrt(dx*dx+dy*dy);
 
-if(distance>joyRadius){
+  if(distance>joyRadius){
 
-dx=dx/distance*joyRadius;
+    dx = dx/distance*joyRadius;
 
-dy=dy/distance*joyRadius;
+    dy = dy/distance*joyRadius;
 
-}
+  }
 
-stick.style.transform=
+  stick.style.transform =
 
-"translate("+dx+"px,"+dy+"px)";
+    "translate("+dx+"px,"+dy+"px)";
 
-player.dirX=dx/joyRadius;
+  player.dirX = dx/joyRadius;
 
-player.dirY=dy/joyRadius;
+  player.dirY = dy/joyRadius;
 
 }
 
 function joystickEnd(){
 
-joyActive=false;
+  joyActive=false;
 
-joyPointer=null;
+  joyPointer=null;
 
-stick.style.transform="translate(0,0)";
+  stick.style.transform="translate(0,0)";
 
-player.dirX=0;
+  player.dirX=0;
 
-player.dirY=0;
+  player.dirY=0;
 
 }
 
 joystick.addEventListener("touchstart",function(e){
 
-e.preventDefault();
+  e.preventDefault();
 
-if(joyActive)return;
+  if(joyActive)return;
 
-joyActive=true;
+  joyActive=true;
 
-joyPointer=e.changedTouches[0].identifier;
+  joyPointer=e.changedTouches[0].identifier;
 
-const t=e.changedTouches[0];
+  const t=e.changedTouches[0];
 
-joystickMove(t.clientX,t.clientY);
+  joystickMove(t.clientX,t.clientY);
 
 },{passive:false});
 
 joystick.addEventListener("touchmove",function(e){
 
-e.preventDefault();
+  e.preventDefault();
 
-if(!joyActive)return;
+  if(!joyActive)return;
 
-for(const t of e.changedTouches){
+  for(const t of e.changedTouches){
 
-if(t.identifier===joyPointer){
+    if(t.identifier===joyPointer){
 
-joystickMove(t.clientX,t.clientY);
+      joystickMove(t.clientX,t.clientY);
 
-break;
+      break;
 
-}
+    }
 
-}
+  }
 
 },{passive:false});
 
 joystick.addEventListener("touchend",function(e){
 
-e.preventDefault();
+  e.preventDefault();
 
-for(const t of e.changedTouches){
+  for(const t of e.changedTouches){
 
-if(t.identifier===joyPointer){
+    if(t.identifier===joyPointer){
 
-joystickEnd();
+      joystickEnd();
 
-break;
+      break;
 
-}
+    }
 
-}
+  }
 
 },{passive:false});
 
 joystick.addEventListener("touchcancel",joystickEnd);
 
-/* =========================
+/* =====================================================
 
    THẾ GIỚI
 
-========================= */
+   ===================================================== */
 
 const trees=[];
 
@@ -728,83 +938,91 @@ const flowers=[];
 
 function rnd(seed){
 
-const x=Math.sin(seed)*10000;
+  const x=Math.sin(seed)*10000;
 
-return x-Math.floor(x);
-
-}
-
-for(let i=0;i<100;i++){
-
-trees.push({
-
-x:350+rnd(i*8.31)*2500,
-
-y:250+rnd(i*19.17)*1900,
-
-s:.7+rnd(i*3.2)*.7
-
-});
+  return x-Math.floor(x);
 
 }
 
-for(let i=0;i<60;i++){
+for(let i=0;i<105;i++){
 
-stones.push({
+  trees.push({
 
-x:350+rnd(i*13.7)*2500,
+    x:350+rnd(i*8.31)*2500,
 
-y:250+rnd(i*21.4)*1900,
+    y:250+rnd(i*19.17)*1900,
 
-s:.7+rnd(i*2.2)*.5
+    s:.7+rnd(i*3.2)*.7
 
-});
-
-}
-
-for(let i=0;i<180;i++){
-
-flowers.push({
-
-x:300+rnd(i*5.1)*2600,
-
-y:200+rnd(i*7.7)*2000
-
-});
+  });
 
 }
 
-/* =========================
+for(let i=0;i<65;i++){
+
+  stones.push({
+
+    x:350+rnd(i*13.7)*2500,
+
+    y:250+rnd(i*21.4)*1900,
+
+    s:.7+rnd(i*2.2)*.5
+
+  });
+
+}
+
+for(let i=0;i<190;i++){
+
+  flowers.push({
+
+    x:300+rnd(i*5.1)*2600,
+
+    y:200+rnd(i*7.7)*2000
+
+  });
+
+}
+
+/* =====================================================
 
    QUÁI VẬT
 
-========================= */
+   ===================================================== */
 
 const monsters=[];
 
-function spawnMonster(x,y){
+function spawnMonster(x,y,type="Sơn Tặc"){
 
-monsters.push({
+  monsters.push({
 
-x:x,
+    x:x,
 
-y:y,
+    y:y,
 
-hp:60,
+    name:type,
 
-maxHp:60,
+    hp:70,
 
-speed:0.65,
+    maxHp:70,
 
-alive:true,
+    speed:.62,
 
-attackTimer:0,
+    alive:true,
 
-respawn:0,
+    attackTimer:0,
 
-flash:0
+    respawn:0,
 
-});
+    flash:0,
+
+    knockX:0,
+
+    knockY:0,
+
+    aggro:false
+
+  });
 
 }
 
@@ -820,987 +1038,1723 @@ spawnMonster(2100,1200);
 
 spawnMonster(1150,1000);
 
-/* =========================
+spawnMonster(1750,1500);
 
-   CAMERA
+spawnMonster(2250,1350);
 
-========================= */
+/* =====================================================
+
+   WORLD TO SCREEN
+
+   ===================================================== */
 
 function worldToScreen(x,y){
 
-return{
+  return {
 
-x:W/2+(x-camera.x),
+    x:W/2+(x-camera.x),
 
-y:H/2+(y-camera.y)
+    y:H/2+(y-camera.y)
 
-};
+  };
 
 }
 
-/* =========================
+/* =====================================================
 
-   VẼ BẢN ĐỒ
+   VẼ MẶT ĐẤT
 
-========================= */
+   ===================================================== */
 
 function drawGround(){
 
-ctx.fillStyle="#244c2e";
+  ctx.fillStyle="#244c2e";
 
-ctx.fillRect(0,0,W,H);
+  ctx.fillRect(0,0,W,H);
 
-const grid=80;
+  const grid=80;
 
-const ox=(( -camera.x%grid)+grid)%grid;
+  const ox=((-camera.x%grid)+grid)%grid;
 
-const oy=(( -camera.y%grid)+grid)%grid;
+  const oy=((-camera.y%grid)+grid)%grid;
 
-ctx.strokeStyle="rgba(255,255,255,.035)";
+  ctx.strokeStyle="rgba(255,255,255,.035)";
 
-ctx.lineWidth=1;
+  ctx.lineWidth=1;
 
-for(let x=ox;x<W;x+=grid){
+  for(let x=ox;x<W;x+=grid){
 
-ctx.beginPath();
+    ctx.beginPath();
 
-ctx.moveTo(x,0);
+    ctx.moveTo(x,0);
 
-ctx.lineTo(x,H);
+    ctx.lineTo(x,H);
 
-ctx.stroke();
+    ctx.stroke();
 
-}
+  }
 
-for(let y=oy;y<H;y+=grid){
+  for(let y=oy;y<H;y+=grid){
 
-ctx.beginPath();
+    ctx.beginPath();
 
-ctx.moveTo(0,y);
+    ctx.moveTo(0,y);
 
-ctx.lineTo(W,y);
+    ctx.lineTo(W,y);
 
-ctx.stroke();
+    ctx.stroke();
 
-}
+  }
 
 }
 
 function drawFlowers(){
 
-for(const f of flowers){
+  for(const f of flowers){
 
-const p=worldToScreen(f.x,f.y);
+    const p=worldToScreen(f.x,f.y);
 
-if(p.x<-10||p.x>W+10||p.y<-10||p.y>H+10)continue;
+    if(
 
-ctx.fillStyle="#e7d26b";
+      p.x<-10 ||
 
-ctx.beginPath();
+      p.x>W+10 ||
 
-ctx.arc(p.x,p.y,2,0,Math.PI*2);
+      p.y<-10 ||
 
-ctx.fill();
+      p.y>H+10
 
-}
+    )continue;
+
+    ctx.fillStyle="#e7d26b";
+
+    ctx.beginPath();
+
+    ctx.arc(p.x,p.y,2,0,Math.PI*2);
+
+    ctx.fill();
+
+  }
 
 }
 
 function drawStones(){
 
-for(const s of stones){
+  for(const s of stones){
 
-const p=worldToScreen(s.x,s.y);
+    const p=worldToScreen(s.x,s.y);
 
-if(p.x<-40||p.x>W+40||p.y<-40||p.y>H+40)continue;
+    if(
 
-ctx.fillStyle="#68726c";
+      p.x<-40 ||
 
-ctx.beginPath();
+      p.x>W+40 ||
 
-ctx.ellipse(
+      p.y<-40 ||
 
-p.x,
+      p.y>H+40
 
-p.y,
+    )continue;
 
-10*s.s,
+    ctx.fillStyle="#68726c";
 
-7*s.s,
+    ctx.beginPath();
 
--.2,
+    ctx.ellipse(
 
-0,
+      p.x,
 
-Math.PI*2
+      p.y,
 
-);
+      10*s.s,
 
-ctx.fill();
+      7*s.s,
 
-}
+      -.2,
+
+      0,
+
+      Math.PI*2
+
+    );
+
+    ctx.fill();
+
+  }
 
 }
 
 function drawTrees(){
 
-for(const t of trees){
+  for(const t of trees){
 
-const p=worldToScreen(t.x,t.y);
+    const p=worldToScreen(t.x,t.y);
 
-if(p.x<-60||p.x>W+60||p.y<-90||p.y>H+60)continue;
+    if(
 
-const s=t.s;
+      p.x<-60 ||
 
-ctx.fillStyle="#5b3925";
+      p.x>W+60 ||
 
-ctx.fillRect(
+      p.y<-90 ||
 
-p.x-5*s,
+      p.y>H+60
 
-p.y,
+    )continue;
 
-10*s,
+    const s=t.s;
 
-32*s
+    ctx.fillStyle="#5b3925";
 
-);
+    ctx.fillRect(
 
-ctx.fillStyle="#173b25";
+      p.x-5*s,
 
-ctx.beginPath();
+      p.y,
 
-ctx.arc(
+      10*s,
 
-p.x,
+      32*s
 
-p.y-18*s,
+    );
 
-26*s,
+    ctx.fillStyle="#173b25";
 
-0,
+    ctx.beginPath();
 
-Math.PI*2
+    ctx.arc(
 
-);
+      p.x,
 
-ctx.fill();
+      p.y-18*s,
 
-ctx.fillStyle="#235a32";
+      26*s,
 
-ctx.beginPath();
+      0,
 
-ctx.arc(
+      Math.PI*2
 
-p.x-16*s,
+    );
 
-p.y-5*s,
+    ctx.fill();
 
-20*s,
+    ctx.fillStyle="#235a32";
 
-0,
+    ctx.beginPath();
 
-Math.PI*2
+    ctx.arc(
 
-);
+      p.x-16*s,
 
-ctx.fill();
+      p.y-5*s,
 
-ctx.beginPath();
+      20*s,
 
-ctx.arc(
+      0,
 
-p.x+16*s,
+      Math.PI*2
 
-p.y-5*s,
+    );
 
-20*s,
+    ctx.fill();
 
-0,
+    ctx.beginPath();
 
-Math.PI*2
+    ctx.arc(
 
-);
+      p.x+16*s,
 
-ctx.fill();
+      p.y-5*s,
+
+      20*s,
+
+      0,
+
+      Math.PI*2
+
+    );
+
+    ctx.fill();
+
+  }
 
 }
 
-}
-
-/* =========================
+/* =====================================================
 
    VẼ QUÁI
 
-========================= */
+   ===================================================== */
 
 function drawMonster(m){
 
-if(!m.alive)return;
+  if(!m.alive)return;
 
-const p=worldToScreen(m.x,m.y);
+  const p=worldToScreen(m.x,m.y);
 
-if(
+  if(
 
-p.x<-80||
+    p.x<-100 ||
 
-p.x>W+80||
+    p.x>W+100 ||
 
-p.y<-100||
+    p.y<-120 ||
 
-p.y>H+100
+    p.y>H+120
 
-)return;
+  )return;
 
-ctx.save();
+  ctx.save();
 
-ctx.translate(p.x,p.y);
+  ctx.translate(p.x,p.y);
 
-if(m.flash>0){
+  if(m.flash>0){
 
-ctx.globalAlpha=.65;
+    ctx.globalAlpha=.65;
+
+  }
+
+  ctx.fillStyle="rgba(0,0,0,.3)";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+
+    0,
+
+    20,
+
+    21,
+
+    7,
+
+    0,
+
+    0,
+
+    Math.PI*2
+
+  );
+
+  ctx.fill();
+
+  ctx.fillStyle="#713b31";
+
+  ctx.beginPath();
+
+  ctx.arc(0,0,18,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.fillStyle="#9c5140";
+
+  ctx.beginPath();
+
+  ctx.arc(0,-5,13,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.fillStyle="#f5df79";
+
+  ctx.beginPath();
+
+  ctx.arc(-5,-7,3,0,Math.PI*2);
+
+  ctx.arc(5,-7,3,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.fillStyle="#222";
+
+  ctx.beginPath();
+
+  ctx.arc(-5,-7,1.5,0,Math.PI*2);
+
+  ctx.arc(5,-7,1.5,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.restore();
+
+  /* HP */
+
+  const barW=50;
+
+  const hpRatio=Math.max(0,m.hp/m.maxHp);
+
+  ctx.fillStyle="rgba(0,0,0,.72)";
+
+  ctx.fillRect(
+
+    p.x-barW/2,
+
+    p.y-32,
+
+    barW,
+
+    6
+
+  );
+
+  ctx.fillStyle="#ef4848";
+
+  ctx.fillRect(
+
+    p.x-barW/2,
+
+    p.y-32,
+
+    barW*hpRatio,
+
+    6
+
+  );
+
+  /* tên */
+
+  ctx.font="10px -apple-system";
+
+  ctx.textAlign="center";
+
+  ctx.fillStyle="rgba(255,255,255,.85)";
+
+  ctx.fillText(
+
+    m.name,
+
+    p.x,
+
+    p.y-39
+
+  );
 
 }
 
-ctx.fillStyle="rgba(0,0,0,.28)";
+/* =====================================================
 
-ctx.beginPath();
+   NHÂN VẬT
 
-ctx.ellipse(
-
-0,
-
-20,
-
-20,
-
-7,
-
-0,
-
-0,
-
-Math.PI*2
-
-);
-
-ctx.fill();
-
-ctx.fillStyle="#713b31";
-
-ctx.beginPath();
-
-ctx.arc(0,0,18,0,Math.PI*2);
-
-ctx.fill();
-
-ctx.fillStyle="#9c5140";
-
-ctx.beginPath();
-
-ctx.arc(0,-5,13,0,Math.PI*2);
-
-ctx.fill();
-
-ctx.fillStyle="#f5df79";
-
-ctx.beginPath();
-
-ctx.arc(-5,-7,3,0,Math.PI*2);
-
-ctx.arc(5,-7,3,0,Math.PI*2);
-
-ctx.fill();
-
-ctx.fillStyle="#222";
-
-ctx.beginPath();
-
-ctx.arc(-5,-7,1.5,0,Math.PI*2);
-
-ctx.arc(5,-7,1.5,0,Math.PI*2);
-
-ctx.fill();
-
-ctx.restore();
-
-/* thanh máu */
-
-const barW=44;
-
-const hpRatio=Math.max(0,m.hp/m.maxHp);
-
-ctx.fillStyle="rgba(0,0,0,.7)";
-
-ctx.fillRect(
-
-p.x-barW/2,
-
-p.y-30,
-
-barW,
-
-5
-
-);
-
-ctx.fillStyle="#ef4848";
-
-ctx.fillRect(
-
-p.x-barW/2,
-
-p.y-30,
-
-barW*hpRatio,
-
-5
-
-);
-
-}
-
-/* =========================
-
-   VẼ NHÂN VẬT
-
-========================= */
+   ===================================================== */
 
 function drawPlayer(){
 
-const x=W/2;
+  const x=W/2;
 
-const y=H/2;
+  const y=H/2;
 
-ctx.save();
+  ctx.save();
 
-ctx.translate(x,y);
+  ctx.translate(x,y);
 
-ctx.fillStyle="rgba(0,0,0,.3)";
+  /* hiệu ứng khi đánh */
 
-ctx.beginPath();
+  if(player.attackAnim>0){
 
-ctx.ellipse(
+    ctx.strokeStyle="rgba(255,235,150,.9)";
 
-0,
+    ctx.lineWidth=4;
 
-18,
+    ctx.beginPath();
 
-17,
+    ctx.arc(
 
-7,
+      0,
 
-0,
+      0,
 
-0,
+      38,
 
-Math.PI*2
+      -1.1,
 
-);
+      .9
 
-ctx.fill();
+    );
 
-ctx.fillStyle="#e9e1d0";
+    ctx.stroke();
 
-ctx.beginPath();
+  }
 
-ctx.moveTo(0,-18);
+  if(player.skillAnim>0){
 
-ctx.lineTo(-14,5);
+    ctx.strokeStyle="rgba(100,210,255,.9)";
 
-ctx.lineTo(-9,20);
+    ctx.lineWidth=5;
 
-ctx.lineTo(0,13);
+    ctx.beginPath();
 
-ctx.lineTo(9,20);
+    ctx.arc(
 
-ctx.lineTo(14,5);
+      0,
 
-ctx.closePath();
+      0,
 
-ctx.fill();
+      50,
 
-ctx.fillStyle="#8d672d";
+      0,
 
-ctx.fillRect(-11,4,22,5);
+      Math.PI*2
 
-ctx.fillStyle="#f1c8a6";
+    );
 
-ctx.beginPath();
+    ctx.stroke();
 
-ctx.arc(0,-25,9,0,Math.PI*2);
+  }
 
-ctx.fill();
+  ctx.fillStyle="rgba(0,0,0,.3)";
 
-ctx.fillStyle="#171717";
+  ctx.beginPath();
 
-ctx.beginPath();
+  ctx.ellipse(
 
-ctx.arc(0,-29,10,Math.PI,Math.PI*2);
+    0,
 
-ctx.fill();
+    18,
 
-ctx.strokeStyle="#d8d8d8";
+    17,
 
-ctx.lineWidth=3;
+    7,
 
-ctx.beginPath();
+    0,
 
-ctx.moveTo(12,3);
+    0,
 
-ctx.lineTo(27,-20);
+    Math.PI*2
 
-ctx.stroke();
+  );
 
-ctx.strokeStyle="#9c6c2d";
+  ctx.fill();
 
-ctx.lineWidth=4;
+  /* áo */
 
-ctx.beginPath();
+  ctx.fillStyle="#e9e1d0";
 
-ctx.moveTo(9,8);
+  ctx.beginPath();
 
-ctx.lineTo(16,1);
+  ctx.moveTo(0,-18);
 
-ctx.stroke();
+  ctx.lineTo(-14,5);
 
-ctx.restore();
+  ctx.lineTo(-9,20);
+
+  ctx.lineTo(0,13);
+
+  ctx.lineTo(9,20);
+
+  ctx.lineTo(14,5);
+
+  ctx.closePath();
+
+  ctx.fill();
+
+  /* đai */
+
+  ctx.fillStyle="#8d672d";
+
+  ctx.fillRect(-11,4,22,5);
+
+  /* đầu */
+
+  ctx.fillStyle="#f1c8a6";
+
+  ctx.beginPath();
+
+  ctx.arc(0,-25,9,0,Math.PI*2);
+
+  ctx.fill();
+
+  /* tóc */
+
+  ctx.fillStyle="#171717";
+
+  ctx.beginPath();
+
+  ctx.arc(
+
+    0,
+
+    -29,
+
+    10,
+
+    Math.PI,
+
+    Math.PI*2
+
+  );
+
+  ctx.fill();
+
+  /* kiếm */
+
+  ctx.strokeStyle="#d8d8d8";
+
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+
+  ctx.moveTo(12,3);
+
+  ctx.lineTo(27,-20);
+
+  ctx.stroke();
+
+  ctx.strokeStyle="#9c6c2d";
+
+  ctx.lineWidth=4;
+
+  ctx.beginPath();
+
+  ctx.moveTo(9,8);
+
+  ctx.lineTo(16,1);
+
+  ctx.stroke();
+
+  ctx.restore();
 
 }
 
-/* =========================
+/* =====================================================
 
    TÌM QUÁI GẦN NHẤT
 
-========================= */
+   ===================================================== */
 
 function nearestMonster(){
 
-let best=null;
+  let best=null;
 
-let bestDist=Infinity;
+  let bestDist=Infinity;
 
-for(const m of monsters){
+  for(const m of monsters){
 
-if(!m.alive)continue;
+    if(!m.alive)continue;
 
-const dx=m.x-player.x;
+    const dx=m.x-player.x;
 
-const dy=m.y-player.y;
+    const dy=m.y-player.y;
 
-const d=Math.sqrt(dx*dx+dy*dy);
+    const d=Math.sqrt(dx*dx+dy*dy);
 
-if(d<bestDist){
+    if(d<bestDist){
 
-bestDist=d;
+      bestDist=d;
 
-best=m;
+      best=m;
 
-}
+    }
 
-}
+  }
 
-return{
+  return{
 
-monster:best,
+    monster:best,
 
-distance:bestDist
+    distance:bestDist
 
-};
-
-}
-
-/* =========================
-
-   TẤN CÔNG
-
-========================= */
-
-function attack(){
-
-if(player.attackCooldown>0)return;
-
-const result=nearestMonster();
-
-const m=result.monster;
-
-if(!m)return;
-
-if(result.distance>115){
-
-showMessage("⚔️ Không có quái trong tầm!");
-
-return;
+  };
 
 }
 
-player.attackCooldown=28;
+/* =====================================================
 
-m.hp-=30;
+   HIỆU ỨNG SÁT THƯƠNG
 
-m.flash=8;
+   ===================================================== */
 
-if(m.hp<=0){
+function showDamage(m,amount,type=""){
 
-m.hp=0;
+  const p=worldToScreen(m.x,m.y);
 
-m.alive=false;
+  const el=document.createElement("div");
 
-m.respawn=180;
+  el.className="damage "+type;
 
-gainExp(35);
+  el.textContent="-"+amount;
 
-player.gold+=10;
+  el.style.left=p.x+"px";
 
-showMessage("💥 Hạ quái! +35 EXP +10 🪙");
+  el.style.top=p.y+"px";
 
-}
+  document
 
-}
+    .getElementById("damageLayer")
 
-/* =========================
+    .appendChild(el);
 
-   KỸ NĂNG
+  setTimeout(()=>{
 
-========================= */
+    el.remove();
 
-function skillAttack(){
-
-if(player.attackCooldown>0)return;
-
-const result=nearestMonster();
-
-const m=result.monster;
-
-if(!m)return;
-
-if(result.distance>180){
-
-showMessage("☯️ Quái quá xa!");
-
-return;
+  },760);
 
 }
 
-player.attackCooldown=45;
-
-m.hp-=60;
-
-m.flash=10;
-
-if(m.hp<=0){
-
-m.hp=0;
-
-m.alive=false;
-
-m.respawn=180;
-
-gainExp(60);
-
-player.gold+=20;
-
-showMessage("☯️ Kỹ năng hạ quái! +60 EXP");
-
-}else{
-
-showMessage("☯️ Gây 60 sát thương!");
-
-}
-
-}
-
-/* =========================
-
-   EXP / LÊN CẤP
-
-========================= */
-
-function gainExp(amount){
-
-player.exp+=amount;
-
-while(player.exp>=player.nextExp){
-
-player.exp-=player.nextExp;
-
-player.level++;
-
-player.nextExp=
-
-Math.floor(player.nextExp*1.35);
-
-player.maxHp+=20;
-
-player.hp=player.maxHp;
-
-showMessage("✨ LÊN CẤP "+player.level+"!");
-
-}
-
-}
-
-/* =========================
+/* =====================================================
 
    THÔNG BÁO
 
-========================= */
+   ===================================================== */
 
 let messageTimer=0;
 
 function showMessage(text){
 
-const el=document.getElementById("message");
+  const el=document.getElementById("message");
 
-el.textContent=text;
+  el.textContent=text;
 
-el.classList.add("show");
+  el.classList.add("show");
 
-messageTimer=100;
+  messageTimer=90;
 
 }
 
-/* =========================
+/* =====================================================
 
-   QUÁI TẤN CÔNG
+   KHÓA MỤC TIÊU
 
-========================= */
+   ===================================================== */
+
+let lockedTarget=null;
+
+function lockNearest(){
+
+  const result=nearestMonster();
+
+  if(
+
+    !result.monster ||
+
+    result.distance>350
+
+  ){
+
+    lockedTarget=null;
+
+    showMessage("🎯 Không có quái gần!");
+
+    return;
+
+  }
+
+  lockedTarget=result.monster;
+
+  showMessage(
+
+    "🎯 Đã khóa "+lockedTarget.name
+
+  );
+
+}
+
+/* =====================================================
+
+   ĐÁNH THƯỜNG
+
+   ===================================================== */
+
+function attack(){
+
+  if(player.dead)return;
+
+  if(player.attackCooldown>0)return;
+
+  let m=lockedTarget;
+
+  if(!m || !m.alive){
+
+    m=nearestMonster().monster;
+
+  }
+
+  if(!m){
+
+    showMessage("⚔️ Không có mục tiêu!");
+
+    return;
+
+  }
+
+  const dx=m.x-player.x;
+
+  const dy=m.y-player.y;
+
+  const dist=Math.sqrt(dx*dx+dy*dy);
+
+  if(dist>125){
+
+    showMessage("⚔️ Hãy đến gần quái hơn!");
+
+    return;
+
+  }
+
+  lockedTarget=m;
+
+  player.attackCooldown=28;
+
+  player.attackAnim=12;
+
+  const damage=30;
+
+  m.hp-=damage;
+
+  m.flash=8;
+
+  /* knockback */
+
+  if(dist>0){
+
+    m.knockX=(dx/dist)*9;
+
+    m.knockY=(dy/dist)*9;
+
+  }
+
+  showDamage(m,damage);
+
+  if(m.hp<=0){
+
+    killMonster(m);
+
+  }
+
+}
+
+/* =====================================================
+
+   KỸ NĂNG ☯️
+
+   ===================================================== */
+
+function skillAttack(){
+
+  if(player.dead)return;
+
+  if(player.skillCooldown>0){
+
+    showMessage(
+
+      "☯️ Đang hồi "+Math.ceil(player.skillCooldown/60)+"s"
+
+    );
+
+    return;
+
+  }
+
+  let m=lockedTarget;
+
+  if(!m || !m.alive){
+
+    m=nearestMonster().monster;
+
+  }
+
+  if(!m){
+
+    showMessage("☯️ Không có mục tiêu!");
+
+    return;
+
+  }
+
+  const dx=m.x-player.x;
+
+  const dy=m.y-player.y;
+
+  const dist=Math.sqrt(dx*dx+dy*dy);
+
+  if(dist>200){
+
+    showMessage("☯️ Quái quá xa!");
+
+    return;
+
+  }
+
+  lockedTarget=m;
+
+  player.skillCooldown=180;
+
+  player.skillAnim=20;
+
+  const damage=60;
+
+  m.hp-=damage;
+
+  m.flash=12;
+
+  if(dist>0){
+
+    m.knockX=(dx/dist)*18;
+
+    m.knockY=(dy/dist)*18;
+
+  }
+
+  showDamage(m,damage,"gold");
+
+  if(m.hp<=0){
+
+    killMonster(m);
+
+  }else{
+
+    showMessage("☯️ Gây "+damage+" sát thương!");
+
+  }
+
+}
+
+/* =====================================================
+
+   HỎA CÔNG 🔥
+
+   ===================================================== */
+
+function fireAttack(){
+
+  if(player.dead)return;
+
+  const result=nearestMonster();
+
+  const m=result.monster;
+
+  if(!m){
+
+    showMessage("🔥 Không có quái!");
+
+    return;
+
+  }
+
+  if(result.distance>240){
+
+    showMessage("🔥 Quái quá xa!");
+
+    return;
+
+  }
+
+  const damage=45;
+
+  m.hp-=damage;
+
+  m.flash=10;
+
+  m.knockX*=1.5;
+
+  m.knockY*=1.5;
+
+  showDamage(m,damage,"red");
+
+  if(m.hp<=0){
+
+    killMonster(m);
+
+  }else{
+
+    showMessage("🔥 Hỏa công -"+damage);
+
+  }
+
+}
+
+/* =====================================================
+
+   HẠ QUÁI
+
+   ===================================================== */
+
+function killMonster(m){
+
+  m.hp=0;
+
+  m.alive=false;
+
+  m.respawn=220;
+
+  const exp=35;
+
+  const gold=10;
+
+  gainExp(exp);
+
+  player.gold+=gold;
+
+  showMessage(
+
+    "💥 Hạ "+m.name+"! +"+exp+
+
+    " EXP  +"+gold+" 🪙"
+
+  );
+
+  if(lockedTarget===m){
+
+    lockedTarget=null;
+
+  }
+
+}
+
+/* =====================================================
+
+   EXP / LEVEL
+
+   ===================================================== */
+
+function gainExp(amount){
+
+  player.exp+=amount;
+
+  while(player.exp>=player.nextExp){
+
+    player.exp-=player.nextExp;
+
+    player.level++;
+
+    player.nextExp=
+
+      Math.floor(player.nextExp*1.35);
+
+    player.maxHp+=20;
+
+    player.hp=player.maxHp;
+
+    showMessage(
+
+      "✨ LÊN CẤP "+player.level+"!"
+
+    );
+
+  }
+
+}
+
+/* =====================================================
+
+   QUÁI DI CHUYỂN
+
+   ===================================================== */
 
 function updateMonsters(dt){
 
-for(const m of monsters){
+  for(const m of monsters){
 
-if(!m.alive){
+    if(!m.alive){
 
-m.respawn-=dt;
+      m.respawn-=dt;
 
-if(m.respawn<=0){
+      if(m.respawn<=0){
 
-m.alive=true;
+        m.alive=true;
 
-m.hp=m.maxHp;
+        m.hp=m.maxHp;
+
+        /* tái xuất gần vị trí cũ */
+
+        m.x+=
+
+          (Math.random()-.5)*60;
+
+        m.y+=
+
+          (Math.random()-.5)*60;
+
+      }
+
+      continue;
+
+    }
+
+    if(m.flash>0){
+
+      m.flash-=dt;
+
+    }
+
+    /* knockback */
+
+    if(
+
+      Math.abs(m.knockX)>.1 ||
+
+      Math.abs(m.knockY)>.1
+
+    ){
+
+      m.x+=m.knockX;
+
+      m.y+=m.knockY;
+
+      m.knockX*=.78;
+
+      m.knockY*=.78;
+
+    }
+
+    const dx=player.x-m.x;
+
+    const dy=player.y-m.y;
+
+    const dist=Math.sqrt(dx*dx+dy*dy);
+
+    /* aggro */
+
+    if(dist<290){
+
+      m.aggro=true;
+
+    }
+
+    if(m.aggro && dist>48){
+
+      const speed=
+
+        dist<130 ?
+
+        m.speed*1.25 :
+
+        m.speed;
+
+      if(dist>0){
+
+        m.x+=(dx/dist)*speed*dt;
+
+        m.y+=(dy/dist)*speed*dt;
+
+      }
+
+    }
+
+    /* đánh nhân vật */
+
+    if(dist<=48){
+
+      m.attackTimer-=dt;
+
+      if(
+
+        m.attackTimer<=0 &&
+
+        player.hitCooldown<=0
+
+      ){
+
+        const damage=8;
+
+        player.hp-=damage;
+
+        player.hitCooldown=35;
+
+        m.attackTimer=60;
+
+        showPlayerDamage(damage);
+
+        if(player.hp<=0){
+
+          player.hp=0;
+
+          player.dead=true;
+
+          document
+
+            .getElementById("dead")
+
+            .style.display="flex";
+
+          joystickEnd();
+
+        }
+
+      }
+
+    }
+
+  }
 
 }
 
-continue;
+/* =====================================================
+
+   SÁT THƯƠNG NHÂN VẬT
+
+   ===================================================== */
+
+function showPlayerDamage(amount){
+
+  const el=document.createElement("div");
+
+  el.className="damage red";
+
+  el.textContent="-"+amount;
+
+  el.style.left=(W/2)+"px";
+
+  el.style.top=(H/2-35)+"px";
+
+  document
+
+    .getElementById("damageLayer")
+
+    .appendChild(el);
+
+  setTimeout(()=>{
+
+    el.remove();
+
+  },760);
 
 }
 
-if(m.flash>0){
+/* =====================================================
 
-m.flash-=dt;
+   HỒI SINH
 
-}
-
-const dx=player.x-m.x;
-
-const dy=player.y-m.y;
-
-const dist=Math.sqrt(dx*dx+dy*dy);
-
-if(dist<260&&dist>45){
-
-m.x+=(dx/dist)*m.speed*dt;
-
-m.y+=(dy/dist)*m.speed*dt;
-
-}
-
-if(dist<=48){
-
-m.attackTimer-=dt;
-
-if(m.attackTimer<=0&&player.hitCooldown<=0){
-
-player.hp-=8;
-
-player.hitCooldown=35;
-
-m.attackTimer=55;
-
-showMessage("💢 Bạn bị quái tấn công!");
-
-if(player.hp<=0){
-
-player.hp=player.maxHp;
-
-player.x=1600;
-
-player.y=1200;
-
-showMessage("💫 Bạn đã hồi sinh!");
-
-}
-
-}
-
-}
-
-}
-
-}
-
-/* =========================
-
-   CẬP NHẬT
-
-========================= */
-
-function update(dt){
-
-const len=Math.sqrt(
-
-player.dirX*player.dirX+
-
-player.dirY*player.dirY
-
-);
-
-if(len>.01){
-
-player.x+=player.dirX*player.speed*dt;
-
-player.y+=player.dirY*player.speed*dt;
-
-player.x=Math.max(250,Math.min(2850,player.x));
-
-player.y=Math.max(200,Math.min(2200,player.y));
-
-}
-
-if(player.attackCooldown>0){
-
-player.attackCooldown-=dt;
-
-}
-
-if(player.hitCooldown>0){
-
-player.hitCooldown-=dt;
-
-}
-
-updateMonsters(dt);
-
-camera.x+=(player.x-camera.x)*.12;
-
-camera.y+=(player.y-camera.y)*.12;
-
-if(messageTimer>0){
-
-messageTimer-=dt;
-
-if(messageTimer<=0){
+   ===================================================== */
 
 document
 
-.getElementById("message")
+.getElementById("respawnBtn")
 
-.classList.remove("show");
+.addEventListener("click",respawnPlayer);
+
+function respawnPlayer(){
+
+  player.dead=false;
+
+  player.hp=player.maxHp;
+
+  player.x=1600;
+
+  player.y=1200;
+
+  camera.x=1600;
+
+  camera.y=1200;
+
+  document
+
+    .getElementById("dead")
+
+    .style.display="none";
+
+  showMessage("✨ Hồi sinh tại Tân Thủ!");
 
 }
 
+/* =====================================================
+
+   CẬP NHẬT CAMERA
+
+   ===================================================== */
+
+function updateCamera(){
+
+  camera.x+=(player.x-camera.x)*.12;
+
+  camera.y+=(player.y-camera.y)*.12;
+
 }
 
-updateUI();
+/* =====================================================
 
-}
+   CẬP NHẬT GIAO DIỆN
 
-/* =========================
-
-   GIAO DIỆN
-
-========================= */
+   ===================================================== */
 
 function updateUI(){
 
-document.getElementById("level").textContent=
+  document.getElementById("level").textContent=
 
-player.level;
+    player.level;
 
-document.getElementById("coord").textContent=
+  document.getElementById("coord").textContent=
 
-Math.round(player.x)+","+Math.round(player.y);
+    Math.round(player.x)+","+Math.round(player.y);
 
-document.getElementById("gold").textContent=
+  document.getElementById("gold").textContent=
 
-player.gold;
+    player.gold;
 
-document.getElementById("hpText").textContent=
+  document.getElementById("hpText").textContent=
 
-Math.max(0,Math.round(player.hp))+
+    Math.max(0,Math.round(player.hp))+
 
-"/"+
+    "/"+player.maxHp;
 
-player.maxHp;
+  document.getElementById("expText").textContent=
 
-document.getElementById("expText").textContent=
+    Math.round(player.exp)+
 
-Math.round(player.exp)+
+    "/"+player.nextExp;
 
-"/"+
+  document.getElementById("playerHp").style.width=
 
-player.nextExp;
+    Math.max(
 
-document.getElementById("playerHp").style.width=
+      0,
 
-Math.max(0,player.hp/player.maxHp*100)+"%";
+      player.hp/player.maxHp*100
 
-document.getElementById("expBar").style.width=
+    )+"%";
 
-Math.max(0,player.exp/player.nextExp*100)+"%";
+  document.getElementById("expBar").style.width=
 
-const result=nearestMonster();
+    Math.max(
 
-const target=document.getElementById("target");
+      0,
 
-if(result.monster&&result.distance<300){
+      player.exp/player.nextExp*100
 
-const m=result.monster;
+    )+"%";
 
-target.style.display="block";
+  /* cooldown kỹ năng */
 
-target.textContent=
+  const skillBtn=
 
-"👹 Quái · "+
+    document.getElementById("skillBtn");
 
-Math.max(0,Math.round(m.hp))+
+  if(player.skillCooldown>0){
 
-"/"+
+    skillBtn.classList.add("locked");
 
-m.maxHp;
+  }else{
 
-}else{
+    skillBtn.classList.remove("locked");
 
-target.style.display="none";
+  }
+
+  /* mục tiêu */
+
+  const target=
+
+    document.getElementById("target");
+
+  const ring=
+
+    document.getElementById("targetRing");
+
+  if(
+
+    lockedTarget &&
+
+    lockedTarget.alive
+
+  ){
+
+    const p=
+
+      worldToScreen(
+
+        lockedTarget.x,
+
+        lockedTarget.y
+
+      );
+
+    target.style.display="block";
+
+    target.innerHTML=
+
+      '<span class="name">🎯 '+
+
+      lockedTarget.name+
+
+      '</span> · '+
+
+      Math.max(
+
+        0,
+
+        Math.round(lockedTarget.hp)
+
+      )+
+
+      "/"+
+
+      lockedTarget.maxHp;
+
+    ring.style.display="block";
+
+    ring.style.left=p.x+"px";
+
+    ring.style.top=p.y+"px";
+
+  }else{
+
+    target.style.display="none";
+
+    ring.style.display="none";
+
+  }
 
 }
 
+/* =====================================================
+
+   NÚT
+
+   ===================================================== */
+
+function bindButton(id,fn){
+
+  const el=document.getElementById(id);
+
+  el.addEventListener(
+
+    "touchstart",
+
+    function(e){
+
+      e.preventDefault();
+
+      fn();
+
+    },
+
+    {passive:false}
+
+  );
+
+  el.addEventListener("click",fn);
+
 }
 
-/* =========================
+bindButton("attackBtn",attack);
 
-   NÚT KỸ NĂNG
+bindButton("skillBtn",skillAttack);
 
-========================= */
+bindButton("fireBtn",fireAttack);
 
-document.getElementById("attackBtn")
+/* nhấn giữ nút đánh */
 
-.addEventListener("touchstart",function(e){
+let attackHold=null;
 
-e.preventDefault();
+const attackBtn=
 
-attack();
+  document.getElementById("attackBtn");
 
-},{passive:false});
+attackBtn.addEventListener(
 
-document.getElementById("attackBtn")
+  "touchstart",
 
-.addEventListener("click",attack);
+  function(e){
 
-document.getElementById("skillBtn")
+    e.preventDefault();
 
-.addEventListener("touchstart",function(e){
+    attack();
 
-e.preventDefault();
+    clearInterval(attackHold);
 
-skillAttack();
+    attackHold=setInterval(()=>{
 
-},{passive:false});
+      attack();
 
-document.getElementById("skillBtn")
+    },300);
 
-.addEventListener("click",skillAttack);
+  },
 
-document.getElementById("fireBtn")
+  {passive:false}
 
-.addEventListener("touchstart",function(e){
+);
 
-e.preventDefault();
+attackBtn.addEventListener(
 
-showMessage("🔥 Hỏa công đang được chuẩn bị!");
+  "touchend",
 
-},{passive:false});
+  function(){
 
-/* =========================
+    clearInterval(attackHold);
+
+    attackHold=null;
+
+  }
+
+);
+
+attackBtn.addEventListener(
+
+  "touchcancel",
+
+  function(){
+
+    clearInterval(attackHold);
+
+    attackHold=null;
+
+  }
+
+);
+
+/* double click canvas = khóa mục tiêu */
+
+let lastTap=0;
+
+canvas.addEventListener(
+
+  "touchend",
+
+  function(){
+
+    const now=Date.now();
+
+    if(now-lastTap<350){
+
+      lockNearest();
+
+    }
+
+    lastTap=now;
+
+  },
+
+  {passive:true}
+
+);
+
+/* =====================================================
+
+   GAME UPDATE
+
+   ===================================================== */
+
+function update(dt){
+
+  if(!player.dead){
+
+    const len=Math.sqrt(
+
+      player.dirX*player.dirX+
+
+      player.dirY*player.dirY
+
+    );
+
+    if(len>.01){
+
+      player.x+=
+
+        player.dirX*
+
+        player.speed*
+
+        dt;
+
+      player.y+=
+
+        player.dirY*
+
+        player.speed*
+
+        dt;
+
+      player.x=
+
+        Math.max(
+
+          250,
+
+          Math.min(2850,player.x)
+
+        );
+
+      player.y=
+
+        Math.max(
+
+          200,
+
+          Math.min(2200,player.y)
+
+        );
+
+    }
+
+  }
+
+  if(player.attackCooldown>0){
+
+    player.attackCooldown-=dt;
+
+  }
+
+  if(player.skillCooldown>0){
+
+    player.skillCooldown-=dt;
+
+  }
+
+  if(player.hitCooldown>0){
+
+    player.hitCooldown-=dt;
+
+  }
+
+  if(player.attackAnim>0){
+
+    player.attackAnim-=dt;
+
+  }
+
+  if(player.skillAnim>0){
+
+    player.skillAnim-=dt;
+
+  }
+
+  updateMonsters(dt);
+
+  updateCamera();
+
+  if(messageTimer>0){
+
+    messageTimer-=dt;
+
+    if(messageTimer<=0){
+
+      document
+
+        .getElementById("message")
+
+        .classList.remove("show");
+
+    }
+
+  }
+
+  updateUI();
+
+}
+
+/* =====================================================
+
+   RENDER
+
+   ===================================================== */
+
+function render(){
+
+  ctx.clearRect(0,0,W,H);
+
+  drawGround();
+
+  drawFlowers();
+
+  drawStones();
+
+  drawTrees();
+
+  for(const m of monsters){
+
+    drawMonster(m);
+
+  }
+
+  drawPlayer();
+
+}
+
+/* =====================================================
 
    GAME LOOP
 
-========================= */
+   ===================================================== */
 
 let last=performance.now();
 
 function loop(now){
 
-const dt=Math.min(
+  const dt=
 
-(now-last)/16.666,
+    Math.min(
 
-3
+      (now-last)/16.666,
+
+      3
+
+    );
+
+  last=now;
+
+  update(dt);
+
+  render();
+
+  requestAnimationFrame(loop);
+
+}
+
+requestAnimationFrame(loop);
+
+/* =====================================================
+
+   SAFARI / IPHONE
+
+   ===================================================== */
+
+document.addEventListener(
+
+  "touchmove",
+
+  function(e){
+
+    if(e.target.closest("#game")){
+
+      e.preventDefault();
+
+    }
+
+  },
+
+  {passive:false}
 
 );
 
-last=now;
+document.addEventListener(
 
-update(dt);
+  "gesturestart",
 
-ctx.clearRect(0,0,W,H);
+  function(e){
 
-drawGround();
+    e.preventDefault();
 
-drawFlowers();
+  },
 
-drawStones();
+  {passive:false}
 
-drawTrees();
+);
 
-for(const m of monsters){
+document.addEventListener(
 
-drawMonster(m);
+  "gesturechange",
 
-}
+  function(e){
 
-drawPlayer();
+    e.preventDefault();
 
-requestAnimationFrame(loop);
+  },
 
-}
+  {passive:false}
 
-requestAnimationFrame(loop);
+);
 
-/* =========================
+document.addEventListener(
 
-   SAFARI
+  "gestureend",
 
-========================= */
+  function(e){
 
-document.addEventListener("touchmove",function(e){
+    e.preventDefault();
 
-if(e.target.closest("#game")){
+  },
 
-e.preventDefault();
+  {passive:false}
 
-}
-
-},{passive:false});
-
-document.addEventListener("gesturestart",function(e){
-
-e.preventDefault();
-
-},{passive:false});
-
-document.addEventListener("gesturechange",function(e){
-
-e.preventDefault();
-
-},{passive:false});
-
-document.addEventListener("gestureend",function(e){
-
-e.preventDefault();
-
-},{passive:false});
+);
 
 </script>
 

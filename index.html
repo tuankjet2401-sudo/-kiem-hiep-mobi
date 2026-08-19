@@ -672,117 +672,893 @@ for(const op of otherPlayers){
 ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(P.x,P.y-32,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#f5f1e4";ctx.beginPath();ctx.moveTo(P.x-24,P.y+45);ctx.lineTo(P.x,P.y-8);ctx.lineTo(P.x+28,P.y+45);ctx.lineTo(P.x,P.y+60);ctx.closePath();ctx.fill();ctx.strokeStyle="#e8e8e8";ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(P.x+18,P.y+15);ctx.lineTo(P.x+55,P.y-38);ctx.stroke();
 ctx.restore();
 }
+/* =========================================================
 
-/* 4.10 CLIENT ↔ NODE.JS SERVER
-   Server-authoritative demo:
-   - Client sends input only.
-   - Server validates movement and owns the canonical position/inventory.
-   - Client receives snapshots.
-*/
-let otherPlayers=[];
+   4.11.2 MULTIPLAYER
+
+   - Mỗi tab = 1 player riêng
+
+   - Không dùng chung account demo
+
+   - Hiển thị người chơi khác
+
+   - Đồng bộ ngựa + phi phong
+
+   - Nội suy vị trí người chơi khác
+
+   ========================================================= */
+
+let otherPlayers = [];
+
 const NET = {
-  ws:null,
-  connected:false,
-  id:null,
-  seq:0,
-  url: (location.protocol==="https:" ? "wss://" : "ws://") + location.host
+
+  ws: null,
+
+  connected: false,
+
+  id: null,
+
+  seq: 0,
+
+  url: (location.protocol === "https:"
+
+    ? "wss://"
+
+    : "ws://") + location.host
+
 };
 
-function setNetStatus(text, ok=false){
+/* ID riêng cho từng tab */
+
+const TAB_ID =
+
+  "p_" +
+
+  Date.now().toString(36) +
+
+  "_" +
+
+  Math.random().toString(36).slice(2,9);
+
+const PLAYER_NAME =
+
+  "Thiếu Hiệp " +
+
+  TAB_ID.slice(-4).toUpperCase();
+
+function setNetStatus(text,ok=false){
+
   const el=document.getElementById("netStatus");
-  if(el){el.textContent=(ok?"🟢 ":"🔴 ")+text;}
+
+  if(el){
+
+    el.textContent=(ok?"🟢 ":"🔴 ")+text;
+
+  }
+
 }
 
 function connectServer(){
-  // If opened directly as a local file, connect to the demo Node server.
-  const url = location.protocol==="file:" ? "ws://localhost:3000" : NET.url;
+
+  const url =
+
+    location.protocol==="file:"
+
+      ? "ws://localhost:3000"
+
+      : NET.url;
+
   try{
+
     NET.ws=new WebSocket(url);
+
     NET.ws.onopen=()=>{
+
       NET.connected=true;
-      setNetStatus("Server 4.11.1 connected",true);
+
+      setNetStatus("Đang kết nối...",true);
+
       NET.ws.send(JSON.stringify({
+
         type:"hello",
-        account:"demo",
-        character:"ThieuHiep"
+
+        /* QUAN TRỌNG:
+
+           mỗi tab có character riêng */
+
+        account: TAB_ID,
+
+        character: PLAYER_NAME,
+
+        clientVersion:"4.11.2"
+
       }));
+
     };
+
     NET.ws.onmessage=(ev)=>{
-      try{handleServerMessage(JSON.parse(ev.data));}catch(_){}
+
+      try{
+
+        const msg=JSON.parse(ev.data);
+
+        handleServerMessage(msg);
+
+      }catch(err){
+
+        console.warn("Bad server message",err);
+
+      }
+
     };
+
     NET.ws.onclose=()=>{
+
       NET.connected=false;
+
+      NET.id=null;
+
+      otherPlayers=[];
+
       setNetStatus("Offline");
-      setTimeout(connectServer,3000);
+
+      setTimeout(connectServer,2000);
+
     };
-    NET.ws.onerror=()=>setNetStatus("Server error");
-  }catch(_){setNetStatus("Offline")}
+
+    NET.ws.onerror=()=>{
+
+      NET.connected=false;
+
+      setNetStatus("Server error");
+
+    };
+
+  }catch(err){
+
+    NET.connected=false;
+
+    setNetStatus("Offline");
+
+  }
+
 }
+
+/* =========================================================
+
+   GỬI INPUT
+
+   ========================================================= */
 
 function sendInput(){
-  if(!NET.connected || !NET.ws || NET.ws.readyState!==1)return;
+
+  if(
+
+    !NET.connected ||
+
+    !NET.ws ||
+
+    NET.ws.readyState!==WebSocket.OPEN
+
+  ) return;
+
   NET.ws.send(JSON.stringify({
+
     type:"input",
+
     seq:++NET.seq,
-    x:joy.x,
-    y:joy.y,
+
+    x:Number(joy.x)||0,
+
+    y:Number(joy.y)||0,
+
     mounted:!!mounted,
-    cape:!!capeOn
+
+    cape:!!capeOn,
+
+    /* thêm thông tin hiển thị */
+
+    name:PLAYER_NAME,
+
+    level:14,
+
+    className:playerClass,
+
+    element:elements[elementIndex]
+
   }));
+
 }
+
+/* =========================================================
+
+   NHẬN SERVER
+
+   ========================================================= */
 
 function handleServerMessage(m){
+
   if(m.type==="welcome"){
-    NET.id=m.playerId;
-    if(m.protocol) setNetStatus("Online · v"+m.protocol,true);
+
+    NET.id=m.playerId || m.id || null;
+
     if(m.player){
-      P.x=m.player.x; P.y=m.player.y;
-      P.hp=m.player.hp; P.mp=m.player.mp;
-      gold=m.player.gold;
+
+      P.x=Number(m.player.x)||P.x;
+
+      P.y=Number(m.player.y)||P.y;
+
+      if(typeof m.player.hp==="number")
+
+        P.hp=m.player.hp;
+
+      if(typeof m.player.mp==="number")
+
+        P.mp=m.player.mp;
+
+      if(typeof m.player.gold==="number")
+
+        gold=m.player.gold;
+
     }
-    setNetStatus("Online · "+NET.id,true);
+
+    setNetStatus(
+
+      "Online · "+(NET.id||"player"),
+
+      true
+
+    );
+
     return;
+
   }
+
   if(m.type==="snapshot"){
+
+    /* player hiện tại */
+
     if(m.player){
-      // Server is authoritative. Small interpolation can be added later.
-      P.x=m.player.x; P.y=m.player.y;
-      P.hp=m.player.hp; P.mp=m.player.mp;
-      gold=m.player.gold;
+
+      P.x=Number(m.player.x)||P.x;
+
+      P.y=Number(m.player.y)||P.y;
+
+      if(typeof m.player.hp==="number")
+
+        P.hp=m.player.hp;
+
+      if(typeof m.player.mp==="number")
+
+        P.mp=m.player.mp;
+
+      if(typeof m.player.gold==="number")
+
+        gold=m.player.gold;
+
     }
+
+    /* =====================================================
+
+       NGƯỜI CHƠI KHÁC
+
+       ===================================================== */
+
     if(Array.isArray(m.players)){
-      // Other players are rendered in a later multiplayer pass.
-      otherPlayers=m.players.filter(p=>p.id!==NET.id);
+
+      const now=performance.now();
+
+      const list=[];
+
+      for(const p of m.players){
+
+        if(!p) continue;
+
+        const id=
+
+          p.id ??
+
+          p.playerId ??
+
+          p.uid;
+
+        /* bỏ chính mình */
+
+        if(NET.id && String(id)===String(NET.id))
+
+          continue;
+
+        if(!id)
+
+          continue;
+
+        let old=otherPlayers.find(
+
+          x=>String(x.id)===String(id)
+
+        );
+
+        if(!old){
+
+          old={
+
+            id:String(id),
+
+            x:Number(p.x)||0,
+
+            y:Number(p.y)||0,
+
+            tx:Number(p.x)||0,
+
+            ty:Number(p.y)||0,
+
+            hp:Number(p.hp ?? 100),
+
+            maxHp:Number(p.maxHp ?? 100),
+
+            name:p.name || p.character || "Thiếu Hiệp",
+
+            level:Number(
+
+              p.level ??
+
+              p.lv ??
+
+              14
+
+            ),
+
+            className:
+
+              p.className ||
+
+              p.class ||
+
+              "Võ Đang",
+
+            element:
+
+              p.element ||
+
+              "Kim",
+
+            mounted:!!p.mounted,
+
+            cape:!!p.cape,
+
+            lastSeen:now
+
+          };
+
+        }else{
+
+          old.tx=Number(p.x)||old.tx;
+
+          old.ty=Number(p.y)||old.ty;
+
+          old.hp=Number(
+
+            p.hp ??
+
+            old.hp
+
+          );
+
+          old.maxHp=Number(
+
+            p.maxHp ??
+
+            old.maxHp
+
+          );
+
+          old.name=
+
+            p.name ||
+
+            p.character ||
+
+            old.name;
+
+          old.level=Number(
+
+            p.level ??
+
+            p.lv ??
+
+            old.level
+
+          );
+
+          old.className=
+
+            p.className ||
+
+            p.class ||
+
+            old.className;
+
+          old.element=
+
+            p.element ||
+
+            old.element;
+
+          old.mounted=
+
+            typeof p.mounted==="boolean"
+
+              ? p.mounted
+
+              : old.mounted;
+
+          old.cape=
+
+            typeof p.cape==="boolean"
+
+              ? p.cape
+
+              : old.cape;
+
+          old.lastSeen=now;
+
+        }
+
+        list.push(old);
+
+      }
+
+      otherPlayers=list;
+
     }
+
     return;
+
   }
+
   if(m.type==="inventory"){
+
     if(Array.isArray(m.inventory)){
-      // Only replace inventory with server data when the server sends it.
+
       bag=m.inventory;
+
       renderBag();
+
     }
-    if(typeof m.gold==="number") gold=m.gold;
+
+    if(typeof m.gold==="number")
+
+      gold=m.gold;
+
     return;
+
   }
-  if(m.type==="toast") toast(m.text);
-  if(m.type==="error") toast("⚠️ "+m.text);
+
+  if(m.type==="toast"){
+
+    toast(m.text);
+
+    return;
+
+  }
+
+  if(m.type==="error"){
+
+    toast("⚠️ "+m.text);
+
+    return;
+
+  }
+
 }
 
-let lastNetSend=0;
-const oldUpdate = update;
-update = function(dt){
-  oldUpdate(dt);
-  const now=performance.now();
-  if(now-lastNetSend>80){
-    lastNetSend=now;
-    sendInput();
+/* =========================================================
+
+   NỘI SUY NGƯỜI CHƠI KHÁC
+
+   ========================================================= */
+
+function updateOtherPlayers(dt){
+
+  const speed=Math.min(
+
+    1,
+
+    dt*12
+
+  );
+
+  for(const p of otherPlayers){
+
+    p.x +=
+
+      (p.tx-p.x)*speed;
+
+    p.y +=
+
+      (p.ty-p.y)*speed;
+
   }
+
+}
+
+/* =========================================================
+
+   VẼ NGƯỜI CHƠI KHÁC
+
+   ========================================================= */
+
+function drawOtherPlayers(){
+
+  for(const op of otherPlayers){
+
+    if(!Number.isFinite(op.x) ||
+
+       !Number.isFinite(op.y))
+
+      continue;
+
+    const d=Math.hypot(
+
+      op.x-P.x,
+
+      op.y-P.y
+
+    );
+
+    if(d>1100)
+
+      continue;
+
+    /* =============================
+
+       PHI PHONG
+
+       ============================= */
+
+    if(op.cape){
+
+      ctx.fillStyle="#6b3fa0dd";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+
+        op.x-34,
+
+        op.y+10
+
+      );
+
+      ctx.quadraticCurveTo(
+
+        op.x,
+
+        op.y+42,
+
+        op.x+34,
+
+        op.y+10
+
+      );
+
+      ctx.lineTo(
+
+        op.x+22,
+
+        op.y+58
+
+      );
+
+      ctx.lineTo(
+
+        op.x-22,
+
+        op.y+58
+
+      );
+
+      ctx.closePath();
+
+      ctx.fill();
+
+    }
+
+    /* =============================
+
+       NGỰA
+
+       ============================= */
+
+    if(op.mounted){
+
+      ctx.font="34px sans-serif";
+
+      ctx.textAlign="center";
+
+      ctx.fillText(
+
+        "🐎",
+
+        op.x,
+
+        op.y+30
+
+      );
+
+    }
+
+    /* =============================
+
+       THÂN NHÂN VẬT
+
+       ============================= */
+
+    ctx.fillStyle="#f0d2b4";
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+      op.x,
+
+      op.y-34,
+
+      18,
+
+      0,
+
+      Math.PI*2
+
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#c9d8f0";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+
+      op.x-25,
+
+      op.y+45
+
+    );
+
+    ctx.lineTo(
+
+      op.x,
+
+      op.y-10
+
+    );
+
+    ctx.lineTo(
+
+      op.x+28,
+
+      op.y+45
+
+    );
+
+    ctx.lineTo(
+
+      op.x,
+
+      op.y+60
+
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    /* =============================
+
+       TÊN
+
+       ============================= */
+
+    ctx.font="bold 14px sans-serif";
+
+    ctx.fillStyle="#fff";
+
+    ctx.textAlign="center";
+
+    const icon =
+
+      elementIcon[op.element] || "⚙️";
+
+    ctx.fillText(
+
+      icon+" "+op.name,
+
+      op.x,
+
+      op.y-62
+
+    );
+
+    /* =============================
+
+       CẤP + MÔN PHÁI
+
+       ============================= */
+
+    ctx.font="11px sans-serif";
+
+    ctx.fillStyle="#c8d8e8";
+
+    ctx.fillText(
+
+      "Cấp "+op.level+
+
+      " · "+op.className,
+
+      op.x,
+
+      op.y-47
+
+    );
+
+    /* =============================
+
+       HP
+
+       ============================= */
+
+    const hpRatio=
+
+      Math.max(
+
+        0,
+
+        Math.min(
+
+          1,
+
+          op.hp/Math.max(1,op.maxHp)
+
+        )
+
+      );
+
+    ctx.fillStyle="#18221a";
+
+    ctx.fillRect(
+
+      op.x-32,
+
+      op.y+66,
+
+      64,
+
+      6
+
+    );
+
+    ctx.fillStyle="#e45b56";
+
+    ctx.fillRect(
+
+      op.x-32,
+
+      op.y+66,
+
+      64*hpRatio,
+
+      6
+
+    );
+
+  }
+
+}
+
+/* =========================================================
+
+   UPDATE MẠNG
+
+   ========================================================= */
+
+let lastNetSend=0;
+
+const oldUpdate=update;
+
+update=function(dt){
+
+  oldUpdate(dt);
+
+  /* nội suy player khác */
+
+  updateOtherPlayers(dt);
+
+  const now=performance.now();
+
+  if(
+
+    now-lastNetSend>50
+
+  ){
+
+    lastNetSend=now;
+
+    sendInput();
+
+  }
+
 };
 
-connectServer();
+/* =========================================================
 
-function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+   PATCH DRAW
+
+   ========================================================= */
+
+/*
+
+   Hàm draw() cũ đã có đoạn vẽ otherPlayers.
+
+   Đoạn mới bên dưới được gọi sau phần map/quái/drop
+
+   để đảm bảo người chơi khác luôn nằm trên map.
+
+*/
+
+const oldDraw=draw;
+
+draw=function(){
+
+  oldDraw();
+
+  /*
+
+    oldDraw đã restore canvas.
+
+    Vì vậy phải vẽ lại multiplayer với đúng camera.
+
+  */
+
+  ctx.save();
+
+  ctx.translate(
+
+    W/2,
+
+    H/2
+
+  );
+
+  ctx.scale(
+
+    ZOOM,
+
+    ZOOM
+
+  );
+
+  ctx.translate(
+
+    -cam.x,
+
+    -cam.y
+
+  );
+
+  drawOtherPlayers();
+
+  ctx.restore();
+
+};
+
+/* =========================================================
+
+   KẾT NỐI
+
+   ========================================================= */
+
+connectServer();tion loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 renderBag();
 </script>
 </div>

@@ -16,119 +16,59 @@ const DB_FILE = path.join(DATA_DIR, "accounts.json");
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-/* =========================
+const WORLD = { w: 3200, h: 2400 };
 
-   KIẾM THẾ MOBI 4.11.2
-
-   SERVER
-
-========================= */
-
-const WORLD = {
-
-  w: 3200,
-
-  h: 2400
-
-};
+const MAX_SPEED = 330;
 
 const PROTOCOL = "4.11.2";
-
-const PLAYER_RADIUS = 25;
-
-const WALK_SPEED = 230;
-
-const MOUNT_SPEED = 330;
-
-const TICK_MS = 100;
-
-const MAX_INPUT_RATE = 35;
-
-const MAX_SESSIONS = 100;
-
-/* =========================
-
-   DATABASE
-
-========================= */
-
-function defaultCharacter() {
-
-  return {
-
-    name: "Thiếu Hiệp",
-
-    level: 14,
-
-    className: "Võ Đang",
-
-    element: "Kim",
-
-    x: 1600,
-
-    y: 1500,
-
-    hp: 180,
-
-    maxHp: 220,
-
-    mp: 33,
-
-    maxMp: 60,
-
-    gold: 733,
-
-    mounted: false,
-
-    cape: true,
-
-    inventory: [],
-
-    weapon: null,
-
-    armor: null
-
-  };
-
-}
 
 function loadDB() {
 
   try {
 
-    const raw = fs.readFileSync(DB_FILE, "utf8");
+    return JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
 
-    const data = JSON.parse(raw);
+  } catch {
 
-    if (data && typeof data === "object") {
+    return {
 
-      return data;
+      demo: {
 
-    }
+        password: "demo",
 
-  } catch (_) {}
+        character: {
 
-  const db = {
+          name: "Thiếu Hiệp",
 
-    demo: {
+          level: 14,
 
-      password: "demo",
+          className: "Võ Đang",
 
-      character: defaultCharacter()
+          element: "Kim",
 
-    }
+          x: 1600,
 
-  };
+          y: 1500,
 
-  fs.writeFileSync(
+          hp: 180,
 
-    DB_FILE,
+          maxHp: 220,
 
-    JSON.stringify(db, null, 2)
+          mp: 33,
 
-  );
+          maxMp: 60,
 
-  return db;
+          gold: 733,
+
+          inventory: []
+
+        }
+
+      }
+
+    };
+
+  }
 
 }
 
@@ -138,1360 +78,576 @@ function saveDB() {
 
   try {
 
-    fs.writeFileSync(
+    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
 
-      DB_FILE,
+  } catch (e) {
 
-      JSON.stringify(db, null, 2)
-
-    );
-
-  } catch (err) {
-
-    console.error(
-
-      "Không thể lưu database:",
-
-      err.message
-
-    );
+    console.error("DB save error:", e.message);
 
   }
 
 }
 
-/* =========================
-
-   UTILITY
-
-========================= */
-
 function clamp(v, a, b) {
 
-  return Math.max(
-
-    a,
-
-    Math.min(b, v)
-
-  );
+  return Math.max(a, Math.min(b, v));
 
 }
 
 function safeNumber(v, fallback = 0) {
 
-  const n = Number(v);
-
-  return Number.isFinite(n)
-
-    ? n
-
-    : fallback;
+  return Number.isFinite(Number(v)) ? Number(v) : fallback;
 
 }
 
-function cleanText(v, max = 80) {
+function sendJSON(res, code, data) {
 
-  return String(v || "")
+  res.writeHead(code, {
 
-    .replace(/[<>]/g, "")
+    "Content-Type": "application/json; charset=utf-8",
 
-    .slice(0, max);
-
-}
-
-function normalizeCharacter(c) {
-
-  const d = defaultCharacter();
-
-  if (!c || typeof c !== "object") {
-
-    return d;
-
-  }
-
-  c.name =
-
-    cleanText(c.name || d.name, 24);
-
-  c.level =
-
-    clamp(
-
-      Math.floor(
-
-        safeNumber(c.level, d.level)
-
-      ),
-
-      1,
-
-      200
-
-    );
-
-  c.className =
-
-    cleanText(
-
-      c.className || d.className,
-
-      30
-
-    );
-
-  c.element =
-
-    cleanText(
-
-      c.element || d.element,
-
-      12
-
-    );
-
-  c.x =
-
-    clamp(
-
-      safeNumber(c.x, d.x),
-
-      PLAYER_RADIUS,
-
-      WORLD.w - PLAYER_RADIUS
-
-    );
-
-  c.y =
-
-    clamp(
-
-      safeNumber(c.y, d.y),
-
-      PLAYER_RADIUS,
-
-      WORLD.h - PLAYER_RADIUS
-
-    );
-
-  c.maxHp =
-
-    Math.max(
-
-      1,
-
-      safeNumber(c.maxHp, d.maxHp)
-
-    );
-
-  c.maxMp =
-
-    Math.max(
-
-      1,
-
-      safeNumber(c.maxMp, d.maxMp)
-
-    );
-
-  c.hp =
-
-    clamp(
-
-      safeNumber(c.hp, d.hp),
-
-      0,
-
-      c.maxHp
-
-    );
-
-  c.mp =
-
-    clamp(
-
-      safeNumber(c.mp, d.mp),
-
-      0,
-
-      c.maxMp
-
-    );
-
-  c.gold =
-
-    Math.max(
-
-      0,
-
-      Math.floor(
-
-        safeNumber(c.gold, d.gold)
-
-      )
-
-    );
-
-  c.mounted = !!c.mounted;
-
-  c.cape = c.cape !== false;
-
-  if (!Array.isArray(c.inventory)) {
-
-    c.inventory = [];
-
-  }
-
-  if (c.inventory.length > 24) {
-
-    c.inventory.length = 24;
-
-  }
-
-  return c;
-
-}
-
-/* =========================
-
-   HTTP SERVER
-
-========================= */
-
-const server = http.createServer(
-
-  (req, res) => {
-
-    if (
-
-      req.url === "/" ||
-
-      req.url === "/index.html"
-
-    ) {
-
-      const file =
-
-        path.join(
-
-          __dirname,
-
-          "index.html"
-
-        );
-
-      try {
-
-        res.writeHead(
-
-          200,
-
-          {
-
-            "Content-Type":
-
-              "text/html; charset=utf-8",
-
-            "Cache-Control":
-
-              "no-store"
-
-          }
-
-        );
-
-        return res.end(
-
-          fs.readFileSync(file)
-
-        );
-
-      } catch (err) {
-
-        res.writeHead(500);
-
-        return res.end(
-
-          "Không tìm thấy index.html"
-
-        );
-
-      }
-
-    }
-
-    res.writeHead(404);
-
-    res.end("Not found");
-
-  }
-
-);
-
-/* =========================
-
-   WEBSOCKET
-
-========================= */
-
-const wss =
-
-  new WebSocket.Server({
-
-    server,
-
-    maxPayload: 32 * 1024
+    "Cache-Control": "no-store"
 
   });
 
-const sessions = new Map();
+  res.end(JSON.stringify(data));
 
-function broadcast(message) {
+}
 
-  const data =
+const server = http.createServer((req, res) => {
 
-    JSON.stringify(message);
+  const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
 
-  for (
+  // Health check
 
-    const session of sessions.values()
+  if (url.pathname === "/health") {
 
-  ) {
+    return sendJSON(res, 200, {
 
-    if (
+      ok: true,
 
-      session.ws.readyState ===
+      game: "Kiem Hiep Mobi",
 
-      WebSocket.OPEN
+      protocol: PROTOCOL,
 
-    ) {
+      time: Date.now()
 
-      try {
-
-        session.ws.send(data);
-
-      } catch (_) {}
-
-    }
+    });
 
   }
 
-}
+  // Game client
 
-/* =========================
+  if (
 
-   PLAYER SNAPSHOT
+    url.pathname === "/" ||
 
-========================= */
+    url.pathname === "/index.html"
 
-function publicPlayer(session) {
+  ) {
 
-  const c = session.character;
+    const indexFile = path.join(__dirname, "index.html");
 
-  if (!c) return null;
+    if (!fs.existsSync(indexFile)) {
 
-  return {
+      return sendJSON(res, 500, {
 
-    id: session.id,
+        ok: false,
 
-    x: c.x,
+        error: "index.html not found"
 
-    y: c.y,
+      });
 
-    name: c.name,
+    }
 
-    level: c.level,
+    res.writeHead(200, {
 
-    className: c.className,
+      "Content-Type": "text/html; charset=utf-8",
 
-    element: c.element,
+      "Cache-Control": "no-store"
 
-    hp: c.hp,
+    });
 
-    maxHp: c.maxHp,
+    return fs.createReadStream(indexFile).pipe(res);
 
-    mounted:
+  }
 
-      !!session.input.mounted,
+  res.writeHead(404, {
 
-    cape:
+    "Content-Type": "text/plain; charset=utf-8"
 
-      !!session.input.cape
+  });
+
+  res.end("Not found");
+
+});
+
+const wss = new WebSocket.Server({ server });
+
+const sessions = new Map();
+
+wss.on("connection", (ws) => {
+
+  const playerId =
+
+    "p_" + Math.random().toString(36).slice(2, 10);
+
+  const session = {
+
+    id: playerId,
+
+    ws,
+
+    account: null,
+
+    character: null,
+
+    input: {
+
+      x: 0,
+
+      y: 0,
+
+      mounted: false,
+
+      cape: true
+
+    },
+
+    lastInput: 0,
+
+    lastSeq: 0,
+
+    rateViolations: 0,
+
+    _moveAt: Date.now(),
+
+    lastPong: Date.now()
 
   };
 
-}
+  sessions.set(playerId, session);
 
-function serverPlayer(session) {
+  ws.send(JSON.stringify({
 
-  const c = session.character;
+    type: "hello_required",
 
-  return {
+    protocol: PROTOCOL
 
-    x: c.x,
+  }));
 
-    y: c.y,
+  ws.on("message", (raw) => {
 
-    hp: c.hp,
+    let msg;
 
-    maxHp: c.maxHp,
+    try {
 
-    mp: c.mp,
+      msg = JSON.parse(raw.toString());
 
-    maxMp: c.maxMp,
+    } catch {
 
-    gold: c.gold,
+      return ws.send(JSON.stringify({
 
-    mounted:
+        type: "error",
 
-      !!session.input.mounted,
+        text: "Gói tin không hợp lệ"
 
-    cape:
+      }));
 
-      !!session.input.cape
+    }
 
-  };
+    // LOGIN / HELLO
 
-}
+    if (msg.type === "hello") {
 
-/* =========================
+      const account =
 
-   CONNECTION
+        String(msg.account || "demo").slice(0, 32);
 
-========================= */
+      if (!db[account]) {
 
-wss.on(
+        db[account] = {
 
-  "connection",
+          password: "demo",
 
-  (ws) => {
+          character: {
 
-    if (
+            x: 1600,
 
-      sessions.size >= MAX_SESSIONS
+            y: 1500,
 
-    ) {
+            hp: 180,
 
-      ws.close(
+            maxHp: 220,
 
-        1013,
+            mp: 33,
 
-        "Server đầy"
+            maxMp: 60,
+
+            gold: 733,
+
+            inventory: [],
+
+            name: "Thiếu Hiệp",
+
+            level: 14,
+
+            className: "Võ Đang",
+
+            element: "Kim"
+
+          }
+
+        };
+
+        saveDB();
+
+      }
+
+      session.account = account;
+
+      session.character = db[account].character;
+
+      const ch = session.character;
+
+      ch.name = ch.name || "Thiếu Hiệp";
+
+      ch.level = ch.level || 14;
+
+      ch.className = ch.className || "Võ Đang";
+
+      ch.element = ch.element || "Kim";
+
+      ch.maxHp = ch.maxHp || 220;
+
+      ch.maxMp = ch.maxMp || 60;
+
+      ch.x = safeNumber(ch.x, 1600);
+
+      ch.y = safeNumber(ch.y, 1500);
+
+      return ws.send(JSON.stringify({
+
+        type: "welcome",
+
+        protocol: PROTOCOL,
+
+        playerId,
+
+        player: {
+
+          x: ch.x,
+
+          y: ch.y,
+
+          hp: ch.hp,
+
+          mp: ch.mp,
+
+          gold: ch.gold,
+
+          name: ch.name,
+
+          level: ch.level,
+
+          className: ch.className,
+
+          element: ch.element
+
+        }
+
+      }));
+
+    }
+
+    // MOVEMENT
+
+    if (msg.type === "input") {
+
+      if (!session.character) return;
+
+      const now = Date.now();
+
+      if (now - session.lastInput < 35) {
+
+        session.rateViolations++;
+
+        if (session.rateViolations > 20) {
+
+          return ws.close(1008, "Too many inputs");
+
+        }
+
+        return;
+
+      }
+
+      session.lastInput = now;
+
+      let x = clamp(safeNumber(msg.x), -1, 1);
+
+      let y = clamp(safeNumber(msg.y), -1, 1);
+
+      const len = Math.hypot(x, y);
+
+      if (len > 1) {
+
+        x /= len;
+
+        y /= len;
+
+      }
+
+      session.input.x = x;
+
+      session.input.y = y;
+
+      session.input.mounted = !!msg.mounted;
+
+      session.input.cape = msg.cape !== false;
+
+      const dt = Math.min(
+
+        0.15,
+
+        Math.max(
+
+          0.01,
+
+          (now - session._moveAt) / 1000
+
+        )
 
       );
+
+      session._moveAt = now;
+
+      const speed =
+
+        session.input.mounted
+
+          ? MAX_SPEED
+
+          : 230;
+
+      session.character.x = clamp(
+
+        session.character.x + x * speed * dt,
+
+        25,
+
+        WORLD.w - 25
+
+      );
+
+      session.character.y = clamp(
+
+        session.character.y + y * speed * dt,
+
+        25,
+
+        WORLD.h - 25
+
+      );
+
+      const seq = Number(msg.seq);
+
+      if (
+
+        Number.isFinite(seq) &&
+
+        seq >= session.lastSeq
+
+      ) {
+
+        session.lastSeq = seq;
+
+      }
 
       return;
 
     }
 
-    const playerId =
+    // ITEM
 
-      "p_" +
+    if (msg.type === "use_item") {
 
-      Math.random()
+      return ws.send(JSON.stringify({
 
-        .toString(36)
+        type: "error",
 
-        .slice(2, 10);
+        text: "Hành động vật phẩm phải được server xác nhận."
 
-    const session = {
-
-      id: playerId,
-
-      ws,
-
-      account: null,
-
-      character: null,
-
-      input: {
-
-        x: 0,
-
-        y: 0,
-
-        mounted: false,
-
-        cape: true
-
-      },
-
-      lastInput: 0,
-
-      lastSeq: 0,
-
-      rateViolations: 0,
-
-      moveAt: Date.now(),
-
-      lastPong: Date.now(),
-
-      authenticated: false
-
-    };
-
-    sessions.set(
-
-      playerId,
-
-      session
-
-    );
-
-    ws.send(
-
-      JSON.stringify({
-
-        type: "hello_required",
-
-        protocol: PROTOCOL
-
-      })
-
-    );
-
-    /* =========================
-
-       MESSAGE
-
-    ========================= */
-
-    ws.on(
-
-      "message",
-
-      (raw) => {
-
-        let msg;
-
-        try {
-
-          msg =
-
-            JSON.parse(
-
-              raw.toString()
-
-            );
-
-        } catch (_) {
-
-          ws.send(
-
-            JSON.stringify({
-
-              type: "error",
-
-              text:
-
-                "Gói tin không hợp lệ"
-
-            })
-
-          );
-
-          return;
-
-        }
-
-        if (
-
-          !msg ||
-
-          typeof msg !== "object"
-
-        ) {
-
-          return;
-
-        }
-
-        /* =========================
-
-           HELLO / LOGIN DEMO
-
-        ========================= */
-
-        if (
-
-          msg.type === "hello"
-
-        ) {
-
-          const account =
-
-            cleanText(
-
-              msg.account || "demo",
-
-              32
-
-            );
-
-          if (!db[account]) {
-
-            db[account] = {
-
-              password: "demo",
-
-              character:
-
-                defaultCharacter()
-
-            };
-
-            saveDB();
-
-          }
-
-          session.account =
-
-            account;
-
-          session.character =
-
-            normalizeCharacter(
-
-              db[account].character
-
-            );
-
-          db[account].character =
-
-            session.character;
-
-          session.authenticated =
-
-            true;
-
-          ws.send(
-
-            JSON.stringify({
-
-              type: "welcome",
-
-              protocol: PROTOCOL,
-
-              playerId,
-
-              player:
-
-                serverPlayer(session)
-
-            })
-
-          );
-
-          return;
-
-        }
-
-        /* =========================
-
-           TẤT CẢ ACTION CẦN LOGIN
-
-        ========================= */
-
-        if (
-
-          !session.authenticated ||
-
-          !session.character
-
-        ) {
-
-          ws.send(
-
-            JSON.stringify({
-
-              type: "error",
-
-              text:
-
-                "Chưa đăng nhập nhân vật"
-
-            })
-
-          );
-
-          return;
-
-        }
-
-        /* =========================
-
-           INPUT DI CHUYỂN
-
-        ========================= */
-
-        if (
-
-          msg.type === "input"
-
-        ) {
-
-          const now =
-
-            Date.now();
-
-          if (
-
-            now -
-
-            session.lastInput
-
-            <
-
-            MAX_INPUT_RATE
-
-          ) {
-
-            session.rateViolations++;
-
-            if (
-
-              session.rateViolations >
-
-              25
-
-            ) {
-
-              ws.close(
-
-                1008,
-
-                "Too many inputs"
-
-              );
-
-              return;
-
-            }
-
-            return;
-
-          }
-
-          session.lastInput =
-
-            now;
-
-          session.input.mounted =
-
-            !!msg.mounted;
-
-          session.input.cape =
-
-            msg.cape !== false;
-
-          let x =
-
-            clamp(
-
-              safeNumber(
-
-                msg.x
-
-              ),
-
-              -1,
-
-              1
-
-            );
-
-          let y =
-
-            clamp(
-
-              safeNumber(
-
-                msg.y
-
-              ),
-
-              -1,
-
-              1
-
-            );
-
-          const len =
-
-            Math.hypot(
-
-              x,
-
-              y
-
-            );
-
-          if (len > 1) {
-
-            x /= len;
-
-            y /= len;
-
-          }
-
-          const nowMove =
-
-            Date.now();
-
-          const dt =
-
-            Math.min(
-
-              0.15,
-
-              Math.max(
-
-                0.01,
-
-                (
-
-                  nowMove -
-
-                  session.moveAt
-
-                ) / 1000
-
-              )
-
-            );
-
-          session.moveAt =
-
-            nowMove;
-
-          const speed =
-
-            session.input.mounted
-
-              ? MOUNT_SPEED
-
-              : WALK_SPEED;
-
-          /*
-
-             SERVER TỰ TÍNH VỊ TRÍ.
-
-             Client không được gửi x/y thật.
-
-          */
-
-          session.character.x =
-
-            clamp(
-
-              session.character.x +
-
-                x *
-
-                speed *
-
-                dt,
-
-              PLAYER_RADIUS,
-
-              WORLD.w -
-
-                PLAYER_RADIUS
-
-            );
-
-          session.character.y =
-
-            clamp(
-
-              session.character.y +
-
-                y *
-
-                speed *
-
-                dt,
-
-              PLAYER_RADIUS,
-
-              WORLD.h -
-
-                PLAYER_RADIUS
-
-            );
-
-          const seq =
-
-            Number(msg.seq);
-
-          if (
-
-            Number.isFinite(seq) &&
-
-            seq >= session.lastSeq
-
-          ) {
-
-            session.lastSeq =
-
-              seq;
-
-          }
-
-          return;
-
-        }
-
-        /* =========================
-
-           DÙNG VẬT PHẨM
-
-        ========================= */
-
-        if (
-
-          msg.type === "use_item"
-
-        ) {
-
-          ws.send(
-
-            JSON.stringify({
-
-              type: "error",
-
-              text:
-
-                "Hành động vật phẩm phải được server xác nhận."
-
-            })
-
-          );
-
-          return;
-
-        }
-
-        /* =========================
-
-           CHAT
-
-        ========================= */
-
-        if (
-
-          msg.type === "world_chat"
-
-        ) {
-
-          const text =
-
-            cleanText(
-
-              msg.text,
-
-              80
-
-            );
-
-          if (!text) {
-
-            return;
-
-          }
-
-          broadcast({
-
-            type: "world_chat",
-
-            playerId,
-
-            name:
-
-              session.character.name,
-
-            text
-
-          });
-
-          return;
-
-        }
-
-        /* =========================
-
-           PING
-
-        ========================= */
-
-        if (
-
-          msg.type === "ping"
-
-        ) {
-
-          ws.send(
-
-            JSON.stringify({
-
-              type: "pong",
-
-              serverTime:
-
-                Date.now()
-
-            })
-
-          );
-
-        }
-
-      }
-
-    );
-
-    /* =========================
-
-       ERROR
-
-    ========================= */
-
-    ws.on(
-
-      "error",
-
-      () => {}
-
-    );
-
-    /* =========================
-
-       PONG
-
-    ========================= */
-
-    ws.on(
-
-      "pong",
-
-      () => {
-
-        session.lastPong =
-
-          Date.now();
-
-      }
-
-    );
-
-    /* =========================
-
-       CLOSE
-
-    ========================= */
-
-    ws.on(
-
-      "close",
-
-      () => {
-
-        if (
-
-          session.character &&
-
-          session.account &&
-
-          db[session.account]
-
-        ) {
-
-          session.character =
-
-            normalizeCharacter(
-
-              session.character
-
-            );
-
-          db[session.account].character =
-
-            session.character;
-
-          saveDB();
-
-        }
-
-        sessions.delete(
-
-          playerId
-
-        );
-
-      }
-
-    );
-
-  }
-
-);
-
-/* =========================
-
-   WORLD TICK
-
-========================= */
-
-setInterval(
-
-  () => {
-
-    const players = [];
-
-    for (
-
-      const session
-
-      of sessions.values()
-
-    ) {
-
-      if (
-
-        !session.character ||
-
-        !session.authenticated
-
-      ) {
-
-        continue;
-
-      }
-
-      players.push(
-
-        publicPlayer(session)
-
-      );
+      }));
 
     }
 
-    for (
+  });
 
-      const session
+  ws.on("pong", () => {
 
-      of sessions.values()
+    session.lastPong = Date.now();
 
-    ) {
+  });
 
-      if (
+  ws.on("error", () => {});
 
-        session.ws.readyState !==
+  ws.on("close", () => {
 
-        WebSocket.OPEN
-
-      ) {
-
-        continue;
-
-      }
-
-      if (
-
-        !session.character
-
-      ) {
-
-        continue;
-
-      }
-
-      try {
-
-        session.ws.send(
-
-          JSON.stringify({
-
-            type: "snapshot",
-
-            protocol: PROTOCOL,
-
-            serverTime:
-
-              Date.now(),
-
-            player:
-
-              serverPlayer(
-
-                session
-
-              ),
-
-            players
-
-          })
-
-        );
-
-      } catch (_) {}
-
-    }
-
-  },
-
-  TICK_MS
-
-);
-
-/* =========================
-
-   HEARTBEAT
-
-========================= */
-
-setInterval(
-
-  () => {
-
-    const now =
-
-      Date.now();
-
-    for (
-
-      const session
-
-      of sessions.values()
-
-    ) {
-
-      if (
-
-        session.ws.readyState !==
-
-        WebSocket.OPEN
-
-      ) {
-
-        continue;
-
-      }
-
-      if (
-
-        now -
-
-        session.lastPong
-
-        >
-
-        30000
-
-      ) {
-
-        try {
-
-          session.ws.terminate();
-
-        } catch (_) {}
-
-        continue;
-
-      }
-
-      session.lastPong =
-
-        now;
-
-      try {
-
-        session.ws.ping();
-
-      } catch (_) {}
-
-    }
-
-  },
-
-  15000
-
-);
-
-/* =========================
-
-   AUTO SAVE
-
-========================= */
-
-setInterval(
-
-  () => {
-
-    for (
-
-      const session
-
-      of sessions.values()
-
-    ) {
-
-      if (
-
-        !session.character ||
-
-        !session.account
-
-      ) {
-
-        continue;
-
-      }
-
-      if (!db[session.account]) {
-
-        continue;
-
-      }
+    if (session.character && session.account) {
 
       db[session.account].character =
 
         session.character;
 
+      saveDB();
+
     }
 
-    saveDB();
+    sessions.delete(playerId);
 
-  },
+  });
 
-  10000
+});
 
-);
+// SNAPSHOT
 
-/* =========================
+setInterval(() => {
 
-   SERVER START
+  const players = [];
 
-========================= */
+  for (const s of sessions.values()) {
 
-server.listen(
+    if (!s.character) continue;
 
-  PORT,
+    const ch = s.character;
 
-  () => {
+    players.push({
 
-    console.log(
+      id: s.id,
 
-      `Kiếm Thế Mobi 4.11.2 Server đang chạy tại http://localhost:${PORT}`
+      x: ch.x,
 
-    );
+      y: ch.y,
 
-    console.log(
+      name: ch.name || "Thiếu Hiệp",
 
-      `Protocol: ${PROTOCOL}`
+      level: ch.level || 14,
 
-    );
+      className: ch.className || "Võ Đang",
+
+      element: ch.element || "Kim",
+
+      mounted: !!s.input.mounted,
+
+      cape: !!s.input.cape,
+
+      hp: ch.hp,
+
+      maxHp: ch.maxHp || 220
+
+    });
 
   }
 
-);
+  for (const s of sessions.values()) {
+
+    if (
+
+      s.ws.readyState !== WebSocket.OPEN ||
+
+      !s.character
+
+    ) {
+
+      continue;
+
+    }
+
+    const ch = s.character;
+
+    s.ws.send(JSON.stringify({
+
+      type: "snapshot",
+
+      protocol: PROTOCOL,
+
+      serverTime: Date.now(),
+
+      player: {
+
+        x: ch.x,
+
+        y: ch.y,
+
+        hp: ch.hp,
+
+        mp: ch.mp,
+
+        gold: ch.gold,
+
+        mounted: !!s.input.mounted,
+
+        cape: !!s.input.cape
+
+      },
+
+      players
+
+    }));
+
+  }
+
+}, 100);
+
+// PING
+
+setInterval(() => {
+
+  const now = Date.now();
+
+  for (const s of sessions.values()) {
+
+    if (s.ws.readyState !== WebSocket.OPEN) {
+
+      continue;
+
+    }
+
+    if (
+
+      s.lastPong &&
+
+      now - s.lastPong > 30000
+
+    ) {
+
+      try {
+
+        s.ws.terminate();
+
+      } catch (_) {}
+
+      continue;
+
+    }
+
+    try {
+
+      s.ws.ping();
+
+    } catch (_) {}
+
+  }
+
+}, 15000);
+
+server.listen(PORT, "0.0.0.0", () => {
+
+  console.log(
+
+    `Kiếm Thế Mobi ${PROTOCOL} server listening on port ${PORT}`
+
+  );
+
+});

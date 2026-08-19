@@ -178,6 +178,15 @@ let capeOn=true;
 let locationName="Tân Thủ Thôn";
 
 const trees=[[250,300],[600,420],[940,250],[1260,500],[1760,350],[2180,300],[2700,450],[380,900],[800,850],[1150,760],[2050,800],[2500,850],[2950,950],[260,1450],[720,1320],[1080,1550],[2150,1420],[2680,1510],[3000,1350],[500,2050],[950,1900],[1450,2100],[2050,2000],[2500,2050],[2900,1900]];
+const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"];
+const elementIcon={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};
+let elementIndex=0,playerClass="Võ Đang";
+let statuses={stun:0,slow:0,buff:0};
+const classData={
+ "Thiếu Lâm":{desc:"Cận chiến bền bỉ, thiên về khống chế.",element:"Thổ",atkBonus:3},
+ "Võ Đang":{desc:"Cân bằng công thủ, kỹ năng linh hoạt.",element:"Kim",atkBonus:4},
+ "Nga Mi":{desc:"Hỗ trợ, hồi phục và buff đồng đội.",element:"Thủy",atkBonus:2}
+};
 const mobs=[];for(let i=0;i<12;i++)mobs.push({x:700+(i*211)%1900,y:650+(i*157)%1300,r:24,hp:65,maxHp:65,alive:true,hit:0,element:elements[i%5]});
 const items=[
 {name:"Kiếm Tân Thủ+",type:"vũ khí",rarity:"Thường",level:1,atk:5,def:0,icon:"🗡️"},
@@ -188,15 +197,6 @@ const items=[
 {name:"Bình Hồi Khí",type:"tiêu hao",rarity:"Thường",level:1,atk:0,def:0,icon:"🧪"}];
 let bag=[...items.slice(0,5),items[5],items[5]],equip={weapon:items[3],armor:items[2]};
 const drops=[];let gold=733,last=performance.now(),attackCd=0,skillCd=0,fireCd=0;
-const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"];
-const elementIcon={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};
-let elementIndex=0,playerClass="Võ Đang";
-let statuses={stun:0,slow:0,buff:0};
-const classData={
- "Thiếu Lâm":{desc:"Cận chiến bền bỉ, thiên về khống chế.",element:"Thổ",atkBonus:3},
- "Võ Đang":{desc:"Cân bằng công thủ, kỹ năng linh hoạt.",element:"Kim",atkBonus:4},
- "Nga Mi":{desc:"Hỗ trợ, hồi phục và buff đồng đội.",element:"Thủy",atkBonus:2}
-};
 
 const ENHANCE_MAX=10;
 const ENHANCE_BASE_COST=50;

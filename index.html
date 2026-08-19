@@ -104,6 +104,8 @@ addEventListener("resize",resize);resize();
 const world={w:3200,h:2400},ZOOM=.62;
 const P={x:1750,y:1480,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15};
 const cam={x:P.x,y:P.y},town={x:1600,y:1200},city={x:2600,y:700},xaPhu={x:1460,y:1080};
+const SAFE_RADIUS=220;
+function inSafeZone(x,y,pad=0){return Math.hypot(x-town.x,y-town.y)<=SAFE_RADIUS+pad;}
 let mounted=false,capeOn=true,locationName="Tân Thủ Thôn",gold=733;
 const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"],elementIcon={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};
 let elementIndex=0,playerClass="Võ Đang",statuses={stun:0,slow:0,buff:0};
@@ -114,7 +116,15 @@ const mobSpawns=[
   [720,1180],[980,1580],[2050,1450],[2460,1580],
   [620,1720],[2860,1250],[760,2050],[2220,2050]
 ];
-const mobs=mobSpawns.map((p,i)=>({x:p[0],y:p[1],r:24,hp:65,maxHp:65,alive:true,hit:0,element:elements[i%5]}));
+const mobs=mobSpawns.map((p,i)=>{
+  let x=p[0],y=p[1];
+  if(inSafeZone(x,y,35)){
+    const dx=x-town.x,dy=y-town.y,dd=Math.hypot(dx,dy)||1;
+    x=town.x+dx/dd*(SAFE_RADIUS+45);
+    y=town.y+dy/dd*(SAFE_RADIUS+45);
+  }
+  return {x,y,r:24,hp:65,maxHp:65,alive:true,hit:0,element:elements[i%5]};
+});
 const baseItems=[
 {name:"Kiếm Tân Thủ+",type:"vũ khí",rarity:"Thường",level:1,atk:5,def:0,icon:"🗡️"},
 {name:"Đao Bào",type:"áo",rarity:"Thường",level:1,atk:0,def:5,icon:"🥋"},
@@ -193,17 +203,16 @@ const len=Math.hypot(dx,dy)||1;if(!NET.connected&&(dx||dy)){const speed=mounted?
 P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.r,P.y));
 for(const m of mobs)if(m.alive){
   const d=Math.hypot(P.x-m.x,P.y-m.y);
-  if(d<330&&d>105&&statuses.stun<=0){
+  if(d<330&&d>105&&statuses.stun<=0&&!inSafeZone(m.x,m.y,28)){
     const ms=statuses.slow>0?20:45;
     m.x+=(P.x-m.x)/Math.max(d,1)*ms*dt;
     m.y+=(P.y-m.y)/Math.max(d,1)*ms*dt;
   }
-  // Giữ quái ngoài khu trung tâm Tân Thủ Thôn để không đè nhân vật/NPC.
-  const td=Math.hypot(m.x-town.x,m.y-town.y);
-  if(td<270){
-    const k=270/Math.max(td,1);
-    m.x=town.x+(m.x-town.x)*k;
-    m.y=town.y+(m.y-town.y)*k;
+  // Không cho Sơn Tặc bước vào khu an toàn.
+  if(inSafeZone(m.x,m.y,28)){
+    const dx=m.x-town.x,dy=m.y-town.y,dd=Math.hypot(dx,dy)||1;
+    m.x=town.x+dx/dd*(SAFE_RADIUS+30);
+    m.y=town.y+dy/dd*(SAFE_RADIUS+30);
   }
   m.hit=Math.max(0,m.hit-dt);
 }
@@ -233,8 +242,8 @@ ctx.strokeStyle="#ffffff12";for(let x=0;x<=world.w;x+=160){ctx.beginPath();ctx.m
 ctx.fillStyle="#3f91bd";ctx.beginPath();ctx.moveTo(0,1650);ctx.bezierCurveTo(500,1500,650,1900,1100,1750);ctx.bezierCurveTo(1450,1620,1800,1850,2200,1740);ctx.bezierCurveTo(2600,1640,2900,1800,3200,1700);ctx.lineTo(3200,2400);ctx.lineTo(0,2400);ctx.closePath();ctx.fill();
 ctx.fillStyle="#b49a68";ctx.beginPath();ctx.moveTo(0,1850);ctx.quadraticCurveTo(800,1450,1600,1700);ctx.quadraticCurveTo(2300,1900,3200,1500);ctx.lineTo(3200,1750);ctx.quadraticCurveTo(2300,2150,1600,1950);ctx.quadraticCurveTo(800,1750,0,2100);ctx.closePath();ctx.fill();
 ctx.save();
-ctx.fillStyle="#214d2b55";ctx.beginPath();ctx.arc(town.x,town.y,270,0,Math.PI*2);ctx.fill();
-ctx.strokeStyle="#f0d77a55";ctx.lineWidth=3;ctx.setLineDash([12,10]);ctx.beginPath();ctx.arc(town.x,town.y,270,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+ctx.fillStyle="#214d2b55";ctx.beginPath();ctx.arc(town.x,town.y,SAFE_RADIUS,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle="#f0d77a55";ctx.lineWidth=3;ctx.setLineDash([12,10]);ctx.beginPath();ctx.arc(town.x,town.y,SAFE_RADIUS,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
 ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-70,210,140);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+8);ctx.font="13px sans-serif";ctx.fillStyle="#f7e9b0";ctx.fillText("KHU AN TOÀN",town.x,town.y+34);ctx.restore();
 for(const [x,y] of trees){ctx.fillStyle="#704a30";ctx.fillRect(x-9,y+28,18,50);ctx.fillStyle="#285d37";ctx.beginPath();ctx.arc(x,y,58,0,Math.PI*2);ctx.fill();ctx.fillStyle="#347447";ctx.beginPath();ctx.arc(x-20,y-18,36,0,Math.PI*2);ctx.fill()}
 for(const m of mobs)if(m.alive){
@@ -245,8 +254,8 @@ for(const m of mobs)if(m.alive){
   ctx.font="bold 12px sans-serif";ctx.textAlign="center";
   const tw=ctx.measureText(label).width+14;
   ctx.fillStyle="#08100dcc";
-  ctx.beginPath();ctx.roundRect(m.x-tw/2,m.y-61,tw,20,7);ctx.fill();
-  ctx.fillStyle="#fff";ctx.fillText(label,m.x,m.y-47);
+  ctx.beginPath();ctx.roundRect(m.x-tw/2,m.y-64,tw,20,7);ctx.fill();
+  ctx.fillStyle="#fff";ctx.fillText(label,m.x,m.y-50);
   ctx.fillStyle="#18221a";ctx.fillRect(m.x-30,m.y+30,60,6);
   ctx.fillStyle="#d95c5c";ctx.fillRect(m.x-30,m.y+30,60*(m.hp/m.maxHp),6);
 }
@@ -256,10 +265,14 @@ if(capeOn){ctx.fillStyle="#6b3fa0aa";ctx.beginPath();ctx.moveTo(P.x-30,P.y+42);c
 if(mounted){ctx.font="34px sans-serif";ctx.textAlign="center";ctx.fillText("🐎",P.x,P.y+30)}
 ctx.fillStyle="#00000055";ctx.beginPath();ctx.ellipse(P.x,P.y+48,30,9,0,0,Math.PI*2);ctx.fill();
 ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(P.x,P.y-32,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#f5f1e4";ctx.beginPath();ctx.moveTo(P.x-24,P.y+45);ctx.lineTo(P.x,P.y-8);ctx.lineTo(P.x+28,P.y+45);ctx.lineTo(P.x,P.y+60);ctx.closePath();ctx.fill();
-ctx.font="bold 14px sans-serif";ctx.textAlign="center";const pn="⚔️ Thiếu Hiệp";const pntw=ctx.measureText(pn).width+14;ctx.fillStyle="#08100dcc";ctx.beginPath();ctx.roundRect(P.x-pntw/2,P.y-88,pntw,20,7);ctx.fill();ctx.fillStyle="#fff";ctx.fillText(pn,P.x,P.y-73);
-ctx.font="11px sans-serif";ctx.fillStyle="#d8e7f2";ctx.fillText("Cấp 14 · "+playerClass,P.x,P.y-59);
+ctx.font="bold 14px sans-serif";ctx.textAlign="center";const pn="⚔️ Thiếu Hiệp";const pntw=ctx.measureText(pn).width+14;ctx.fillStyle="#08100dcc";ctx.beginPath();ctx.roundRect(P.x-pntw/2,P.y-94,pntw,20,7);ctx.fill();ctx.fillStyle="#fff";ctx.fillText(pn,P.x,P.y-79);
+ctx.font="11px sans-serif";ctx.fillStyle="#d8e7f2";ctx.fillText("Cấp 14 · "+playerClass,P.x,P.y-65);
+if(inSafeZone(P.x,P.y)){
+  ctx.font="bold 11px sans-serif";ctx.fillStyle="#f7e9b0";ctx.textAlign="center";
+  ctx.fillText("🛡️ Khu an toàn",P.x,P.y+78);
+}
 const near=nearest();
-if(near && Math.hypot(P.x-near.x,P.y-near.y)<190){ctx.strokeStyle="#ffd95a99";ctx.lineWidth=3;ctx.beginPath();ctx.arc(near.x,near.y,near.r+9,0,Math.PI*2);ctx.stroke();}
+if(near && !inSafeZone(near.x,near.y) && Math.hypot(P.x-near.x,P.y-near.y)<190){ctx.strokeStyle="#ffd95a99";ctx.lineWidth=3;ctx.beginPath();ctx.arc(near.x,near.y,near.r+9,0,Math.PI*2);ctx.stroke();}
 ctx.restore();
 }
 

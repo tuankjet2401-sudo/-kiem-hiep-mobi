@@ -118,7 +118,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   <button id="skill" class="btn skill">☯️</button>
   <button id="fire" class="btn skill">🔥</button>
 </div>
-<div id="msg"></div>
+<div id="msg"></div><div id="netStatus" style="position:absolute;z-index:40;left:16px;bottom:12px;padding:7px 10px;border-radius:12px;background:#08100dcc;color:#fff;font-size:12px">🔴 Offline</div>
 <div class="gameMenu">
   <button id="elementBtn">☯️ Ngũ hành</button>
   <button id="activityBtn">🏆 Hoạt động</button>
@@ -563,7 +563,7 @@ c.addEventListener("touchstart",e=>{
 
 function update(dt){
 let dx=joy.x,dy=joy.y;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;
-const len=Math.hypot(dx,dy)||1;if(dx||dy){const speed=mounted?330:230;P.x+=dx/len*speed*dt;P.y+=dy/len*speed*dt}
+const len=Math.hypot(dx,dy)||1;if((!NET.connected) && (dx||dy)){const speed=mounted?330:230;P.x+=dx/len*speed*dt;P.y+=dy/len*speed*dt}
 P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.r,P.y));
 for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330 && statuses.stun<=0){const ms=statuses.slow>0?20:45;m.x+=(P.x-m.x)/Math.max(d,1)*ms*dt;m.y+=(P.y-m.y)/Math.max(d,1)*ms*dt}if(d<55)m.hit=Math.max(m.hit,0.1);m.hit=Math.max(0,m.hit-dt)}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);
@@ -664,9 +664,129 @@ for(const [x,y] of trees){ctx.fillStyle="#704a30";ctx.fillRect(x-9,y+28,18,50);c
 ctx.fillStyle="#78d28d";ctx.beginPath();ctx.arc(1780,1110,28,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.font="18px sans-serif";ctx.fillText("💚 Đạo Sĩ",1780,1060);
 for(const m of mobs)if(m.alive){ctx.fillStyle=m.hit?"#ffbd59":"#814237";ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#ffe58a";ctx.beginPath();ctx.arc(m.x-8,m.y-4,5,0,Math.PI*2);ctx.arc(m.x+8,m.y-4,5,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.font="14px sans-serif";ctx.fillText(elementIcon[m.element]+" Sơn Tặc",m.x,m.y-34);ctx.fillStyle="#18221a";ctx.fillRect(m.x-30,m.y+30,60,6);ctx.fillStyle="#d95c5c";ctx.fillRect(m.x-30,m.y+30,60*(m.hp/m.maxHp),6)}
 for(const d of drops){ctx.save();ctx.translate(d.x,d.y);ctx.shadowColor=d.kind==="gold"?"#ffd95a":"#aee8ff";ctx.shadowBlur=18;ctx.fillStyle=d.kind==="gold"?"#e8c64f":"#d7d7d7";ctx.beginPath();ctx.arc(0,0,22,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle="#111";ctx.font="16px sans-serif";ctx.textAlign="center";ctx.fillText(d.kind==="gold"?"🪙":d.item.icon,0,6);ctx.fillStyle="#fff";ctx.fillText(d.kind==="gold"?"+"+d.amount:d.item.rarity.toUpperCase(),0,42);ctx.restore()}
+for(const op of otherPlayers){
+  const d=Math.hypot(op.x-P.x,op.y-P.y);
+  if(d>900) continue;
+  if(op.cape){ctx.fillStyle="#6b3fa0aa";ctx.beginPath();ctx.moveTo(op.x-30,op.y+42);ctx.quadraticCurveTo(op.x,op.y+8,op.x+30,op.y+42);ctx.lineTo(op.x+18,op.y+58);ctx.lineTo(op.x-18,op.y+58);ctx.closePath();ctx.fill()}
+  if(op.mounted){ctx.font="30px sans-serif";ctx.textAlign="center";ctx.fillText("🐎",op.x,op.y+28)}
+  ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(op.x,op.y-32,18,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#c9d8f0";ctx.beginPath();ctx.moveTo(op.x-24,op.y+45);ctx.lineTo(op.x,op.y-8);ctx.lineTo(op.x+28,op.y+45);ctx.lineTo(op.x,op.y+60);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="bold 13px sans-serif";ctx.textAlign="center";ctx.fillText((op.element?elementIcon[op.element]+" ":"")+op.name,op.x,op.y-58);
+  ctx.font="11px sans-serif";ctx.fillStyle="#c8d8e8";ctx.fillText("Cấp "+(op.level||14)+" · "+(op.className||"Võ Đang"),op.x,op.y-44);
+}
 ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(P.x,P.y-32,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#f5f1e4";ctx.beginPath();ctx.moveTo(P.x-24,P.y+45);ctx.lineTo(P.x,P.y-8);ctx.lineTo(P.x+28,P.y+45);ctx.lineTo(P.x,P.y+60);ctx.closePath();ctx.fill();ctx.strokeStyle="#e8e8e8";ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(P.x+18,P.y+15);ctx.lineTo(P.x+55,P.y-38);ctx.stroke();
 ctx.restore();
 }
+
+/* 4.10 CLIENT ↔ NODE.JS SERVER
+   Server-authoritative demo:
+   - Client sends input only.
+   - Server validates movement and owns the canonical position/inventory.
+   - Client receives snapshots.
+*/
+let otherPlayers=[];
+const NET = {
+  ws:null,
+  connected:false,
+  id:null,
+  seq:0,
+  url: (location.protocol==="https:" ? "wss://" : "ws://") + location.host
+};
+
+function setNetStatus(text, ok=false){
+  const el=document.getElementById("netStatus");
+  if(el){el.textContent=(ok?"🟢 ":"🔴 ")+text;}
+}
+
+function connectServer(){
+  // If opened directly as a local file, connect to the demo Node server.
+  const url = location.protocol==="file:" ? "ws://localhost:3000" : NET.url;
+  try{
+    NET.ws=new WebSocket(url);
+    NET.ws.onopen=()=>{
+      NET.connected=true;
+      setNetStatus("Server 4.11.1 connected",true);
+      NET.ws.send(JSON.stringify({
+        type:"hello",
+        account:"demo",
+        character:"ThieuHiep"
+      }));
+    };
+    NET.ws.onmessage=(ev)=>{
+      try{handleServerMessage(JSON.parse(ev.data));}catch(_){}
+    };
+    NET.ws.onclose=()=>{
+      NET.connected=false;
+      setNetStatus("Offline");
+      setTimeout(connectServer,3000);
+    };
+    NET.ws.onerror=()=>setNetStatus("Server error");
+  }catch(_){setNetStatus("Offline")}
+}
+
+function sendInput(){
+  if(!NET.connected || !NET.ws || NET.ws.readyState!==1)return;
+  NET.ws.send(JSON.stringify({
+    type:"input",
+    seq:++NET.seq,
+    x:joy.x,
+    y:joy.y,
+    mounted:!!mounted,
+    cape:!!capeOn
+  }));
+}
+
+function handleServerMessage(m){
+  if(m.type==="welcome"){
+    NET.id=m.playerId;
+    if(m.protocol) setNetStatus("Online · v"+m.protocol,true);
+    if(m.player){
+      P.x=m.player.x; P.y=m.player.y;
+      P.hp=m.player.hp; P.mp=m.player.mp;
+      gold=m.player.gold;
+    }
+    setNetStatus("Online · "+NET.id,true);
+    return;
+  }
+  if(m.type==="snapshot"){
+    if(m.player){
+      // Server is authoritative. Small interpolation can be added later.
+      P.x=m.player.x; P.y=m.player.y;
+      P.hp=m.player.hp; P.mp=m.player.mp;
+      gold=m.player.gold;
+    }
+    if(Array.isArray(m.players)){
+      // Other players are rendered in a later multiplayer pass.
+      otherPlayers=m.players.filter(p=>p.id!==NET.id);
+    }
+    return;
+  }
+  if(m.type==="inventory"){
+    if(Array.isArray(m.inventory)){
+      // Only replace inventory with server data when the server sends it.
+      bag=m.inventory;
+      renderBag();
+    }
+    if(typeof m.gold==="number") gold=m.gold;
+    return;
+  }
+  if(m.type==="toast") toast(m.text);
+  if(m.type==="error") toast("⚠️ "+m.text);
+}
+
+let lastNetSend=0;
+const oldUpdate = update;
+update = function(dt){
+  oldUpdate(dt);
+  const now=performance.now();
+  if(now-lastNetSend>80){
+    lastNetSend=now;
+    sendInput();
+  }
+};
+
+connectServer();
+
 function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 renderBag();
 </script>

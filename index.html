@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.4">
+<meta name="game-version" content="4.5">
 <title>Kiếm Thế Mobi – Bản 3.9.9</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -15,20 +15,32 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 #stats{width:430px;max-width:54vw}.name{font-size:25px;font-weight:800}.sub{font-size:17px}.bar{height:9px;border-radius:9px;background:#30363b;margin:6px 0;overflow:hidden}.hp{height:100%;background:#e45b56}.mp{height:100%;background:#63b7ee}
 #town{width:250px;max-width:31vw;text-align:right;font-size:17px}
 .btn{position:absolute;z-index:30;border:2px solid #68727d;background:#0d141bdf;color:#fff;border-radius:50%;width:68px;height:68px;font-size:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px #0005}
-#bagBtn{right:24px;top:155px}.skills{position:absolute;z-index:30;right:18px;bottom:145px;display:flex;gap:10px}.skill{position:relative}
+#bagBtn{right:24px;top:155px}
+.travelBtn{right:24px}
+#mountBtn{top:235px}
+#teleBtn{top:315px}
+.travelModal{inset:20% 8%;max-width:520px;margin:auto;height:max-content}
+.travelCard{background:#20282f;border:1px solid #3b454e;border-radius:16px;padding:14px;margin:10px 0;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.travelCard strong{font-size:19px}.travelCard small{color:#cfd5da;display:block}
+.mountOn{box-shadow:0 0 0 3px #f3d46b,0 8px 20px #0005}
+.skills{position:absolute;z-index:30;right:18px;bottom:145px;display:flex;gap:10px}.skill{position:relative}
 #joy{position:absolute;z-index:30;left:14px;bottom:150px;width:108px;height:108px;border-radius:50%;background:#14221bcc;border:4px solid #43504c}
 #stick{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:#e8c45c;border:5px solid #fff0b0}
 #msg{position:absolute;z-index:50;left:50%;top:42%;transform:translate(-50%,-50%);padding:10px 18px;border-radius:20px;background:#08100ddd;color:#fff;font-size:18px;display:none;white-space:nowrap}
 .modal{position:absolute;z-index:80;inset:10% 4%;background:#101820f5;border:1px solid #3c4650;border-radius:24px;color:#fff;padding:20px;overflow:auto;display:none}
 .modal h1{margin:0 0 12px;font-size:30px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:12px;font-size:28px;padding:8px 14px}
 .item{background:#20282f;border-radius:15px;padding:11px 13px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}.item strong{font-size:18px}.item small{display:block;color:#ddd}.rare{color:#c47cff}.good{color:#77e36a}.normal{color:#eee}
-@media(max-width:430px){#stats{max-width:58vw;padding:10px 12px}.name{font-size:22px}.sub{font-size:15px}#town{max-width:30vw;font-size:14px}.skills{gap:8px;right:12px;bottom:132px}.btn{width:60px;height:60px;font-size:26px}#joy{left:12px;bottom:150px;width:108px;height:108px}#stick{width:48px;height:48px}}
+@media(max-width:430px){#stats{max-width:58vw;padding:10px 12px}.name{font-size:22px}.sub{font-size:15px}#town{max-width:30vw;font-size:14px}.skills{gap:8px;right:12px;bottom:132px}.btn{width:60px;height:60px;font-size:26px}#joy{left:12px;bottom:150px;width:108px;height:108px}.travelBtn{right:12px}#stick{width:48px;height:48px}}
 .action{background:#d2a44e;border:0;color:#fff;font-weight:700;border-radius:12px;padding:10px 13px;font-size:15px}
 .enhancePanel{margin-top:6px;padding-top:6px;border-top:1px solid #3b444d}
 .enhanceBtn{background:#6f4fd8;border:0;color:#fff;font-weight:800;border-radius:11px;padding:9px 10px;font-size:14px}
 .enhanceBtn:disabled{opacity:.45}
 .enhanceLv{color:#ffd95a;font-weight:800}
 .enhanceCost{color:#ffd95a;font-size:13px;font-weight:700}
+.enhanceInfo{margin-top:5px;font-size:12px;color:#cbd3da}
+.enhanceBar{height:5px;background:#343b42;border-radius:5px;overflow:hidden;margin-top:4px;max-width:150px}
+.enhanceBar>i{display:block;height:100%;background:#a77cff}
+
 .itemActions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
 @media(max-width:700px){
   .itemActions{max-width:100%;margin-top:7px;justify-content:flex-start}
@@ -62,9 +74,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     <div class="bar"><div id="mp" class="mp" style="width:55%"></div></div>
     ❤️ <span id="hpText">180/220</span> · 💧 <span id="mpText">33/60</span> · ✨ <span id="expText">519/600</span><br>⚔️ <span id="atkText">15</span>
   </div>
-  <div id="town" class="box">🏠 Tân Thủ Thôn<br>🌍 <span id="coord">1600,1500</span><br>🪙 <span id="gold">733</span></div>
+  <div id="town" class="box">📍 <span id="locationName">Tân Thủ Thôn</span><br>🌍 <span id="coord">1600,1500</span><br>🪙 <span id="gold">733</span></div>
 </div>
 <button id="bagBtn" class="btn">🎒</button>
+<button id="mountBtn" class="btn travelBtn">🐎</button>
+<button id="teleBtn" class="btn travelBtn">🌀</button>
 <div id="joy"><div id="stick"></div></div>
 <div class="skills">
   <button id="attack" class="btn skill">⚔️</button>
@@ -72,6 +86,21 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   <button id="fire" class="btn skill">🔥</button>
 </div>
 <div id="msg"></div>
+<div id="teleport" class="modal travelModal">
+  <button class="close" onclick="closeTeleport()">×</button>
+  <h1>🌀 Dịch chuyển</h1>
+  <button class="action" onclick="capeOn=!capeOn;toast(capeOn?'🪽 Phi phong bật':'🪽 Phi phong tắt');closeTeleport()">🪽 Phi phong: <span id="capeState">Bật</span></button>
+  <div class="travelCard">
+    <strong>🏠 Tân Thủ Thôn</strong>
+    <small>Khu an toàn · 1600,1200</small>
+    <button class="action" onclick="teleportTo('town')">Đi đến</button>
+  </div>
+  <div class="travelCard">
+    <strong>🏙️ Thành Thị</strong>
+    <small>Thành thị · 2600,700</small>
+    <button class="action" onclick="teleportTo('city')">Đi đến</button>
+  </div>
+</div>
 <div id="bag" class="modal">
 <button class="close" onclick="closeBag()">×</button>
 <h1>🎒 Túi đồ & Trang bị</h1><h2>Trang bị</h2><div id="equip"></div>
@@ -90,6 +119,11 @@ const ZOOM=0.62;
 const P={x:1600,y:1500,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15,dead:false};
 const cam={x:P.x,y:P.y};
 const town={x:1600,y:1200};
+const city={x:2600,y:700};
+let mounted=false;
+let capeOn=true;
+let locationName="Tân Thủ Thôn";
+
 const trees=[[250,300],[600,420],[940,250],[1260,500],[1760,350],[2180,300],[2700,450],[380,900],[800,850],[1150,760],[2050,800],[2500,850],[2950,950],[260,1450],[720,1320],[1080,1550],[2150,1420],[2680,1510],[3000,1350],[500,2050],[950,1900],[1450,2100],[2050,2000],[2500,2050],[2900,1900]];
 const mobs=[];for(let i=0;i<12;i++)mobs.push({x:700+(i*211)%1900,y:650+(i*157)%1300,r:24,hp:65,maxHp:65,alive:true,hit:0});
 const items=[
@@ -129,6 +163,24 @@ function itemPower(it){
 function rarityClass(r){return r==="Hiếm"?"rare":r==="Tốt"?"good":"normal"}
 function openBag(){renderBag();document.getElementById("bag").style.display="block"}
 function closeBag(){document.getElementById("bag").style.display="none"} document.getElementById("bagBtn").onclick=openBag;
+function openTeleport(){document.getElementById("capeState").textContent=capeOn?"Bật":"Tắt";document.getElementById("teleport").style.display="block"}
+function closeTeleport(){document.getElementById("teleport").style.display="none"}
+function toggleMount(){
+  mounted=!mounted;
+  document.getElementById("mountBtn").classList.toggle("mountOn",mounted);
+  toast(mounted?"🐎 Lên ngựa · Tốc độ tăng":"🐎 Xuống ngựa");
+}
+function teleportTo(where){
+  const dest=where==="city"?city:town;
+  P.x=dest.x; P.y=dest.y;
+  cam.x=P.x; cam.y=P.y;
+  locationName=where==="city"?"Thành Thị":"Tân Thủ Thôn";
+  closeTeleport();
+  toast("🌀 Đã dịch chuyển đến "+locationName);
+}
+document.getElementById("mountBtn").addEventListener("click",toggleMount);
+document.getElementById("teleBtn").addEventListener("click",openTeleport);
+
 function renderBag(){
   document.getElementById("count").textContent=bag.length;
   document.getElementById("gold").textContent=gold;
@@ -144,9 +196,11 @@ function renderBag(){
     const p=itemPower(it);
     const cost=enhanceCost(it);
     const can=lv<ENHANCE_MAX && gold>=cost;
+    const progress=Math.min(100,Math.round(lv/ENHANCE_MAX*100));
     return `<div class="item">
       <div>${icon} <strong class="${rarityClass(it.rarity)}">${it.name} <span class="enhanceLv">+${lv}</span></strong>
-      <small>${it.rarity} · ${it.type} · Cấp ${it.level} · ⚔️ ${p.atk} 🛡️ ${p.def}</small></div>
+      <small>${it.rarity} · ${it.type} · Cấp ${it.level} · ⚔️ ${p.atk} 🛡️ ${p.def}</small>
+      <div class="enhanceInfo">Cường hoá: +${lv}/+${ENHANCE_MAX} · ${progress}%<div class="enhanceBar"><i style="width:${progress}%"></i></div></div></div>
       <div class="itemActions">
         <button class="enhanceBtn" onclick="enhanceEquipped('${slot}')" ${lv>=ENHANCE_MAX||!can?"disabled":""}>
           ⚒️ Cường hoá +${Math.min(lv+1,ENHANCE_MAX)}<br><span class="enhanceCost">🪙 ${cost}</span>
@@ -226,7 +280,7 @@ c.addEventListener("touchstart",e=>{if(document.getElementById("bag").style.disp
 
 function update(dt){
 let dx=joy.x,dy=joy.y;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;
-const len=Math.hypot(dx,dy)||1;if(dx||dy){P.x+=dx/len*230*dt;P.y+=dy/len*230*dt}
+const len=Math.hypot(dx,dy)||1;if(dx||dy){const speed=mounted?330:230;P.x+=dx/len*speed*dt;P.y+=dy/len*speed*dt}
 P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.r,P.y));
 for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330){m.x+=(P.x-m.x)/Math.max(d,1)*45*dt;m.y+=(P.y-m.y)/Math.max(d,1)*45*dt}if(d<55)m.hit=Math.max(m.hit,0.1);m.hit=Math.max(0,m.hit-dt)}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);
@@ -297,7 +351,7 @@ cam.x+=(targetX-cam.x)*Math.min(1,dt*5.0);
 cam.y+=(targetY-cam.y)*Math.min(1,dt*5.0);
 
 pickup();
-document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);
+document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y); document.getElementById("locationName").textContent=locationName;
 document.getElementById("hpText").textContent=Math.round(P.hp)+"/"+P.maxHp;
 document.getElementById("mpText").textContent=Math.round(P.mp)+"/"+P.maxMp;
 document.getElementById("hp").style.width=(P.hp/P.maxHp*100)+"%";

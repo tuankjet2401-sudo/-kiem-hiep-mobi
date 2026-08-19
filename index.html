@@ -280,6 +280,22 @@ function openMap(){$("mapList").innerHTML=zones.map(z=>`<div class=row><span>${z
 window.travel=name=>{let z=zones.find(x=>x.name===name);if(P.lv<z.min)return message("🔒 Cần cấp "+z.min);P.x=(z.x1+z.x2)/2;P.y=(z.y1+z.y2)/2;$("mapModal").style.display="none";message("🗺️ Đã đến "+z.name);save()}
 document.querySelectorAll(".close").forEach(b=>b.onclick=()=>$(b.dataset.close).style.display="none");
 
+function kill(m){
+  if(!m || !m.alive)return;
+  createDrop(m);
+  m.alive=false;
+  m.respawn=360;
+  P.xp+=25+m.lv*3;
+  P.gold+=5+m.lv;
+  const q=quests[0];
+  if(m.type.includes("Sơn Tặc") && !m.type.includes("Tinh Anh") && !q.done){
+    q.count=Math.min(q.need,q.count+1);
+  }
+  levelCheck();
+  message("💥 Hạ "+m.type+" · 🎁 Đồ rơi · 🪙 +"+(5+m.lv));
+  if(target===m)target=null;
+  save();
+}
 function attack(){if(P.dead||P.cd>0)return;let r=target?.alive?{m:target,d:Math.hypot(target.x-P.x,target.y-P.y)}:nearest(),m=r.m;if(!m)return message("⚔️ Không có mục tiêu");if(r.d>125)return message("⚔️ Hãy đến gần quái");P.cd=28;let n=30+P.atk;m.hp-=n;m.flash=8;m.kx=(m.x-P.x)/r.d*10;m.ky=(m.y-P.y)/r.d*10;damageText(m.x,m.y,n);if(m.hp<=0)kill(m)}
 function skill(){if(P.dead)return;if(P.mp<15)return message("💧 Không đủ MP");if(P.scd>0)return message("☯️ Đang hồi "+Math.ceil(P.scd/60)+"s");let r=target?.alive?{m:target,d:Math.hypot(target.x-P.x,target.y-P.y)}:nearest(),m=r.m;if(!m||r.d>210)return message("☯️ Không có mục tiêu");P.scd=180;P.mp-=15;let n=60+P.atk*2;m.hp-=n;m.flash=12;m.kx=(m.x-P.x)/r.d*18;m.ky=(m.y-P.y)/r.d*18;damageText(m.x,m.y,n,"goldtxt");if(m.hp<=0)kill(m)}
 function fire(){if(P.dead)return;if(P.mp<20)return message("💧 Không đủ MP");let r=target?.alive?{m:target,d:Math.hypot(target.x-P.x,target.y-P.y)}:nearest(),m=r.m;if(!m||r.d>250)return message("🔥 Quái quá xa");P.mp-=20;let n=45+P.atk;m.hp-=n;m.flash=14;m.kx=(m.x-P.x)/r.d*20;m.ky=(m.y-P.y)/r.d*20;damageText(m.x,m.y,n,"red");if(m.hp<=0)kill(m);else message("🔥 Hỏa công -"+n)}

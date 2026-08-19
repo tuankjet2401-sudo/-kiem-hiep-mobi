@@ -10,6 +10,7 @@
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
 #game{position:fixed;inset:0;overflow:hidden;background:#285b35}
 canvas{position:absolute;inset:0;width:100%;height:100%}
+/* 4.11.2 FINAL FIX: khu làng và quái luôn dễ nhìn */
 .hud{position:absolute;z-index:20;top:max(10px,env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
 .box{background:#071016ed;border:1px solid #33404a;border-radius:18px;padding:10px 13px;color:#fff;box-shadow:0 8px 25px #0005}
 #stats{width:430px;max-width:56vw}.name{font-size:23px;font-weight:800}.sub{font-size:15px}
@@ -108,7 +109,12 @@ const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"],elementIcon={Kim:"⚙️
 let elementIndex=0,playerClass="Võ Đang",statuses={stun:0,slow:0,buff:0};
 const classData={"Thiếu Lâm":{desc:"Cận chiến bền bỉ, thiên về khống chế."},"Võ Đang":{desc:"Cân bằng công thủ, kỹ năng linh hoạt."},"Nga Mi":{desc:"Hỗ trợ, hồi phục và buff đồng đội."}};
 const trees=[[250,300],[600,420],[940,250],[1260,500],[1760,350],[2180,300],[2700,450],[380,900],[800,850],[1150,760],[2050,800],[2500,850],[2950,950],[260,1450],[720,1320],[1080,1550],[2150,1420],[2680,1510],[3000,1350],[500,2050],[950,1900],[1450,2100],[2050,2000],[2500,2050],[2900,1900]];
-const mobs=[];for(let i=0;i<12;i++)mobs.push({x:700+(i*211)%1900,y:650+(i*157)%1300,r:24,hp:65,maxHp:65,alive:true,hit:0,element:elements[i%5]});
+const mobSpawns=[
+  [820,720],[1120,880],[2220,720],[2580,980],
+  [720,1180],[980,1580],[2050,1450],[2460,1580],
+  [620,1720],[2860,1250],[760,2050],[2220,2050]
+];
+const mobs=mobSpawns.map((p,i)=>({x:p[0],y:p[1],r:24,hp:65,maxHp:65,alive:true,hit:0,element:elements[i%5]}));
 const baseItems=[
 {name:"Kiếm Tân Thủ+",type:"vũ khí",rarity:"Thường",level:1,atk:5,def:0,icon:"🗡️"},
 {name:"Đao Bào",type:"áo",rarity:"Thường",level:1,atk:0,def:5,icon:"🥋"},
@@ -185,7 +191,35 @@ function update(dt){
 let dx=joy.x,dy=joy.y;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;
 const len=Math.hypot(dx,dy)||1;if(!NET.connected&&(dx||dy)){const speed=mounted?330:230;P.x+=dx/len*speed*dt;P.y+=dy/len*speed*dt}
 P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.r,P.y));
-for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330&&d>62&&statuses.stun<=0){const ms=statuses.slow>0?20:45;m.x+=(P.x-m.x)/Math.max(d,1)*ms*dt;m.y+=(P.y-m.y)/Math.max(d,1)*ms*dt}m.hit=Math.max(0,m.hit-dt)}
+for(const m of mobs)if(m.alive){
+  const d=Math.hypot(P.x-m.x,P.y-m.y);
+  if(d<330&&d>105&&statuses.stun<=0){
+    const ms=statuses.slow>0?20:45;
+    m.x+=(P.x-m.x)/Math.max(d,1)*ms*dt;
+    m.y+=(P.y-m.y)/Math.max(d,1)*ms*dt;
+  }
+  // Giữ quái ngoài khu trung tâm Tân Thủ Thôn để không đè nhân vật/NPC.
+  const td=Math.hypot(m.x-town.x,m.y-town.y);
+  if(td<270){
+    const k=270/Math.max(td,1);
+    m.x=town.x+(m.x-town.x)*k;
+    m.y=town.y+(m.y-town.y)*k;
+  }
+  m.hit=Math.max(0,m.hit-dt);
+}
+// Tách các Sơn Tặc khỏi nhau, tránh chồng thân và chồng tên.
+for(let i=0;i<mobs.length;i++){
+  const a=mobs[i]; if(!a.alive) continue;
+  for(let j=i+1;j<mobs.length;j++){
+    const b=mobs[j]; if(!b.alive) continue;
+    const dx=b.x-a.x,dy=b.y-a.y,dd=Math.hypot(dx,dy);
+    if(dd>0&&dd<82){
+      const push=(82-dd)/2, nx=dx/dd, ny=dy/dd;
+      a.x-=nx*push; a.y-=ny*push;
+      b.x+=nx*push; b.y+=ny*push;
+    }
+  }
+}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);statuses.stun=Math.max(0,statuses.stun-dt);statuses.slow=Math.max(0,statuses.slow-dt);statuses.buff=Math.max(0,statuses.buff-dt);
 if(playerClass==="Nga Mi"&&statuses.buff>0)P.hp=Math.min(P.maxHp,P.hp+12*dt);
 const viewW=W/ZOOM,viewH=H/ZOOM,halfW=viewW/2,halfH=viewH/2,safeL=Math.min(W*.30,245),safeR=Math.max(W*.70,W-245),safeT=Math.min(H*.38,360),safeB=Math.min(H*.62,H-270);
@@ -200,7 +234,19 @@ ctx.fillStyle="#3f91bd";ctx.beginPath();ctx.moveTo(0,1650);ctx.bezierCurveTo(500
 ctx.fillStyle="#b49a68";ctx.beginPath();ctx.moveTo(0,1850);ctx.quadraticCurveTo(800,1450,1600,1700);ctx.quadraticCurveTo(2300,1900,3200,1500);ctx.lineTo(3200,1750);ctx.quadraticCurveTo(2300,2150,1600,1950);ctx.quadraticCurveTo(800,1750,0,2100);ctx.closePath();ctx.fill();
 ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-70,210,140);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+8);
 for(const [x,y] of trees){ctx.fillStyle="#704a30";ctx.fillRect(x-9,y+28,18,50);ctx.fillStyle="#285d37";ctx.beginPath();ctx.arc(x,y,58,0,Math.PI*2);ctx.fill();ctx.fillStyle="#347447";ctx.beginPath();ctx.arc(x-20,y-18,36,0,Math.PI*2);ctx.fill()}
-for(const m of mobs)if(m.alive){ctx.fillStyle=m.hit?"#ffbd59":"#814237";ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.font="14px sans-serif";ctx.textAlign="center";ctx.font="12px sans-serif";ctx.fillStyle="#fff";ctx.fillText(elementIcon[m.element]+" Sơn Tặc",m.x,m.y-43);ctx.fillStyle="#18221a";ctx.fillRect(m.x-30,m.y+30,60,6);ctx.fillStyle="#d95c5c";ctx.fillRect(m.x-30,m.y+30,60*(m.hp/m.maxHp),6)}
+for(const m of mobs)if(m.alive){
+  ctx.fillStyle=m.hit?"#ffbd59":"#814237";
+  ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();
+  // Tên quái có nền tối để không dính vào nền/map/nhân vật.
+  const label=elementIcon[m.element]+" Sơn Tặc";
+  ctx.font="bold 12px sans-serif";ctx.textAlign="center";
+  const tw=ctx.measureText(label).width+14;
+  ctx.fillStyle="#08100dcc";
+  ctx.beginPath();ctx.roundRect(m.x-tw/2,m.y-61,tw,20,7);ctx.fill();
+  ctx.fillStyle="#fff";ctx.fillText(label,m.x,m.y-47);
+  ctx.fillStyle="#18221a";ctx.fillRect(m.x-30,m.y+30,60,6);
+  ctx.fillStyle="#d95c5c";ctx.fillRect(m.x-30,m.y+30,60*(m.hp/m.maxHp),6);
+}
 for(const d of drops){ctx.fillStyle=d.kind==="gold"?"#e8c64f":"#d7d7d7";ctx.beginPath();ctx.arc(d.x,d.y,22,0,Math.PI*2);ctx.fill();ctx.fillStyle="#111";ctx.font="16px sans-serif";ctx.fillText(d.kind==="gold"?"🪙":d.item.icon,d.x,d.y+6)}
 drawOtherPlayers();
 if(capeOn){ctx.fillStyle="#6b3fa0aa";ctx.beginPath();ctx.moveTo(P.x-30,P.y+42);ctx.quadraticCurveTo(P.x,P.y+8,P.x+30,P.y+42);ctx.lineTo(P.x+18,P.y+58);ctx.lineTo(P.x-18,P.y+58);ctx.closePath();ctx.fill()}

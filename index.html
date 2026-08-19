@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Kiếm Thế Mobi - Bản 3.8</title>
+<title>Kiếm Thế Mobi - Bản 3.8.1</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#081019;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -126,7 +126,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#081019;fon
 
 <div class="modal" id="npcModal"><div class="panel"><button class="close" data-close="npcModal">✕</button><h2 id="npcTitle">NPC</h2><p id="npcText"></p><div id="npcActions"></div></div></div>
 <div class="modal" id="questModal"><div class="panel"><button class="close" data-close="questModal">✕</button><h2>📜 Nhiệm vụ</h2><div id="questList"></div></div></div>
-<div class="modal" id="bagModal"><div class="panel"><button class="close" data-close="bagModal">✕</button><h2>🎒 Túi đồ 3.8</h2><div class="bagNote">✨ Rơi đồ · nhặt đồ · trang bị · 24 ô · vàng rơi</div><div id="equip"></div><div id="items"></div></div></div>
+<div class="modal" id="bagModal"><div class="panel"><button class="close" data-close="bagModal">✕</button><h2>🎒 Túi đồ 3.8.1</h2><div class="bagNote">✨ Rơi đồ · nhặt đồ · trang bị · 24 ô · vàng rơi</div><div id="equip"></div><div id="items"></div></div></div>
 <div class="modal" id="mapModal"><div class="panel"><button class="close" data-close="mapModal">✕</button><h2>🗺️ Bản đồ</h2><div id="mapList"></div></div></div>
 <div id="dead"><div class="deadbox"><h2>💀 Thiếu Hiệp đã ngã xuống</h2><p>Hồi sinh tại Tân Thủ Thôn</p><button class="respawn" id="respawn">Hồi sinh</button></div></div>
 </div>
@@ -511,7 +511,20 @@ calcStats();ui();
 setInterval(()=>{talkNpc=null;let best=null,bd=999;for(const n of npcs){let d=Math.hypot(n.x-P.x,n.y-P.y);if(d<70&&d<bd){bd=d;best=n}}if(best){talkNpc=best;$("talk").style.display="block"}else $("talk").style.display="none"},200);
 
 ui();
-let last=performance.now();function loop(t){let dt=Math.min((t-last)/16.666,3);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function safeDraw(){
+  try { draw(); } catch(e) {
+    console.error("draw",e);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="#2c6338";ctx.fillRect(0,0,W,H);
+    ctx.fillStyle="#3e95bd";ctx.fillRect(W*.43,0,W*.14,H);
+    ctx.fillStyle="#a98b58";ctx.fillRect(0,H*.68,W,H*.14);
+    ctx.fillStyle="#6e4b32";ctx.fillRect(W/2-70,H*.22,140,115);
+    ctx.fillStyle="#ffe49a";ctx.font="bold 20px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",W/2,H*.29);
+    ctx.fillStyle="#d9a33e";ctx.beginPath();ctx.arc(W/2,H/2,22,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#fff";ctx.font="14px sans-serif";ctx.fillText("Thiếu Hiệp",W/2,H/2+45);
+  }
+}
+let last=performance.now();function loop(t){let dt=Math.min((t-last)/16.666,3);last=t;try{update(dt)}catch(e){console.error("update",e)}safeDraw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 addEventListener("beforeunload",save);
 document.addEventListener("touchmove",e=>{if(e.target.closest("#game"))e.preventDefault()},{passive:false});
 

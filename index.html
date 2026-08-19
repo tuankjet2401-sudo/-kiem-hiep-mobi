@@ -2,50 +2,66 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Kiếm Thế Mobile Demo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Kiếm Hiệp Mobi - Demo</title>
 <style>
-html,body{margin:0;height:100%;overflow:hidden;background:#17120d;font-family:system-ui}
-canvas{display:block;width:100vw;height:100vh;touch-action:none}
-#hint{position:fixed;left:50%;top:10px;transform:translateX(-50%);color:#fff;background:#0009;padding:8px 14px;border-radius:12px;font-size:13px;pointer-events:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10151d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
+#game{position:relative;width:100%;height:100%;overflow:hidden;background:#74b95c}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.hud{position:absolute;top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none}
+.panel{background:#0a0f16c7;border:1px solid #ffffff29;border-radius:14px;padding:9px 11px}
+.name{font-weight:800}.small{font-size:12px;color:#cbd5e1;margin-top:3px}
+.bar{width:155px;height:10px;background:#303945;border-radius:8px;overflow:hidden;margin-top:6px}.hp{height:100%;width:82%;background:#e84b4b}.mp{height:100%;width:70%;background:#3d8df5}
+.stats{text-align:right;font-size:13px;line-height:1.55}
+.controls{position:absolute;left:15px;bottom:max(18px,env(safe-area-inset-bottom));width:145px;height:145px}
+.joy{position:absolute;inset:0;border-radius:50%;background:#ffffff18;border:2px solid #ffffff35}
+.stick{position:absolute;width:58px;height:58px;left:43px;top:43px;border-radius:50%;background:#ffffff45;border:2px solid #ffffff60}
+.actions{position:absolute;right:16px;bottom:max(22px,env(safe-area-inset-bottom));display:flex;gap:12px;align-items:end}
+.btn{width:64px;height:64px;border-radius:50%;border:2px solid #ffffff55;background:#171d28dd;color:#fff;font-weight:800;font-size:13px;box-shadow:0 5px 16px #0007}
+.btn.attack{width:78px;height:78px;background:#a9342ddd;border-color:#ffd18a;font-size:15px}.btn:active{transform:scale(.94)}
+.tip{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:#111827cc;border:1px solid #ffffff22;border-radius:10px;padding:6px 10px;font-size:11px;white-space:nowrap}
+.toast{position:absolute;left:50%;top:24%;transform:translate(-50%,-50%);background:#111827e8;border:1px solid #ffffff30;border-radius:14px;padding:10px 16px;font-weight:700;display:none}
+.menu{position:absolute;left:10px;bottom:180px;background:#111827ed;border:1px solid #ffffff22;border-radius:14px;padding:8px;display:none}
+.menu button{display:block;width:180px;margin:4px 0;padding:10px;border:0;border-radius:9px;background:#263142;color:#fff}
 </style>
 </head>
 <body>
-<canvas id="game"></canvas><div id="hint">Kéo joystick để di chuyển • Nút đỏ để đánh</div>
+<div id="game">
+<canvas id="c"></canvas>
+<div class="hud">
+  <div class="panel"><div class="name">⚔️ Thiếu Hiệp</div><div class="small">Cấp 8 · Võ Đang</div>
+    <div class="bar"><div class="hp"></div></div><div class="bar"><div class="mp"></div></div>
+  </div>
+  <div class="panel stats">💰 <span id="gold">1250</span><br>⭐ EXP <span id="exp">42%</span><br>🗡️ Lực chiến 860</div>
+</div>
+<div id="toast" class="toast"></div>
+<div class="controls" id="joyArea"><div class="joy"></div><div class="stick" id="stick"></div></div>
+<div class="actions">
+<button class="btn" id="skill">KIẾM<br>KHÍ</button>
+<button class="btn" id="bag">🎒<br>TÚI</button>
+<button class="btn attack" id="attack">⚔️<br>ĐÁNH</button>
+</div>
+<div class="menu" id="menu"><button>🎒 Túi đồ</button><button>🧑‍🤝‍🧑 Nhân vật</button><button>📜 Nhiệm vụ</button></div>
+<div class="tip">Kéo vòng tròn để di chuyển · Bấm ⚔️ để đánh quái</div>
+</div>
 <script>
-const c=document.getElementById('game'),ctx=c.getContext('2d');
-let W,H,dpr,px,py,mx,my,hp=100,exp=0,lv=1,gold=0,hit=0,joy={x:0,y:0,active:false};
-function resize(){dpr=devicePixelRatio||1;W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);if(px==null){px=W*.5;py=H*.52;mx=W*.72;my=H*.52}} addEventListener('resize',resize);resize();
-function attack(){if(Math.hypot(px-mx,py-my)<150){hit=.18;hp-=10;if(hp<=0){hp=100;exp+=20;gold+=10;if(exp>=100){exp-=100;lv++;}mx=120+Math.random()*(W-240);my=130+Math.random()*(H-250)}}}
-function draw(){
-ctx.clearRect(0,0,W,H);
-ctx.fillStyle='#cdb27a';ctx.fillRect(0,0,W,H);
-ctx.fillStyle='#a68a5d';ctx.fillRect(0,H*.45,W,H*.12);ctx.fillRect(W*.44,70,W*.12,H);
-ctx.fillStyle='#403025';ctx.fillRect(0,0,W,70);
-ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.fillText('KIẾM THẾ MOBILE',18,30);
-ctx.font='13px system-ui';ctx.fillText('BẢN DEMO 1 • Offline',18,52);
-ctx.fillStyle='#20170fdd';ctx.fillRect(15,85,190,105);
-ctx.fillStyle='#fff';ctx.font='17px system-ui';ctx.fillText('Thiếu Hiệp  •  Cấp '+lv,28,112);
-ctx.fillStyle='#611';ctx.fillRect(28,126,150,14);ctx.fillStyle='#e44';ctx.fillRect(28,126,150*hp/100,14);
-ctx.fillStyle='#fff';ctx.font='13px system-ui';ctx.fillText('HP '+hp+'/100',32,138);
-ctx.fillStyle='#e4bd4b';ctx.fillRect(28,150,150,10);ctx.fillStyle='#61b4e8';ctx.fillRect(28,150,150*exp/100,10);
-ctx.fillStyle='#fff';ctx.fillText('EXP '+exp+'/100',32,175);ctx.fillText('Bạc: '+gold,105,175);
-ctx.fillStyle='#a33';ctx.beginPath();ctx.arc(mx,my,25,0,7);ctx.fill();
-ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(mx-8,my-5,4,0,7);ctx.arc(mx+8,my-5,4,0,7);ctx.fill();
-ctx.fillStyle='#5b1919';ctx.font='14px system-ui';ctx.fillText('Sơn Tặc',mx-28,my+45);
-ctx.fillStyle='#2864d6';ctx.beginPath();ctx.arc(px,py,27,0,7);ctx.fill();
-ctx.fillStyle='#f0c49d';ctx.beginPath();ctx.arc(px,py-31,13,0,7);ctx.fill();
-ctx.fillStyle='#24170f';ctx.font='14px system-ui';ctx.fillText('Thiếu Hiệp',px-35,py+50);
-if(hit>0){ctx.strokeStyle='#ffd34d';ctx.lineWidth=8;ctx.beginPath();ctx.arc(mx,my,52,0,7);ctx.stroke()}
-const jx=105,jy=H-105;ctx.fillStyle='#0005';ctx.beginPath();ctx.arc(jx,jy,70,0,7);ctx.fill();ctx.fillStyle='#fff8';ctx.beginPath();ctx.arc(jx+joy.x*45,jy+joy.y*45,28,0,7);ctx.fill();
-const bx=W-105,by=H-105;ctx.fillStyle='#9b2424dd';ctx.beginPath();ctx.arc(bx,by,58,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 16px system-ui';ctx.fillText('ĐÁNH',bx-24,by+6);
-}
-let last=performance.now();
-function loop(t){let dt=Math.min((t-last)/1000,.04);last=t;px=Math.max(35,Math.min(W-35,px+joy.x*230*dt));py=Math.max(85,Math.min(H-35,py+joy.y*230*dt));hit=Math.max(0,hit-dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-function pos(e){return e.touches?e.touches[0]:e}
-c.addEventListener('touchstart',e=>{e.preventDefault();for(const t of e.changedTouches){const x=t.clientX,y=t.clientY;if(Math.hypot(x-105,y-(H-105))<90){joy.active=true;joy.id=t.identifier;updateJoy(x,y)}else if(Math.hypot(x-(W-105),y-(H-105))<75)attack()}},{passive:false});
-c.addEventListener('touchmove',e=>{e.preventDefault();for(const t of e.changedTouches)if(joy.active&&t.identifier===joy.id)updateJoy(t.clientX,t.clientY)},{passive:false});
-c.addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===joy.id){joy.active=false;joy.x=joy.y=0}});
-function updateJoy(x,y){let dx=x-105,dy=y-(H-105),d=Math.hypot(dx,dy);if(d>55){dx=dx/d*55;dy=dy/d*55}joy.x=dx/55;joy.y=dy/55}
+const c=document.getElementById('c'),x=c.getContext('2d');let W,H,d=1,px=0,py=0,dx=0,dy=0,last=performance.now();
+const mobs=[{x:.68,y:.42,hp:100,n:"Sơn Tặc",a:1},{x:.32,y:.50,hp:100,n:"Dã Lang",a:1},{x:.78,y:.62,hp:100,n:"Hắc Hùng",a:1}];
+function size(){d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0)}addEventListener('resize',size);size();
+function box(a,b,w,h,r){x.beginPath();x.roundRect(a,b,w,h,r);x.fill()}
+function tree(a,b){x.fillStyle="#285d34";x.beginPath();x.arc(a,b,18,0,7);x.fill();x.fillStyle="#704c32";x.fillRect(a-4,b+12,8,34)}
+function mob(m){let a=W*m.x,b=H*m.y;x.fillStyle="#222";box(a-25,b-35,50,6,4);x.fillStyle="#e84b4b";box(a-25,b-35,50*m.hp/100,6,4);x.fillStyle="#1f2937";box(a-22,b-23,44,45,12);x.font="22px sans-serif";x.textAlign="center";x.fillText("👹",a,b+7);x.fillStyle="#fff";x.font="11px sans-serif";x.fillText(m.n,a,b+37)}
+function player(a,b){x.fillStyle="#172033";x.beginPath();x.arc(a,b,23,0,7);x.fill();x.fillStyle="#e7c39b";x.beginPath();x.arc(a,b-8,13,0,7);x.fill();x.fillStyle="#f4d35e";x.fillRect(a-14,b-25,28,7);x.strokeStyle="#fff";x.lineWidth=4;x.beginPath();x.moveTo(a+13,b+2);x.lineTo(a+38,b-25);x.stroke();x.fillStyle="#fff";x.font="bold 11px sans-serif";x.fillText("Bạn",a,b+39)}
+function draw(){x.clearRect(0,0,W,H);x.fillStyle="#74b95c";x.fillRect(0,0,W,H);x.fillStyle="#b99b68";x.beginPath();x.moveTo(0,H*.64);x.quadraticCurveTo(W*.35,H*.47,W,H*.58);x.lineTo(W,H*.70);x.quadraticCurveTo(W*.4,H*.59,0,H*.76);x.fill();x.fillStyle="#4c9bc0";x.beginPath();x.moveTo(W*.03,H*.18);x.quadraticCurveTo(W*.27,H*.30,W*.20,H*.48);x.quadraticCurveTo(W*.13,H*.63,W*.34,H);x.lineTo(W*.48,H);x.quadraticCurveTo(W*.28,H*.62,W*.33,H*.47);x.quadraticCurveTo(W*.42,H*.29,W*.12,H*.08);x.fill();for(let i=0;i<22;i++)tree((i*83+31)%W,H*.15+((i*57)%(Math.max(1,H*.55))));x.fillStyle="#765238";box(W*.42,H*.22,W*.16,H*.12,8);x.fillStyle="#ffe09a";x.font="bold 14px sans-serif";x.fillText("THÔN TÂN THỦ",W*.50,H*.29);mobs.forEach(m=>m.a&&mob(m));player(W*.5+px,H*.52+py);requestAnimationFrame(draw)}requestAnimationFrame(draw);
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',1000)}
+document.getElementById('attack').onclick=()=>{let m=mobs.find(q=>q.a);if(!m){toast("🎉 Đã dọn sạch quái!");return}m.hp-=25;if(m.hp<=0){m.a=0;document.getElementById('gold').textContent=+document.getElementById('gold').textContent+180;toast("💥 Hạ "+m.n+"! +180 vàng")}else toast("⚔️ "+m.n+" -25 HP");let e=document.getElementById('exp'),v=Math.min(99,parseInt(e.textContent)+5);e.textContent=v+"%"};
+document.getElementById('skill').onclick=()=>toast("✨ Kiếm khí! Sát thương diện rộng");
+document.getElementById('bag').onclick=()=>{let m=document.getElementById('menu');m.style.display=m.style.display==="block"?"none":"block"};
+const area=document.getElementById('joyArea'),stick=document.getElementById('stick');let active=false,sx=0,sy=0;
+area.addEventListener('touchstart',e=>{active=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+area.addEventListener('touchmove',e=>{if(!active)return;let a=e.touches[0].clientX-sx,b=e.touches[0].clientY-sy,l=Math.hypot(a,b),mx=43;if(l>mx){a=a/l*mx;b=b/l*mx}stick.style.transform=`translate(${a}px,${b}px)`;dx=a/mx;dy=b/mx},{passive:true});
+area.addEventListener('touchend',()=>{active=false;stick.style.transform="translate(0,0)";dx=dy=0});
+function move(t){let dt=Math.min((t-last)/16,2);last=t;px+=dx*1.5*dt;py+=dy*1.5*dt;px=Math.max(-W*.35,Math.min(W*.35,px));py=Math.max(-H*.28,Math.min(H*.28,py));requestAnimationFrame(move)}requestAnimationFrame(move);
 </script>
 </body></html>

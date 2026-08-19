@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.3">
+<meta name="game-version" content="4.4">
 <title>Kiếm Thế Mobi – Bản 3.9.9</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -24,6 +24,17 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .item{background:#20282f;border-radius:15px;padding:11px 13px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}.item strong{font-size:18px}.item small{display:block;color:#ddd}.rare{color:#c47cff}.good{color:#77e36a}.normal{color:#eee}
 @media(max-width:430px){#stats{max-width:58vw;padding:10px 12px}.name{font-size:22px}.sub{font-size:15px}#town{max-width:30vw;font-size:14px}.skills{gap:8px;right:12px;bottom:132px}.btn{width:60px;height:60px;font-size:26px}#joy{left:12px;bottom:150px;width:108px;height:108px}#stick{width:48px;height:48px}}
 .action{background:#d2a44e;border:0;color:#fff;font-weight:700;border-radius:12px;padding:10px 13px;font-size:15px}
+.enhancePanel{margin-top:6px;padding-top:6px;border-top:1px solid #3b444d}
+.enhanceBtn{background:#6f4fd8;border:0;color:#fff;font-weight:800;border-radius:11px;padding:9px 10px;font-size:14px}
+.enhanceBtn:disabled{opacity:.45}
+.enhanceLv{color:#ffd95a;font-weight:800}
+.enhanceCost{color:#ffd95a;font-size:13px;font-weight:700}
+.itemActions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+@media(max-width:700px){
+  .itemActions{max-width:100%;margin-top:7px;justify-content:flex-start}
+  .item{display:block}
+}
+
 .enhance{background:#6f4fd8;border:0;color:#fff;font-weight:800;border-radius:12px;padding:10px 13px;font-size:15px}
 .item>div:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;max-width:52%}
 .enhance{min-width:92px}
@@ -119,10 +130,64 @@ function rarityClass(r){return r==="Hiếm"?"rare":r==="Tốt"?"good":"normal"}
 function openBag(){renderBag();document.getElementById("bag").style.display="block"}
 function closeBag(){document.getElementById("bag").style.display="none"} document.getElementById("bagBtn").onclick=openBag;
 function renderBag(){
-document.getElementById("count").textContent=bag.length;document.getElementById("gold").textContent=gold;
-document.getElementById("equip").innerHTML=[["weapon","⚔️","Vũ khí"],["armor","🛡️","Áo giáp"]].map(([slot,icon,label])=>{const it=equip[slot];return it?`<div class="item"><div>${icon} <strong class="${rarityClass(it.rarity)}">${it.name}</strong><small>${it.rarity} · ${it.type} · Cấp ${it.level} · ⚔️ ${it.atk} 🛡️ ${it.def}</small></div><button class="action" onclick="unequip('${slot}')">Tháo</button></div>`:`<div class="item"><div>${icon} <strong>${label}: Trống</strong><small>Chưa trang bị</small></div></div>`}).join("");
-document.getElementById("items").innerHTML=bag.map((it,i)=>`<div class="item"><div>${it.icon} <strong class="${rarityClass(it.rarity)}">${it.name}</strong><small>${it.rarity} · ${it.type} · Cấp ${it.level} · ⚔️ ${it.atk} 🛡️ ${it.def}</small></div><div>${it.type==="tiêu hao"?'<button class="action" onclick="useItem('+i+')">Dùng</button>':'<button class="action" onclick="equipItem('+i+')">Trang bị</button>'} <button class="action" onclick="sellItem(${i})">Bán</button></div></div>`).join("");
-let g="";for(let i=0;i<24;i++)g+=`<div class="slot">${bag[i]?bag[i].icon+" "+bag[i].name:"—"}</div>`;document.getElementById("grid").innerHTML=g}
+  document.getElementById("count").textContent=bag.length;
+  document.getElementById("gold").textContent=gold;
+
+  document.getElementById("equip").innerHTML=[
+    ["weapon","⚔️","Vũ khí"],["armor","🛡️","Áo giáp"]
+  ].map(([slot,icon,label])=>{
+    const it=equip[slot];
+    if(!it){
+      return `<div class="item"><div>${icon} <strong>${label}: Trống</strong><small>Chưa trang bị</small></div></div>`;
+    }
+    const lv=it.enhance||0;
+    const p=itemPower(it);
+    const cost=enhanceCost(it);
+    const can=lv<ENHANCE_MAX && gold>=cost;
+    return `<div class="item">
+      <div>${icon} <strong class="${rarityClass(it.rarity)}">${it.name} <span class="enhanceLv">+${lv}</span></strong>
+      <small>${it.rarity} · ${it.type} · Cấp ${it.level} · ⚔️ ${p.atk} 🛡️ ${p.def}</small></div>
+      <div class="itemActions">
+        <button class="enhanceBtn" onclick="enhanceEquipped('${slot}')" ${lv>=ENHANCE_MAX||!can?"disabled":""}>
+          ⚒️ Cường hoá +${Math.min(lv+1,ENHANCE_MAX)}<br><span class="enhanceCost">🪙 ${cost}</span>
+        </button>
+        <button class="action" onclick="unequip('${slot}')">Tháo</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("items").innerHTML=bag.map((it,i)=>{
+    const lv=it.enhance||0;
+    const p=itemPower(it);
+    const cost=enhanceCost(it);
+    const can=lv<ENHANCE_MAX && gold>=cost;
+
+    let actions="";
+    if(it.type==="tiêu hao"){
+      actions=`<button class="action" onclick="useItem(${i})">Dùng</button>`;
+    }else{
+      actions=`
+        <button class="enhanceBtn" onclick="enhanceItem(${i})" ${lv>=ENHANCE_MAX||!can?"disabled":""}>
+          ⚒️ Cường hoá +${Math.min(lv+1,ENHANCE_MAX)}<br>
+          <span class="enhanceCost">🪙 ${cost}</span>
+        </button>
+        <button class="action" onclick="equipItem(${i})">Trang bị</button>`;
+    }
+
+    return `<div class="item">
+      <div>${it.icon} <strong class="${rarityClass(it.rarity)}">${it.name} <span class="enhanceLv">+${lv}</span></strong>
+      <small>${it.rarity} · ${it.type} · Cấp ${it.level} · ⚔️ ${p.atk} 🛡️ ${p.def}</small></div>
+      <div class="itemActions">${actions}<button class="action" onclick="sellItem(${i})">Bán</button></div>
+    </div>`;
+  }).join("");
+
+  let g="";
+  for(let i=0;i<24;i++){
+    const it=bag[i];
+    g+=`<div class="slot">${it?it.icon+" "+it.name+" +"+(it.enhance||0):"—"}</div>`;
+  }
+  document.getElementById("grid").innerHTML=g;
+}
 function equipItem(i){const it=bag[i];if(!it)return;if(it.type==="vũ khí"){if(equip.weapon)bag.push(equip.weapon);equip.weapon=it}else if(it.type==="áo"){if(equip.armor)bag.push(equip.armor);equip.armor=it}bag.splice(i,1);clampBag();renderBag()}
 function unequip(slot){if(bag.length>=24){toast("Túi đã đầy");return}bag.push(equip[slot]);equip[slot]=null;renderBag()}
 function enhanceEquipped(slot){

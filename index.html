@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.5">
-<title>Kiếm Thế Mobi – Bản 3.9.9</title>
+<meta name="game-version" content="4.9.0">
+<title>Kiếm Thế Mobi – Bản 4.9.0</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -74,6 +74,27 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.slot{min-height:65px;background:#1c242b;border:1px solid #3b454e;border-radius:10px;padding:7px;font-size:12px}
 @media(max-width:700px){#stats{max-width:55vw}.name{font-size:22px}#town{max-width:30vw}.modal{inset:8% 4%}.grid{grid-template-columns:repeat(4,1fr)}}
+
+.communityBtn{position:absolute;z-index:35;right:18px;top:445px;background:#111a20e8;border:2px solid #65727c;color:#fff;border-radius:16px;padding:9px 11px;font-weight:700}
+.communityGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.communityCard{background:#20282f;border:1px solid #3b454e;border-radius:16px;padding:13px;margin:9px 0}
+.communityCard h3{margin:0 0 7px;font-size:19px}
+.communityCard small{color:#cfd5da}
+.chatBox{max-height:170px;overflow:auto;background:#121a20;border-radius:12px;padding:8px;margin:8px 0}
+.chatLine{padding:5px 4px;border-bottom:1px solid #263139;font-size:14px}
+.chatLine:last-child{border-bottom:0}
+.chatInput{display:flex;gap:7px}
+.chatInput input{flex:1;min-width:0;background:#20282f;color:#fff;border:1px solid #55616b;border-radius:10px;padding:10px}
+.marketRow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#182126;border-radius:12px;padding:9px;margin:6px 0}
+.marketRow>div:first-child{min-width:0}
+.marketRow strong{font-size:15px}.marketRow small{display:block;color:#cfd5da}
+.guildBadge{display:inline-block;padding:4px 8px;border-radius:9px;background:#342d55;color:#d8c8ff;font-weight:700}
+@media(max-width:700px){
+  .communityBtn{right:10px;top:445px}
+  .communityGrid{grid-template-columns:1fr}
+  .communityBtn{font-size:13px}
+}
+
 </style>
 </head>
 <body>
@@ -102,6 +123,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   <button id="elementBtn">☯️ Ngũ hành</button>
   <button id="activityBtn">🏆 Hoạt động</button>
 </div>
+<button id="communityBtn" class="communityBtn">👥 Cộng đồng</button>
 
 <div id="elementModal" class="modal">
   <button class="close" onclick="closeElement()">×</button>
@@ -136,6 +158,46 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   <div class="card"><strong>👑 Săn Boss Hoàng Kim</strong><small>Boss mạnh, phần thưởng hiếm.</small><button class="action activityBtn" onclick="joinActivity('Săn Boss Hoàng Kim')">Tham gia</button></div>
   <div class="card"><strong>🏯 Vượt ải</strong><small>Đánh quái theo từng cửa ải.</small><button class="action activityBtn" onclick="joinActivity('Vượt ải')">Tham gia</button></div>
   <div class="card"><strong>💎 Kỳ Trân Trác</strong><small>Khu trao đổi và săn vật phẩm quý.</small><button class="action activityBtn" onclick="joinActivity('Kỳ Trân Trác')">Tham gia</button></div>
+</div>
+
+
+<div id="communityModal" class="modal">
+  <button class="close" onclick="closeCommunity()">×</button>
+  <h1>👥 Cộng đồng giang hồ</h1>
+
+  <div class="communityGrid">
+    <div class="communityCard">
+      <h3>🏯 Bang hội chiến</h3>
+      <small>Tham gia chiến bang và đăng ký đội hình.</small>
+      <p>Bang hiện tại: <span class="guildBadge">Thiên Kiếm</span></p>
+      <p>Điểm bang: <strong id="guildScore">1,280</strong></p>
+      <button class="action" onclick="guildWar()">⚔️ Đăng ký Bang chiến</button>
+    </div>
+
+    <div class="communityCard">
+      <h3>⚔️ Chiến trường Tống Kim</h3>
+      <small>Chọn phe và tham gia trận chiến.</small>
+      <p>Trạng thái: <strong id="tongKimState">Chưa tham gia</strong></p>
+      <button class="action" onclick="joinTongKim('Kim')">⚙️ Phe Kim</button>
+      <button class="action" onclick="joinTongKim('Tống')">🏯 Phe Tống</button>
+    </div>
+  </div>
+
+  <div class="communityCard">
+    <h3>🌎 Kênh thế giới</h3>
+    <small>Chat cộng đồng trong bản demo.</small>
+    <div id="worldChat" class="chatBox"></div>
+    <div class="chatInput">
+      <input id="chatInput" maxlength="80" placeholder="Nhập tin nhắn...">
+      <button class="action" onclick="sendWorldChat()">Gửi</button>
+    </div>
+  </div>
+
+  <div class="communityCard">
+    <h3>🛒 Bày bán & giao dịch tự do</h3>
+    <small>Bán vật phẩm trong túi hoặc mua các món đang được bày bán.</small>
+    <div id="marketList"></div>
+  </div>
 </div>
 
 <div id="teleport" class="modal travelModal">
@@ -252,12 +314,122 @@ function joinActivity(name){
   closeActivity();
   toast("🏆 "+name+" · Đã đăng ký");
 }
+
+const worldChat=[
+  {name:"Lãng Khách",text:"Có ai lập đội săn Boss Hoàng Kim không?"},
+  {name:"Thiếu Lâm",text:"Bang chiến tối nay mở đăng ký!"},
+  {name:"Nga Mi",text:"Có buff và trị liệu, ai cần lập đội?"}
+];
+let guildScore=1280;
+let tongKimSide="";
+
+const market=[
+  {id:1,name:"Đao Tinh Anh +2",icon:"⚔️",rarity:"Hiếm",price:180,owner:"Độc Cô"},
+  {id:2,name:"Giáp Tinh Anh +1",icon:"🛡️",rarity:"Tốt",price:120,owner:"Nga Mi"},
+  {id:3,name:"Bình Hồi Khí",icon:"🧪",rarity:"Thường",price:35,owner:"Tiểu Long"}
+];
+
+function openCommunity(){
+  renderCommunity();
+  document.getElementById("communityModal").style.display="block";
+}
+function closeCommunity(){document.getElementById("communityModal").style.display="none"}
+
+function guildWar(){
+  guildScore+=50;
+  document.getElementById("guildScore").textContent=guildScore.toLocaleString("vi-VN");
+  toast("🏯 Thiên Kiếm · Đã đăng ký Bang hội chiến");
+}
+function joinTongKim(side){
+  tongKimSide=side;
+  document.getElementById("tongKimState").textContent="Đã vào phe "+side;
+  toast("⚔️ Tống Kim · Phe "+side);
+}
+function sendWorldChat(){
+  const input=document.getElementById("chatInput");
+  const text=input.value.trim();
+  if(!text)return;
+  worldChat.push({name:"Thiếu Hiệp",text});
+  if(worldChat.length>30)worldChat.shift();
+  input.value="";
+  renderChat();
+  toast("🌎 Đã gửi kênh thế giới");
+}
+function renderChat(){
+  const box=document.getElementById("worldChat");
+  if(!box)return;
+  box.innerHTML=worldChat.map(m=>`<div class="chatLine"><strong>${m.name}:</strong> ${m.text}</div>`).join("");
+  box.scrollTop=box.scrollHeight;
+}
+function listItemForSale(i){
+  const it=bag[i];
+  if(!it){toast("Không tìm thấy vật phẩm");return}
+  if(it.type==="tiêu hao"){toast("🛒 Vật phẩm này chưa hỗ trợ bày bán");return}
+  const price=30+(it.atk||0)*5+(it.def||0)*5+(it.enhance||0)*25;
+  market.unshift({
+    id:Date.now(),
+    name:it.name+" +"+(it.enhance||0),
+    icon:it.icon,
+    rarity:it.rarity,
+    price,
+    owner:"Thiếu Hiệp",
+    ownIndex:i
+  });
+  bag.splice(i,1);
+  renderBag();
+  renderCommunity();
+  toast("🛒 Đã bày bán "+it.name);
+}
+function buyMarket(id){
+  const m=market.find(x=>x.id===id);
+  if(!m)return;
+  if(gold<m.price){toast("🪙 Không đủ vàng · Cần "+m.price);return}
+  if(bag.length>=24){toast("🎒 Túi đầy");return}
+  gold-=m.price;
+  const base=items.find(x=>x.name===m.name.replace(/ \+\d+$/,"")) || items[0];
+  const bought={...base,enhance:Number((m.name.match(/\+(\d+)$/)||[])[1]||0)};
+  bag.push(bought);
+  const idx=market.indexOf(m);
+  if(idx>=0)market.splice(idx,1);
+  renderBag();
+  renderCommunity();
+  toast("🛍️ Đã mua "+m.name);
+}
+function renderMarket(){
+  const box=document.getElementById("marketList");
+  if(!box)return;
+  let ownHtml="";
+  const sellable=bag.map((it,i)=>({it,i})).filter(x=>x.it.type!=="tiêu hao").slice(0,4);
+  if(sellable.length){
+    ownHtml=sellable.map(({it,i})=>`<div class="marketRow">
+      <div>${it.icon} <strong class="${rarityClass(it.rarity)}">${it.name} +${it.enhance||0}</strong>
+      <small>Vật phẩm của bạn · có thể bày bán</small></div>
+      <button class="action" onclick="listItemForSale(${i})">Bày bán</button>
+    </div>`).join("");
+  }
+  const marketHtml=market.map(m=>`<div class="marketRow">
+    <div>${m.icon} <strong class="${rarityClass(m.rarity)}">${m.name}</strong>
+    <small>${m.rarity} · Người bán: ${m.owner} · 🪙 ${m.price}</small></div>
+    <button class="action" onclick="buyMarket(${m.id})">Mua</button>
+  </div>`).join("");
+  box.innerHTML=(ownHtml?`<div><strong>📦 Vật phẩm của bạn</strong>${ownHtml}</div>`:"")+
+    `<div style="margin-top:10px"><strong>🛍️ Gian hàng người chơi</strong>${marketHtml||"<small>Chưa có món nào.</small>"}</div>`;
+}
+function renderCommunity(){
+  renderChat();
+  renderMarket();
+  const state=document.getElementById("tongKimState");
+  if(state)state.textContent=tongKimSide?("Đã vào phe "+tongKimSide):"Chưa tham gia";
+}
+
 function rarityClass(r){return r==="Hiếm"?"rare":r==="Tốt"?"good":"normal"}
 function openBag(){renderBag();document.getElementById("bag").style.display="block"}
 function closeBag(){document.getElementById("bag").style.display="none"} document.getElementById("bagBtn").onclick=openBag;
 document.getElementById("elementBtn").onclick=openElement;
 document.getElementById("activityBtn").onclick=openActivity;
+document.getElementById("communityBtn").onclick=openCommunity;
 
+document.getElementById("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendWorldChat()});
 function openTeleport(){document.getElementById("capeState").textContent=capeOn?"Bật":"Tắt";document.getElementById("teleport").style.display="block"}
 function closeTeleport(){document.getElementById("teleport").style.display="none"}
 function toggleMount(){

@@ -2,122 +2,730 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Kiếm Hiệp Mobi - Bản 2.1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Kiếm Hiệp Mobi - Bản 2.2</title>
+
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#75b95c;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
-*{box-sizing:border-box}
-#game{position:fixed;inset:0;overflow:hidden}
-canvas{display:block;width:100%;height:100%}
-.hud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none}
-.box{background:rgba(10,15,22,.82);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px 10px;font-size:13px}
-.hpbar{width:140px;height:8px;background:#333;border-radius:6px;margin-top:5px;overflow:hidden}
-.hp{width:100%;height:100%;background:#e44}
-.joystick{position:absolute;left:18px;bottom:25px;width:140px;height:140px;border-radius:70px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25)}
-.stick{position:absolute;left:41px;top:41px;width:55px;height:55px;border-radius:50%;background:rgba(255,255,255,.38)}
-.help{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;padding:5px 9px;border-radius:9px;font-size:10px;white-space:nowrap}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#07111b;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+#game{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:#142b20;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.hud{
+  position:absolute;
+  top:max(10px,env(safe-area-inset-top));
+  left:10px;
+  right:10px;
+  z-index:10;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none;
+}
+
+.box{
+  min-width:150px;
+  padding:10px 13px;
+  border-radius:12px;
+  color:#fff;
+  background:rgba(8,14,22,.84);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 5px 20px rgba(0,0,0,.25);
+  line-height:1.45;
+  font-size:14px;
+}
+
+.box b{
+  font-size:17px;
+}
+
+.coord{
+  color:#ffd76a;
+}
+
+.map{
+  text-align:right;
+}
+
+.joystick{
+  position:absolute;
+  z-index:20;
+  left:18px;
+  bottom:max(25px,calc(env(safe-area-inset-bottom) + 18px));
+  width:132px;
+  height:132px;
+  border-radius:50%;
+  background:rgba(20,25,32,.48);
+  border:2px solid rgba(255,255,255,.18);
+  box-shadow:0 5px 25px rgba(0,0,0,.3);
+  touch-action:none;
+}
+
+.joystick:after{
+  content:"";
+  position:absolute;
+  inset:22px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:50%;
+}
+
+.stick{
+  position:absolute;
+  left:41px;
+  top:41px;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:rgba(240,190,75,.88);
+  border:3px solid rgba(255,235,150,.75);
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  z-index:2;
+  transition:transform .04s linear;
+}
+
+.help{
+  position:absolute;
+  z-index:15;
+  bottom:max(8px,env(safe-area-inset-bottom));
+  left:50%;
+  transform:translateX(-50%);
+  color:rgba(255,255,255,.7);
+  font-size:12px;
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+#levelup{
+  position:absolute;
+  z-index:30;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(.9);
+  padding:16px 24px;
+  border-radius:16px;
+  color:#ffe28a;
+  background:rgba(15,18,25,.94);
+  border:1px solid rgba(255,215,100,.35);
+  box-shadow:0 10px 40px rgba(0,0,0,.5);
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+}
+
+#levelup.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+}
+
+.skillbar{
+  position:absolute;
+  z-index:15;
+  right:18px;
+  bottom:max(28px,calc(env(safe-area-inset-bottom) + 20px));
+  display:flex;
+  gap:8px;
+}
+
+.skill{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  color:white;
+  background:rgba(10,16,25,.78);
+  border:1px solid rgba(255,255,255,.2);
+}
+
+@media(max-width:420px){
+  .box{
+    min-width:135px;
+    padding:8px 10px;
+    font-size:12px;
+  }
+
+  .box b{
+    font-size:15px;
+  }
+
+  .joystick{
+    width:124px;
+    height:124px;
+  }
+
+  .stick{
+    left:37px;
+    top:37px;
+  }
+}
 </style>
 </head>
+
 <body>
 <div id="game">
+
 <canvas id="canvas"></canvas>
+
 <div class="hud">
-<div class="box"><b>⚔️ Thiếu Hiệp</b><br>Cấp 8 · Võ Đang<div class="hpbar"><div class="hp"></div></div></div>
-<div class="box">🗺️ Tân Thủ<br>📍 <span id="pos">1600,1200</span></div>
+  <div class="box">
+    <b>⚔️ Thiếu Hiệp</b><br>
+    Cấp <span id="lv">8</span> · Võ Đang
+  </div>
+
+  <div class="box map">
+    🗺️ Tân Thủ<br>
+    📍 <span class="coord" id="coord">1600,1200</span>
+  </div>
 </div>
-<div class="joystick" id="joy"><div class="stick" id="stick"></div></div>
+
+<div id="levelup">✨ Tăng cấp!</div>
+
+<div class="skillbar">
+  <div class="skill">⚔️</div>
+  <div class="skill">☯️</div>
+  <div class="skill">🔥</div>
+</div>
+
+<div class="joystick" id="joystick">
+  <div class="stick" id="stick"></div>
+</div>
+
 <div class="help">Kéo joystick để di chuyển</div>
+
 </div>
+
 <script>
-(function(){
 "use strict";
-var canvas=document.getElementById("canvas");
-var ctx=canvas.getContext("2d");
-var W=0,H=0,DPR=1;
-var WORLD_WIDTH=3200,WORLD_HEIGHT=2400;
-var player={x:1600,y:1200};
-var camera={x:0,y:0};
-var moveX=0,moveY=0,active=false,startX=0,startY=0;
-var trees=[],monsters=[
-{x:800,y:650,name:"Sơn Tặc"},
-{x:1200,y:800,name:"Dã Lang"},
-{x:2050,y:700,name:"Hắc Hùng"},
-{x:2450,y:1250,name:"Sơn Tặc"},
-{x:900,y:1750,name:"Dã Lang"},
-{x:2200,y:1800,name:"Hắc Hùng"}
-];
-var i;
-for(i=0;i<70;i++){trees.push({x:80+(i*179)%3000,y:100+(i*131)%2200});}
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let W = 0;
+let H = 0;
+let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
 function resize(){
-DPR=window.devicePixelRatio||1;if(DPR>2)DPR=2;
-W=window.innerWidth;H=window.innerHeight;
-canvas.width=Math.floor(W*DPR);canvas.height=Math.floor(H*DPR);
-canvas.style.width=W+"px";canvas.style.height=H+"px";
-ctx.setTransform(DPR,0,0,DPR,0,0);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = Math.floor(W * dpr);
+  canvas.height = Math.floor(H * dpr);
+
+  canvas.style.width = W + "px";
+  canvas.style.height = H + "px";
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
 }
-window.addEventListener("resize",resize);resize();
-function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-function tree(t){
-ctx.fillStyle="#2f6735";ctx.beginPath();ctx.arc(t.x,t.y,22,0,Math.PI*2);ctx.fill();
-ctx.fillStyle="#704c32";ctx.fillRect(t.x-5,t.y+15,10,32);
+
+window.addEventListener("resize", resize);
+window.addEventListener("orientationchange", () => {
+  setTimeout(resize,100);
+});
+
+resize();
+
+/* =========================
+   NHÂN VẬT
+========================= */
+
+const player = {
+  x:1600,
+  y:1200,
+  speed:3.2,
+  dirX:0,
+  dirY:0
+};
+
+let camera = {
+  x:1600,
+  y:1200
+};
+
+/* =========================
+   JOYSTICK
+========================= */
+
+const joystick = document.getElementById("joystick");
+const stick = document.getElementById("stick");
+
+let joyActive = false;
+let joyPointer = null;
+
+const joyRadius = 43;
+
+function joystickMove(clientX,clientY){
+
+  const r = joystick.getBoundingClientRect();
+
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+
+  let dx = clientX - cx;
+  let dy = clientY - cy;
+
+  const distance = Math.sqrt(dx*dx + dy*dy);
+
+  if(distance > joyRadius){
+    dx = dx / distance * joyRadius;
+    dy = dy / distance * joyRadius;
+  }
+
+  stick.style.transform =
+    "translate(" + dx + "px," + dy + "px)";
+
+  player.dirX = dx / joyRadius;
+  player.dirY = dy / joyRadius;
 }
-function monster(m){
-var sx=m.x-camera.x,sy=m.y-camera.y;
-if(sx<-80||sx>W+80||sy<-80||sy>H+80)return;
-ctx.fillStyle="#27321f";ctx.fillRect(sx-22,sy-20,44,42);
-ctx.font="24px sans-serif";ctx.textAlign="center";ctx.fillText("👹",sx,sy+7);
-ctx.fillStyle="#fff";ctx.font="11px sans-serif";ctx.fillText(m.name,sx,sy+40);
+
+function joystickEnd(){
+  joyActive = false;
+  joyPointer = null;
+
+  stick.style.transform = "translate(0,0)";
+  player.dirX = 0;
+  player.dirY = 0;
 }
-function player(){
-var x=player.x-camera.x,y=player.y-camera.y;
-ctx.fillStyle="#182238";ctx.beginPath();ctx.arc(x,y,25,0,Math.PI*2);ctx.fill();
-ctx.fillStyle="#e8c49b";ctx.beginPath();ctx.arc(x,y-10,14,0,Math.PI*2);ctx.fill();
-ctx.fillStyle="#e7c34e";ctx.fillRect(x-15,y-29,30,7);
-ctx.strokeStyle="#fff";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x+12,y+3);ctx.lineTo(x+40,y-25);ctx.stroke();
-ctx.fillStyle="#fff";ctx.font="bold 12px sans-serif";ctx.fillText("Bạn",x,y+44);
-}
-function drawWorld(){
-ctx.clearRect(0,0,W,H);ctx.fillStyle="#75b95c";ctx.fillRect(0,0,W,H);
-ctx.save();ctx.translate(-camera.x,-camera.y);
-ctx.fillStyle="#b89b68";ctx.fillRect(0,1120,WORLD_WIDTH,120);ctx.fillRect(1540,0,120,WORLD_HEIGHT);
-ctx.fillStyle="#4d9bc0";ctx.beginPath();
-ctx.moveTo(300,0);ctx.bezierCurveTo(650,400,180,800,600,1200);
-ctx.bezierCurveTo(850,1500,650,1900,900,2400);ctx.lineTo(1040,2400);
-ctx.bezierCurveTo(820,1900,1080,1500,760,1100);ctx.bezierCurveTo(480,800,800,400,470,0);
-ctx.closePath();ctx.fill();
-for(i=0;i<trees.length;i++)tree(trees[i]);
-ctx.fillStyle="#755038";ctx.fillRect(1350,500,500,230);
-ctx.fillStyle="#ffe19a";ctx.font="bold 28px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",1600,625);
-for(i=0;i<monsters.length;i++)monster(monsters[i]);
-player();ctx.restore();
-document.getElementById("pos").textContent=Math.round(player.x)+","+Math.round(player.y);
-}
-function update(){
-var speed=3.8;
-player.x=clamp(player.x+moveX*speed,30,WORLD_WIDTH-30);
-player.y=clamp(player.y+moveY*speed,30,WORLD_HEIGHT-30);
-camera.x=clamp(player.x-W/2,0,WORLD_WIDTH-W);
-camera.y=clamp(player.y-H/2,0,WORLD_HEIGHT-H);
-drawWorld();window.requestAnimationFrame(update);
-}
-var joy=document.getElementById("joy"),stick=document.getElementById("stick");
-joy.addEventListener("touchstart",function(e){
-if(!e.touches||!e.touches.length)return;
-var t=e.touches[0];active=true;startX=t.clientX;startY=t.clientY;e.preventDefault();
+
+joystick.addEventListener("touchstart",function(e){
+  e.preventDefault();
+
+  if(joyActive) return;
+
+  joyActive = true;
+  joyPointer = e.changedTouches[0].identifier;
+
+  const t = e.changedTouches[0];
+  joystickMove(t.clientX,t.clientY);
 },{passive:false});
-joy.addEventListener("touchmove",function(e){
-if(!active||!e.touches||!e.touches.length)return;
-var t=e.touches[0],dx=t.clientX-startX,dy=t.clientY-startY,max=42;
-var len=Math.sqrt(dx*dx+dy*dy);
-if(len>max){dx=dx/len*max;dy=dy/len*max;}
-moveX=dx/max;moveY=dy/max;
-stick.style.transform="translate("+dx+"px,"+dy+"px)";
-e.preventDefault();
+
+joystick.addEventListener("touchmove",function(e){
+  e.preventDefault();
+
+  if(!joyActive) return;
+
+  for(const t of e.changedTouches){
+    if(t.identifier === joyPointer){
+      joystickMove(t.clientX,t.clientY);
+      break;
+    }
+  }
 },{passive:false});
-function stop(){active=false;moveX=0;moveY=0;stick.style.transform="translate(0,0)";}
-joy.addEventListener("touchend",stop);joy.addEventListener("touchcancel",stop);
-drawWorld();window.requestAnimationFrame(update);
-})();
+
+joystick.addEventListener("touchend",function(e){
+  e.preventDefault();
+
+  for(const t of e.changedTouches){
+    if(t.identifier === joyPointer){
+      joystickEnd();
+      break;
+    }
+  }
+},{passive:false});
+
+joystick.addEventListener("touchcancel",joystickEnd);
+
+joystick.addEventListener("pointerdown",function(e){
+  if(e.pointerType === "touch") return;
+
+  joyActive = true;
+  joyPointer = e.pointerId;
+  joystick.setPointerCapture(e.pointerId);
+  joystickMove(e.clientX,e.clientY);
+});
+
+joystick.addEventListener("pointermove",function(e){
+  if(e.pointerType === "touch") return;
+  if(!joyActive) return;
+
+  joystickMove(e.clientX,e.clientY);
+});
+
+joystick.addEventListener("pointerup",function(e){
+  if(e.pointerType === "touch") return;
+  joystickEnd();
+});
+
+joystick.addEventListener("pointercancel",joystickEnd);
+
+/* =========================
+   THẾ GIỚI
+========================= */
+
+const trees = [];
+const stones = [];
+const flowers = [];
+
+function seededRandom(seed){
+  let x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+for(let i=0;i<90;i++){
+
+  const a = seededRandom(i*8.31);
+  const b = seededRandom(i*19.17);
+
+  trees.push({
+    x:500 + a * 2200,
+    y:400 + b * 1600,
+    s:.7 + seededRandom(i*3.2)*.7
+  });
+}
+
+for(let i=0;i<55;i++){
+
+  const a = seededRandom(i*13.7);
+  const b = seededRandom(i*21.4);
+
+  stones.push({
+    x:500 + a * 2200,
+    y:400 + b * 1600,
+    s:.7 + seededRandom(i*2.2)*.5
+  });
+}
+
+for(let i=0;i<160;i++){
+
+  const a = seededRandom(i*5.1);
+  const b = seededRandom(i*7.7);
+
+  flowers.push({
+    x:450 + a * 2300,
+    y:350 + b * 1800
+  });
+}
+
+/* =========================
+   VẼ THẾ GIỚI
+========================= */
+
+function worldToScreen(x,y){
+  return {
+    x: W/2 + (x-camera.x),
+    y: H/2 + (y-camera.y)
+  };
+}
+
+function drawGround(){
+
+  ctx.fillStyle = "#244c2e";
+  ctx.fillRect(0,0,W,H);
+
+  const grid = 80;
+
+  const offsetX =
+    ((-camera.x % grid) + grid) % grid;
+
+  const offsetY =
+    ((-camera.y % grid) + grid) % grid;
+
+  ctx.strokeStyle = "rgba(255,255,255,.035)";
+  ctx.lineWidth = 1;
+
+  for(let x=offsetX;x<W;x+=grid){
+    ctx.beginPath();
+    ctx.moveTo(x,0);
+    ctx.lineTo(x,H);
+    ctx.stroke();
+  }
+
+  for(let y=offsetY;y<H;y+=grid){
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(W,y);
+    ctx.stroke();
+  }
+}
+
+function drawFlowers(){
+
+  for(const f of flowers){
+
+    const p = worldToScreen(f.x,f.y);
+
+    if(p.x < -10 || p.x > W+10 ||
+       p.y < -10 || p.y > H+10) continue;
+
+    ctx.fillStyle = "#e7d26b";
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,2,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function drawStones(){
+
+  for(const s of stones){
+
+    const p = worldToScreen(s.x,s.y);
+
+    if(p.x < -40 || p.x > W+40 ||
+       p.y < -40 || p.y > H+40) continue;
+
+    ctx.fillStyle = "#68726c";
+
+    ctx.beginPath();
+    ctx.ellipse(
+      p.x,
+      p.y,
+      10*s.s,
+      7*s.s,
+      -.2,
+      0,
+      Math.PI*2
+    );
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(255,255,255,.12)";
+
+    ctx.beginPath();
+    ctx.ellipse(
+      p.x-2,
+      p.y-2,
+      4*s.s,
+      2*s.s,
+      -.2,
+      0,
+      Math.PI*2
+    );
+    ctx.fill();
+  }
+}
+
+function drawTrees(){
+
+  for(const t of trees){
+
+    const p = worldToScreen(t.x,t.y);
+
+    if(p.x < -60 || p.x > W+60 ||
+       p.y < -90 || p.y > H+60) continue;
+
+    const s = t.s;
+
+    ctx.fillStyle = "#5b3925";
+    ctx.fillRect(
+      p.x-5*s,
+      p.y,
+      10*s,
+      32*s
+    );
+
+    ctx.fillStyle = "#173b25";
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y-18*s,26*s,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = "#235a32";
+
+    ctx.beginPath();
+    ctx.arc(p.x-16*s,p.y-5*s,20*s,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(p.x+16*s,p.y-5*s,20*s,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+/* =========================
+   NHÂN VẬT
+========================= */
+
+function drawPlayer(){
+
+  const x = W/2;
+  const y = H/2;
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  ctx.fillStyle = "rgba(0,0,0,.28)";
+  ctx.beginPath();
+  ctx.ellipse(0,18,17,7,0,0,Math.PI*2);
+  ctx.fill();
+
+  /* áo */
+  ctx.fillStyle = "#e9e1d0";
+  ctx.beginPath();
+  ctx.moveTo(0,-18);
+  ctx.lineTo(-14,5);
+  ctx.lineTo(-9,20);
+  ctx.lineTo(0,13);
+  ctx.lineTo(9,20);
+  ctx.lineTo(14,5);
+  ctx.closePath();
+  ctx.fill();
+
+  /* đai */
+  ctx.fillStyle = "#8d672d";
+  ctx.fillRect(-11,4,22,5);
+
+  /* đầu */
+  ctx.fillStyle = "#f1c8a6";
+  ctx.beginPath();
+  ctx.arc(0,-25,9,0,Math.PI*2);
+  ctx.fill();
+
+  /* tóc */
+  ctx.fillStyle = "#171717";
+  ctx.beginPath();
+  ctx.arc(0,-29,10,Math.PI,Math.PI*2);
+  ctx.fill();
+
+  /* kiếm */
+  ctx.strokeStyle = "#d8d8d8";
+  ctx.lineWidth = 3;
+
+  ctx.beginPath();
+  ctx.moveTo(12,3);
+  ctx.lineTo(27,-20);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#9c6c2d";
+  ctx.lineWidth = 4;
+
+  ctx.beginPath();
+  ctx.moveTo(9,8);
+  ctx.lineTo(16,1);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+/* =========================
+   CAMERA
+========================= */
+
+function updateCamera(){
+
+  camera.x += (player.x-camera.x)*.12;
+  camera.y += (player.y-camera.y)*.12;
+}
+
+/* =========================
+   TỌA ĐỘ
+========================= */
+
+function updateUI(){
+
+  const x = Math.round(player.x);
+  const y = Math.round(player.y);
+
+  document.getElementById("coord").textContent =
+    x + "," + y;
+}
+
+/* =========================
+   GAME LOOP
+========================= */
+
+let last = performance.now();
+
+function update(dt){
+
+  const length =
+    Math.sqrt(
+      player.dirX*player.dirX +
+      player.dirY*player.dirY
+    );
+
+  if(length > .01){
+
+    player.x +=
+      player.dirX * player.speed * dt;
+
+    player.y +=
+      player.dirY * player.speed * dt;
+
+    player.x = Math.max(300,Math.min(2700,player.x));
+    player.y = Math.max(250,Math.min(2050,player.y));
+  }
+
+  updateCamera();
+  updateUI();
+}
+
+function render(){
+
+  ctx.clearRect(0,0,W,H);
+
+  drawGround();
+  drawFlowers();
+  drawStones();
+  drawTrees();
+  drawPlayer();
+}
+
+function loop(now){
+
+  const dt =
+    Math.min((now-last)/16.666,3);
+
+  last = now;
+
+  update(dt);
+  render();
+
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+
+/* =========================
+   CHỐNG SAFARI SCROLL
+========================= */
+
+document.addEventListener("touchmove",function(e){
+  if(e.target.closest("#game")){
+    e.preventDefault();
+  }
+},{passive:false});
+
+document.addEventListener("gesturestart",function(e){
+  e.preventDefault();
+},{passive:false});
+
+document.addEventListener("gesturechange",function(e){
+  e.preventDefault();
+},{passive:false});
+
+document.addEventListener("gestureend",function(e){
+  e.preventDefault();
+},{passive:false});
+
 </script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.11.2">
-<title>Kiếm Thế Mobi – Bản 4.11.2</title>
+<meta name="game-version" content="4.11.2-FINAL">
+<title>Kiếm Thế Mobi – Bản 4.11.2 FINAL</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -24,9 +24,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 #stick{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:#e8c45c;border:5px solid #fff0b0}
 #msg{position:absolute;z-index:150;left:50%;top:42%;transform:translate(-50%,-50%);padding:10px 18px;border-radius:20px;background:#08100ddd;color:#fff;font-size:17px;display:none;white-space:nowrap;pointer-events:none}
 #netStatus{position:absolute;z-index:80;left:12px;bottom:10px;padding:7px 10px;border-radius:12px;background:#08100dcc;color:#fff;font-size:12px}
-.gameMenu{position:absolute;z-index:50;right:12px;top:360px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:280px}
+.gameMenu{position:fixed;z-index:50;right:12px;bottom:calc(env(safe-area-inset-bottom) + 245px);display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:245px}
 .gameMenu button,.communityBtn{background:#111a20e8;border:2px solid #65727c;color:#fff;border-radius:14px;padding:8px 10px;font-weight:700}
-.communityBtn{position:absolute;z-index:50;right:12px;top:420px}
+.communityBtn{position:fixed;z-index:50;right:12px;bottom:calc(env(safe-area-inset-bottom) + 190px)}
 .modal{position:absolute;z-index:100;inset:7% 4%;background:#101820f5;border:1px solid #3c4650;border-radius:22px;color:#fff;padding:17px;overflow:auto;display:none;box-shadow:0 15px 50px #0008}
 .modal h1{margin:0 0 12px;font-size:27px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:12px;font-size:27px;padding:6px 12px}
 .card,.communityCard{background:#20282f;border:1px solid #3b454e;border-radius:15px;padding:12px;margin:8px 0}
@@ -101,7 +101,7 @@ function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,2)
 addEventListener("resize",resize);resize();
 
 const world={w:3200,h:2400},ZOOM=.62;
-const P={x:1600,y:1500,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15};
+const P={x:1750,y:1480,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15};
 const cam={x:P.x,y:P.y},town={x:1600,y:1200},city={x:2600,y:700},xaPhu={x:1460,y:1080};
 let mounted=false,capeOn=true,locationName="Tân Thủ Thôn",gold=733;
 const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"],elementIcon={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};
@@ -185,7 +185,7 @@ function update(dt){
 let dx=joy.x,dy=joy.y;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;
 const len=Math.hypot(dx,dy)||1;if(!NET.connected&&(dx||dy)){const speed=mounted?330:230;P.x+=dx/len*speed*dt;P.y+=dy/len*speed*dt}
 P.x=Math.max(P.r,Math.min(world.w-P.r,P.x));P.y=Math.max(P.r,Math.min(world.h-P.r,P.y));
-for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330&&statuses.stun<=0){const ms=statuses.slow>0?20:45;m.x+=(P.x-m.x)/Math.max(d,1)*ms*dt;m.y+=(P.y-m.y)/Math.max(d,1)*ms*dt}m.hit=Math.max(0,m.hit-dt)}
+for(const m of mobs)if(m.alive){const d=Math.hypot(P.x-m.x,P.y-m.y);if(d<330&&d>62&&statuses.stun<=0){const ms=statuses.slow>0?20:45;m.x+=(P.x-m.x)/Math.max(d,1)*ms*dt;m.y+=(P.y-m.y)/Math.max(d,1)*ms*dt}m.hit=Math.max(0,m.hit-dt)}
 attackCd=Math.max(0,attackCd-dt);skillCd=Math.max(0,skillCd-dt);fireCd=Math.max(0,fireCd-dt);statuses.stun=Math.max(0,statuses.stun-dt);statuses.slow=Math.max(0,statuses.slow-dt);statuses.buff=Math.max(0,statuses.buff-dt);
 if(playerClass==="Nga Mi"&&statuses.buff>0)P.hp=Math.min(P.maxHp,P.hp+12*dt);
 const viewW=W/ZOOM,viewH=H/ZOOM,halfW=viewW/2,halfH=viewH/2,safeL=Math.min(W*.30,245),safeR=Math.max(W*.70,W-245),safeT=Math.min(H*.38,360),safeB=Math.min(H*.62,H-270);
@@ -200,7 +200,7 @@ ctx.fillStyle="#3f91bd";ctx.beginPath();ctx.moveTo(0,1650);ctx.bezierCurveTo(500
 ctx.fillStyle="#b49a68";ctx.beginPath();ctx.moveTo(0,1850);ctx.quadraticCurveTo(800,1450,1600,1700);ctx.quadraticCurveTo(2300,1900,3200,1500);ctx.lineTo(3200,1750);ctx.quadraticCurveTo(2300,2150,1600,1950);ctx.quadraticCurveTo(800,1750,0,2100);ctx.closePath();ctx.fill();
 ctx.fillStyle="#765239";ctx.fillRect(town.x-105,town.y-70,210,140);ctx.fillStyle="#ffe48b";ctx.font="bold 24px sans-serif";ctx.textAlign="center";ctx.fillText("THÔN TÂN THỦ",town.x,town.y+8);
 for(const [x,y] of trees){ctx.fillStyle="#704a30";ctx.fillRect(x-9,y+28,18,50);ctx.fillStyle="#285d37";ctx.beginPath();ctx.arc(x,y,58,0,Math.PI*2);ctx.fill();ctx.fillStyle="#347447";ctx.beginPath();ctx.arc(x-20,y-18,36,0,Math.PI*2);ctx.fill()}
-for(const m of mobs)if(m.alive){ctx.fillStyle=m.hit?"#ffbd59":"#814237";ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.font="14px sans-serif";ctx.fillText(elementIcon[m.element]+" Sơn Tặc",m.x,m.y-34);ctx.fillStyle="#18221a";ctx.fillRect(m.x-30,m.y+30,60,6);ctx.fillStyle="#d95c5c";ctx.fillRect(m.x-30,m.y+30,60*(m.hp/m.maxHp),6)}
+for(const m of mobs)if(m.alive){ctx.fillStyle=m.hit?"#ffbd59":"#814237";ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.font="14px sans-serif";ctx.textAlign="center";ctx.font="12px sans-serif";ctx.fillStyle="#fff";ctx.fillText(elementIcon[m.element]+" Sơn Tặc",m.x,m.y-43);ctx.fillStyle="#18221a";ctx.fillRect(m.x-30,m.y+30,60,6);ctx.fillStyle="#d95c5c";ctx.fillRect(m.x-30,m.y+30,60*(m.hp/m.maxHp),6)}
 for(const d of drops){ctx.fillStyle=d.kind==="gold"?"#e8c64f":"#d7d7d7";ctx.beginPath();ctx.arc(d.x,d.y,22,0,Math.PI*2);ctx.fill();ctx.fillStyle="#111";ctx.font="16px sans-serif";ctx.fillText(d.kind==="gold"?"🪙":d.item.icon,d.x,d.y+6)}
 drawOtherPlayers();
 if(capeOn){ctx.fillStyle="#6b3fa0aa";ctx.beginPath();ctx.moveTo(P.x-30,P.y+42);ctx.quadraticCurveTo(P.x,P.y+8,P.x+30,P.y+42);ctx.lineTo(P.x+18,P.y+58);ctx.lineTo(P.x-18,P.y+58);ctx.closePath();ctx.fill()}
@@ -214,15 +214,99 @@ const TAB_ID="p_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2
 const PLAYER_NAME="Thiếu Hiệp "+TAB_ID.slice(-4).toUpperCase();
 const NET={ws:null,connected:false,id:null,seq:0,url:(location.protocol==="https:"?"wss://":"ws://")+location.host};
 
+const LOCAL_MP = {
+  enabled: typeof BroadcastChannel !== "undefined",
+  channel: null,
+  lastSend: 0
+};
+if(LOCAL_MP.enabled){
+  try{
+    LOCAL_MP.channel = new BroadcastChannel("kiem-the-mobi-4.11.2");
+    LOCAL_MP.channel.onmessage = (ev)=>{
+      const p=ev.data;
+      if(!p || p.id===TAB_ID) return;
+      let o=otherPlayers.find(x=>String(x.id)===String(p.id));
+      if(!o){
+        o={
+          id:String(p.id),
+          x:Number(p.x)||0,y:Number(p.y)||0,
+          tx:Number(p.x)||0,ty:Number(p.y)||0,
+          hp:Number(p.hp??100),maxHp:Number(p.maxHp??100),
+          name:p.name||"Thiếu Hiệp",
+          level:Number(p.level??14),
+          className:p.className||"Võ Đang",
+          element:p.element||"Kim",
+          mounted:!!p.mounted,cape:!!p.cape,
+          local:true,lastSeen:performance.now()
+        };
+      }else{
+        o.tx=Number(p.x)||o.tx;
+        o.ty=Number(p.y)||o.ty;
+        o.hp=Number(p.hp??o.hp);
+        o.maxHp=Number(p.maxHp??o.maxHp);
+        o.name=p.name||o.name;
+        o.level=Number(p.level??o.level);
+        o.className=p.className||o.className;
+        o.element=p.element||o.element;
+        o.mounted=!!p.mounted;
+        o.cape=!!p.cape;
+        o.lastSeen=performance.now();
+        o.local=true;
+      }
+      otherPlayers = otherPlayers.filter(x=>!x.local || performance.now()-x.lastSeen<1800);
+      if(!otherPlayers.some(x=>String(x.id)===String(o.id))) otherPlayers.push(o);
+    };
+  }catch(_){ LOCAL_MP.enabled=false; }
+}
+function sendLocalPlayer(now){
+  if(!LOCAL_MP.enabled || !LOCAL_MP.channel) return;
+  if(now-LOCAL_MP.lastSend<60) return;
+  LOCAL_MP.lastSend=now;
+  try{
+    LOCAL_MP.channel.postMessage({
+      id:TAB_ID,x:P.x,y:P.y,hp:P.hp,maxHp:P.maxHp,
+      name:PLAYER_NAME,level:14,className:playerClass,
+      element:elements[elementIndex],mounted:!!mounted,cape:!!capeOn
+    });
+  }catch(_){}
+}
+
+
 function setNetStatus(t,ok=false){document.getElementById("netStatus").textContent=(ok?"🟢 ":"🔴 ")+t}
 function connectServer(){
-const url=location.protocol==="file:"?"ws://localhost:3000":NET.url;
-try{NET.ws=new WebSocket(url);
-NET.ws.onopen=()=>{NET.connected=true;setNetStatus("Online",true);NET.ws.send(JSON.stringify({type:"hello",account:TAB_ID,character:PLAYER_NAME,clientVersion:"4.11.2"}))};
-NET.ws.onmessage=e=>{try{handleServerMessage(JSON.parse(e.data))}catch(err){}};
-NET.ws.onerror=()=>{NET.connected=false;setNetStatus("Server error")};
-NET.ws.onclose=()=>{NET.connected=false;NET.id=null;otherPlayers=[];setNetStatus("Offline");setTimeout(connectServer,2000)};
-}catch(e){setNetStatus("Offline")}
+  const isGitHubPages=/github\.io$/i.test(location.hostname);
+  if(isGitHubPages){
+    NET.connected=false;
+    NET.id=TAB_ID;
+    setNetStatus("2 tab · Demo",true);
+    return;
+  }
+  const url=location.protocol==="file:"?"ws://localhost:3000":NET.url;
+  try{
+    NET.ws=new WebSocket(url);
+    NET.ws.onopen=()=>{
+      NET.connected=true;
+      setNetStatus("Online",true);
+      NET.ws.send(JSON.stringify({
+        type:"hello",account:TAB_ID,character:PLAYER_NAME,clientVersion:"4.11.2"
+      }));
+    };
+    NET.ws.onmessage=e=>{try{handleServerMessage(JSON.parse(e.data))}catch(err){}};
+    NET.ws.onerror=()=>{
+      NET.connected=false;
+      setNetStatus(LOCAL_MP.enabled?"2 tab · Demo":"Server error",!!LOCAL_MP.enabled);
+    };
+    NET.ws.onclose=()=>{
+      NET.connected=false;
+      NET.id=TAB_ID;
+      setNetStatus(LOCAL_MP.enabled?"2 tab · Demo":"Offline",!!LOCAL_MP.enabled);
+      if(!isGitHubPages) setTimeout(connectServer,3000);
+    };
+  }catch(e){
+    NET.connected=false;
+    NET.id=TAB_ID;
+    setNetStatus(LOCAL_MP.enabled?"2 tab · Demo":"Offline",!!LOCAL_MP.enabled);
+  }
 }
 function sendInput(){if(!NET.connected||!NET.ws||NET.ws.readyState!==WebSocket.OPEN)return;NET.ws.send(JSON.stringify({type:"input",seq:++NET.seq,x:+joy.x||0,y:+joy.y||0,mounted:!!mounted,cape:!!capeOn,name:PLAYER_NAME,level:14,className:playerClass,element:elements[elementIndex]}))}
 function handleServerMessage(m){
@@ -235,9 +319,11 @@ function updateOtherPlayers(dt){const k=Math.min(1,dt*12);for(const p of otherPl
 function drawOtherPlayers(){for(const op of otherPlayers){if(Math.hypot(op.x-P.x,op.y-P.y)>1100)continue;if(op.cape){ctx.fillStyle="#6b3fa0dd";ctx.beginPath();ctx.moveTo(op.x-34,op.y+10);ctx.quadraticCurveTo(op.x,op.y+42,op.x+34,op.y+10);ctx.lineTo(op.x+22,op.y+58);ctx.lineTo(op.x-22,op.y+58);ctx.closePath();ctx.fill()}if(op.mounted){ctx.font="34px sans-serif";ctx.textAlign="center";ctx.fillText("🐎",op.x,op.y+30)}ctx.fillStyle="#f0d2b4";ctx.beginPath();ctx.arc(op.x,op.y-34,18,0,Math.PI*2);ctx.fill();ctx.fillStyle="#c9d8f0";ctx.beginPath();ctx.moveTo(op.x-25,op.y+45);ctx.lineTo(op.x,op.y-10);ctx.lineTo(op.x+28,op.y+45);ctx.lineTo(op.x,op.y+60);ctx.closePath();ctx.fill();ctx.fillStyle="#fff";ctx.font="bold 14px sans-serif";ctx.fillText((elementIcon[op.element]||"⚙️")+" "+op.name,op.x,op.y-62);ctx.font="11px sans-serif";ctx.fillStyle="#c8d8e8";ctx.fillText("Cấp "+op.level+" · "+op.className,op.x,op.y-47);const hp=Math.max(0,Math.min(1,op.hp/Math.max(1,op.maxHp)));ctx.fillStyle="#18221a";ctx.fillRect(op.x-32,op.y+66,64,6);ctx.fillStyle="#e45b56";ctx.fillRect(op.x-32,op.y+66,64*hp,6)}}
 
 let lastNetSend=0;
-function frame(t){const dt=Math.min(.035,(t-last)/1000);last=t;update(dt);updateOtherPlayers(dt);if(t-lastNetSend>50){lastNetSend=t;sendInput()}draw();requestAnimationFrame(frame)}
+function frame(t){const dt=Math.min(.035,(t-last)/1000);last=t;update(dt);updateOtherPlayers(dt);sendLocalPlayer(t);if(t-lastNetSend>50){lastNetSend=t;sendInput()}draw();requestAnimationFrame(frame)}
 
 renderBag();renderCommunity();connectServer();requestAnimationFrame(frame);
+window.addEventListener("pagehide",()=>{try{LOCAL_MP.channel&&LOCAL_MP.channel.close()}catch(_){}});
 </script>
 </body>
 </html>
+

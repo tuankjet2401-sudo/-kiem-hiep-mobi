@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.2">
+<meta name="game-version" content="4.3">
 <title>Kiếm Thế Mobi – Bản 3.9.9</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -25,6 +25,15 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 @media(max-width:430px){#stats{max-width:58vw;padding:10px 12px}.name{font-size:22px}.sub{font-size:15px}#town{max-width:30vw;font-size:14px}.skills{gap:8px;right:12px;bottom:132px}.btn{width:60px;height:60px;font-size:26px}#joy{left:12px;bottom:150px;width:108px;height:108px}#stick{width:48px;height:48px}}
 .action{background:#d2a44e;border:0;color:#fff;font-weight:700;border-radius:12px;padding:10px 13px;font-size:15px}
 .enhance{background:#6f4fd8;border:0;color:#fff;font-weight:800;border-radius:12px;padding:10px 13px;font-size:15px}
+.item>div:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;max-width:52%}
+.enhance{min-width:92px}
+@media(max-width:700px){
+  .item{align-items:flex-start}
+  .item>div:first-child{min-width:0;flex:1}
+  .item>div:last-child{max-width:48%;min-width:145px}
+  .item .action,.item .enhance{font-size:14px;padding:9px 10px}
+}
+
 .enhance:disabled{opacity:.45}
 .enhanceLv{color:#ffd95a;font-weight:800}
 

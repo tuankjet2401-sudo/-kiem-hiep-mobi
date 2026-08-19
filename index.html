@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Kiếm Thế Mobile Demo</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#17120d;font-family:system-ui}
+canvas{display:block;width:100vw;height:100vh;touch-action:none}
+#hint{position:fixed;left:50%;top:10px;transform:translateX(-50%);color:#fff;background:#0009;padding:8px 14px;border-radius:12px;font-size:13px;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas><div id="hint">Kéo joystick để di chuyển • Nút đỏ để đánh</div>
+<script>
+const c=document.getElementById('game'),ctx=c.getContext('2d');
+let W,H,dpr,px,py,mx,my,hp=100,exp=0,lv=1,gold=0,hit=0,joy={x:0,y:0,active:false};
+function resize(){dpr=devicePixelRatio||1;W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);if(px==null){px=W*.5;py=H*.52;mx=W*.72;my=H*.52}} addEventListener('resize',resize);resize();
+function attack(){if(Math.hypot(px-mx,py-my)<150){hit=.18;hp-=10;if(hp<=0){hp=100;exp+=20;gold+=10;if(exp>=100){exp-=100;lv++;}mx=120+Math.random()*(W-240);my=130+Math.random()*(H-250)}}}
+function draw(){
+ctx.clearRect(0,0,W,H);
+ctx.fillStyle='#cdb27a';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#a68a5d';ctx.fillRect(0,H*.45,W,H*.12);ctx.fillRect(W*.44,70,W*.12,H);
+ctx.fillStyle='#403025';ctx.fillRect(0,0,W,70);
+ctx.fillStyle='#fff';ctx.font='bold 20px system-ui';ctx.fillText('KIẾM THẾ MOBILE',18,30);
+ctx.font='13px system-ui';ctx.fillText('BẢN DEMO 1 • Offline',18,52);
+ctx.fillStyle='#20170fdd';ctx.fillRect(15,85,190,105);
+ctx.fillStyle='#fff';ctx.font='17px system-ui';ctx.fillText('Thiếu Hiệp  •  Cấp '+lv,28,112);
+ctx.fillStyle='#611';ctx.fillRect(28,126,150,14);ctx.fillStyle='#e44';ctx.fillRect(28,126,150*hp/100,14);
+ctx.fillStyle='#fff';ctx.font='13px system-ui';ctx.fillText('HP '+hp+'/100',32,138);
+ctx.fillStyle='#e4bd4b';ctx.fillRect(28,150,150,10);ctx.fillStyle='#61b4e8';ctx.fillRect(28,150,150*exp/100,10);
+ctx.fillStyle='#fff';ctx.fillText('EXP '+exp+'/100',32,175);ctx.fillText('Bạc: '+gold,105,175);
+ctx.fillStyle='#a33';ctx.beginPath();ctx.arc(mx,my,25,0,7);ctx.fill();
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(mx-8,my-5,4,0,7);ctx.arc(mx+8,my-5,4,0,7);ctx.fill();
+ctx.fillStyle='#5b1919';ctx.font='14px system-ui';ctx.fillText('Sơn Tặc',mx-28,my+45);
+ctx.fillStyle='#2864d6';ctx.beginPath();ctx.arc(px,py,27,0,7);ctx.fill();
+ctx.fillStyle='#f0c49d';ctx.beginPath();ctx.arc(px,py-31,13,0,7);ctx.fill();
+ctx.fillStyle='#24170f';ctx.font='14px system-ui';ctx.fillText('Thiếu Hiệp',px-35,py+50);
+if(hit>0){ctx.strokeStyle='#ffd34d';ctx.lineWidth=8;ctx.beginPath();ctx.arc(mx,my,52,0,7);ctx.stroke()}
+const jx=105,jy=H-105;ctx.fillStyle='#0005';ctx.beginPath();ctx.arc(jx,jy,70,0,7);ctx.fill();ctx.fillStyle='#fff8';ctx.beginPath();ctx.arc(jx+joy.x*45,jy+joy.y*45,28,0,7);ctx.fill();
+const bx=W-105,by=H-105;ctx.fillStyle='#9b2424dd';ctx.beginPath();ctx.arc(bx,by,58,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 16px system-ui';ctx.fillText('ĐÁNH',bx-24,by+6);
+}
+let last=performance.now();
+function loop(t){let dt=Math.min((t-last)/1000,.04);last=t;px=Math.max(35,Math.min(W-35,px+joy.x*230*dt));py=Math.max(85,Math.min(H-35,py+joy.y*230*dt));hit=Math.max(0,hit-dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function pos(e){return e.touches?e.touches[0]:e}
+c.addEventListener('touchstart',e=>{e.preventDefault();for(const t of e.changedTouches){const x=t.clientX,y=t.clientY;if(Math.hypot(x-105,y-(H-105))<90){joy.active=true;joy.id=t.identifier;updateJoy(x,y)}else if(Math.hypot(x-(W-105),y-(H-105))<75)attack()}},{passive:false});
+c.addEventListener('touchmove',e=>{e.preventDefault();for(const t of e.changedTouches)if(joy.active&&t.identifier===joy.id)updateJoy(t.clientX,t.clientY)},{passive:false});
+c.addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===joy.id){joy.active=false;joy.x=joy.y=0}});
+function updateJoy(x,y){let dx=x-105,dy=y-(H-105),d=Math.hypot(dx,dy);if(d>55){dx=dx/d*55;dy=dy/d*55}joy.x=dx/55;joy.y=dy/55}
+</script>
+</body></html>

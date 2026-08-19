@@ -104,7 +104,7 @@ addEventListener("resize",resize);resize();
 const world={w:3200,h:2400},ZOOM=.62;
 const P={x:1750,y:1480,r:25,hp:180,maxHp:220,mp:33,maxMp:60,atk:15};
 const cam={x:P.x,y:P.y},town={x:1600,y:1260},city={x:2600,y:700},xaPhu={x:1460,y:1140};
-const SAFE_RADIUS=165;
+const SAFE_RADIUS=125;
 function inSafeZone(x,y,pad=0){return Math.hypot(x-town.x,y-town.y)<=SAFE_RADIUS+pad;}
 let mounted=false,capeOn=true,locationName="Tân Thủ Thôn",gold=733;
 const elements=["Kim","Mộc","Thủy","Hỏa","Thổ"],elementIcon={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};

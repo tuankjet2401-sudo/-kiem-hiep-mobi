@@ -71,11 +71,41 @@ button:disabled{opacity:.45}
 .dust{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);font-size:32px;opacity:.7;animation:dustMove 2.4s infinite}
 @keyframes mountIdle{50%{transform:translateY(-5px) scale(1.015)}}@keyframes riderIdle{50%{transform:translateX(-50%) translateY(-5px)}}@keyframes capeWave{50%{transform:translateX(-8px) rotate(5deg)}}@keyframes dustMove{50%{transform:translateX(-50%) scale(1.25);opacity:.35}}
 .statline{display:flex;justify-content:space-between;background:#3b2b1b;border-radius:9px;padding:7px;margin-top:6px;font-size:11px}
+
+.animStage{position:relative;height:330px;border-radius:16px;overflow:hidden;background:linear-gradient(#7f9d66,#526b43 58%,#33482f);border:1px solid #b98b4a}
+.animStage:before{content:"";position:absolute;left:0;right:0;bottom:0;height:32%;background:repeating-linear-gradient(8deg,rgba(80,57,30,.35) 0 8px,transparent 8px 18px)}
+.combatUnit{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);font-size:76px;z-index:3;filter:drop-shadow(0 8px 5px rgba(0,0,0,.35))}
+.combatCape{position:absolute;left:calc(50% - 62px);bottom:125px;font-size:45px;z-index:2}
+.combatWeapon{position:absolute;left:calc(50% + 22px);bottom:145px;font-size:32px;z-index:4}
+.combatDust{position:absolute;left:50%;bottom:38px;font-size:38px;opacity:.5;z-index:1}
+.animStage.idle .combatUnit{animation:idleUnit 1.5s infinite}
+.animStage.idle .combatCape{animation:capeAnim 1.2s infinite}
+.animStage.walk .combatUnit{animation:walkUnit .45s infinite}
+.animStage.attack .combatUnit{animation:attackUnit .45s 1}
+.animStage.attack .combatWeapon{animation:swingWeapon .45s 1}
+.animStage.skill .combatUnit{animation:skillUnit .9s 1}
+.animStage.skill .combatWeapon{animation:skillWeapon .9s 1}
+.animStage.hit .combatUnit{animation:hitUnit .4s 1}
+.animStage.death .combatUnit{animation:deathUnit 1.3s 1 forwards}
+.animStage.death .combatWeapon{animation:dropWeapon 1s 1 forwards}
+.animStage.skill:after{content:"✨";position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);font-size:90px;animation:skillFx .9s 1;z-index:5}
+.animStage.hit:after{content:"💥";position:absolute;left:50%;top:43%;font-size:52px;animation:hitFx .4s 1;z-index:5}
+.animStage.death:after{content:"🌫️";position:absolute;left:50%;bottom:30px;font-size:45px;animation:fadeFx 1.3s 1;z-index:5}
+@keyframes idleUnit{50%{transform:translateX(-50%) translateY(-5px)}}@keyframes capeAnim{50%{transform:translateX(-8px) rotate(5deg)}}
+@keyframes walkUnit{25%{transform:translateX(-54%) translateY(-2px)}75%{transform:translateX(-46%) translateY(0)}}
+@keyframes attackUnit{0%{transform:translateX(-50%)}45%{transform:translateX(15%)}100%{transform:translateX(-50%)}}
+@keyframes swingWeapon{45%{transform:rotate(-55deg) translate(12px,-8px)}100%{transform:none}}
+@keyframes skillUnit{35%{transform:translateX(-50%) scale(1.12)}70%{transform:translateX(-50%) translateY(-12px) scale(1.05)}}
+@keyframes skillWeapon{50%{transform:rotate(-25deg) scale(1.25)}}@keyframes skillFx{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}50%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}}
+@keyframes hitUnit{25%{transform:translateX(-64%);filter:drop-shadow(0 0 12px #e33)}100%{transform:translateX(-50%)}}
+@keyframes hitFx{100%{opacity:0;transform:scale(1.5)}}@keyframes deathUnit{40%{transform:translateX(-50%) translateY(12px) rotate(-12deg)}100%{transform:translateX(-50%) translateY(30px) rotate(-90deg);opacity:0}}
+@keyframes dropWeapon{100%{transform:translate(35px,35px) rotate(80deg);opacity:.2}}@keyframes fadeFx{100%{opacity:0;transform:scale(1.6)}}
+.combatControls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}
 </style>
 </head><body>
 <div id="game">
 <header class="top">
- <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • TƯỚNG KỴ</span></div>
+ <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • CHIẾN ĐẤU</span></div>
  <div class="resources">
   <div class="res">🌾<b id="food">0</b></div><div class="res">💰<b id="gold">0</b></div>
   <div class="res">🪵<b id="wood">0</b></div><div class="res">⛏️<b id="iron">0</b></div>
@@ -229,7 +259,7 @@ function openSheet(name){
  mine:["⛏️ Mỏ Sắt",`<div class="card"><h3>⛏️ Mỏ quặng</h3><p>Lò rèn cấp ${s.forge}. Thu sắt để chế tạo.</p><button type="button" onclick="collect();openSheet('mine')">⛏️ Khai thác</button></div>`],
  market:["🛒 Chợ Thành",`<div class="grid2"><button type="button" onclick="sellMarket('food');openSheet('market')">Bán 100🌾</button><button type="button" onclick="sellMarket('wood');openSheet('market')">Bán 100🪵</button><button type="button" onclick="sellMarket('iron');openSheet('market')">Bán 100⛏️</button><button type="button" onclick="buyMarket('gold');openSheet('market')">Đổi vàng</button></div>`],
  inventory:["🎒 Kho Đồ",`<div class="grid2"><div class="card">🗡️ Kiếm rèn: ${s.inventory.woodSword}</div><div class="card">🛡️ Giáp rèn: ${s.inventory.ironArmor}</div><div class="card">🏹 Cung rèn: ${s.inventory.warBow}</div><div class="card">🧪 Bình: ${s.inventory.potion}</div></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="usePotion();openSheet('inventory')">🧪 Dùng bình</button><button type="button" onclick="sellLoot();openSheet('inventory')">💰 Bán chiến lợi phẩm</button></div>`],
- hero:["👑 Tướng Quân",`<div class="generalHero"><div class="sun"></div><div class="rider">🛡️</div><div class="cape">🚩</div><div class="mount">🐎</div><div class="dust">🌫️</div></div><div class="statline"><span>👑 Đại tướng</span><b>Cấp ${s.heroLevel}</b></div><div class="statline"><span>⚔️ Sức mạnh</span><b>${power()}</b></div><div class="statline"><span>🛡️ Phòng thủ</span><b>${defense()}</b></div><div class="statline"><span>⭐ Phẩm chất</span><b id="heroRarity"></b></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="trainHero();openSheet('hero')">📚 Huấn luyện</button><button type="button" onclick="promoteHero();openSheet('hero')">⭐ Thăng phẩm</button><button type="button" onclick="upgradeMount();openSheet('hero')">🐎 Nâng chiến mã</button><button type="button" onclick="useSkill('warcry');closeSheet()">🔥 Hào khí</button></div><div class="card" style="margin-top:7px"><h3>🐎 Chiến mã cấp ${s.mount.level}</h3><p>⚡ Tốc độ +${s.mount.level*5}% • ⚔️ Kỵ binh +${s.mount.level*6}% • 🛡️ Giáp ngựa +${s.mount.level*4}%</p></div>`],
+ hero:["👑 Tướng Quân",`<div class="animStage idle" id="animStage"><div class="combatCape">🚩</div><div class="combatWeapon">🗡️</div><div class="combatUnit">🧍‍♂️</div><div class="combatDust">🌫️</div></div><div class="statline"><span>👑 Đại tướng</span><b>Cấp ${s.heroLevel}</b></div><div class="statline"><span>⚔️ Sức mạnh</span><b>${power()}</b></div><div class="combatControls"><button type="button" onclick="playAnim('idle')">🧍 Idle</button><button type="button" onclick="playAnim('walk')">🏃 Di chuyển</button><button type="button" onclick="playAnim('attack')">⚔️ Tấn công</button><button type="button" onclick="playAnim('skill')">🔥 Kỹ năng</button><button type="button" onclick="playAnim('hit')">💥 Bị thương</button><button type="button" onclick="playAnim('death')">☠️ Gục ngã</button></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="trainHero();openSheet('hero')">📚 Huấn luyện</button><button type="button" onclick="upgradeMount();openSheet('hero')">🐎 Nâng chiến mã</button></div>`],
  quest:["📜 Nhiệm Vụ",`<div class="card"><h3>🌾 Thu hoạch</h3><p>${s.daily.harvest}/3</p><button type="button" onclick="claimDaily('harvest');openSheet('quest')">🎁 Nhận thưởng</button></div><div class="card" style="margin-top:7px"><h3>⚔️ Võ đài</h3><p>${s.daily.battles}/2</p><button type="button" onclick="claimDaily('battles');openSheet('quest')">🎁 Nhận thưởng</button></div>`],
  world:["🗺️ Bản Đồ Thế Giới",`<div class="grid2"><button type="button" onclick="campaignBattle();openSheet('world')">🏹 Chiến dịch</button><button type="button" onclick="arenaBattle();openSheet('world')">🏟️ Võ đài</button><button type="button" onclick="attackBoss();openSheet('world')">🐉 Đánh Boss</button><button type="button" onclick="claimLand('delta');openSheet('world')">🗺️ Mở lãnh thổ</button></div><div class="card" style="margin-top:7px">🏯 Lãnh thổ: ${s.territory} • 🏅 Uy thế: ${s.influence}</div>`],
  more:["☰ Quản Lý",`<div class="grid2"><button type="button" onclick="openSheet('season')">🏆 Mùa giải</button><button type="button" onclick="openSheet('tech')">🔬 Công nghệ</button><button type="button" onclick="openSheet('guild')">🏳️ Bang hội</button><button type="button" onclick="openSheet('generals')">👑 Tướng phụ</button><button type="button" onclick="saveGame();closeSheet()">💾 Lưu game</button><button type="button" onclick="closeSheet()">Đóng</button></div>`],
@@ -301,6 +331,21 @@ function finishTutorial(){
 function skipTutorial(){
  s.tutorial.done=true;s.tutorial.step=5;save();
  document.getElementById("tutorial").classList.remove("show");render()
+}
+
+
+function playAnim(state){
+ const el=document.getElementById("animStage");if(!el)return;
+ el.className="animStage "+state;
+ if(state!=="idle"){
+   clearTimeout(window.__animTimer);
+   window.__animTimer=setTimeout(()=>{el.className="animStage idle"}, state==="death"?1400:1100);
+ }
+ if(state==="attack"){s.battleLog.push("⚔️ Tướng thực hiện đòn tấn công.");gainXp(3)}
+ if(state==="skill"){s.battleLog.push("🔥 Tướng thi triển kỹ năng.");gainXp(5)}
+ if(state==="hit")s.battleLog.push("💥 Tướng chịu sát thương.");
+ if(state==="death")s.battleLog.push("☠️ Tướng gục ngã.");
+ render();save();
 }
 
 function render(){

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.12.4">
-<meta name="game-protocol" content="4.12.4">
+<meta name="game-version" content="4.12.5">
+<meta name="game-protocol" content="4.12.5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.4 · NPC Dịch Vụ</title>
+<title>Kiếm Thế Mobi – Bản 4.12.5 · Kênh thế giới</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -99,7 +99,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div class="card">🤝 Tổ đội<br><small>Tìm đồng đội cùng cấp.</small><br><button class="action" onclick="registerCommunity('Tổ đội')">Tìm đội</button></div>
 <div class="card">📢 Kênh thế giới<br><small>Trao đổi với người chơi.</small></div>
 <div class="card">💱 Giao dịch<br><small>Mở giao dịch với người chơi gần đó.</small><br><button class="action" onclick="registerCommunity('Giao dịch')">Giao dịch</button></div>
-<div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." style="width:70%;padding:9px;border-radius:9px"><button class="action" onclick="sendChat()">Gửi</button></div>
+<div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." id="worldInput" type="text" autocomplete="off" enterkeyhint="send" style="width:70%;padding:9px;border-radius:9px;touch-action:manipulation;position:relative;z-index:100"><button id="worldSend" type="button" class="action" style="position:relative;z-index:101;touch-action:manipulation;pointer-events:auto">Gửi</button></div>
 </div>
 
 <div id="questModal" class="modal">
@@ -692,13 +692,33 @@ for(let i=drops.length-1;i>=0;i--)if(Math.hypot(P.x-drops[i].x,P.y-drops[i].y)<7
 }hud()}
 function tele(where){let q=where=="city"?city:town;P.x=q.x;P.y=q.y;cam.x=P.x;cam.y=P.y;closeM("teleModal");toast("🌀 Đã dịch chuyển")}
 function guild(){let q=Number(document.getElementById("gs").textContent.replace(",",""))+50;document.getElementById("gs").textContent=q.toLocaleString("en-US");toast("🏯 Đã đăng ký chiến bang")}
-let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];function renderChat(){document.getElementById("chat").innerHTML=chat.map(v=>"<div>"+v+"</div>").join("")}function sendChat(){let i=document.getElementById("input"),v=i.value.trim();if(v){chat.push("Thiếu Hiệp: "+v);i.value="";renderChat();toast("🌎 Đã gửi")}}
+let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];
+function renderChat(){const box=document.getElementById("chat");box.innerHTML=chat.map(v=>"<div style=\"padding:4px 0\">"+v+"</div>").join("");box.scrollTop=box.scrollHeight}
+function sendChat(){
+  const i=document.getElementById("worldInput"),v=(i.value||"").trim();
+  if(!v){toast("📢 Hãy nhập tin nhắn");i.focus();return false}
+  chat.push("Thiếu Hiệp: "+v);
+  i.value="";
+  renderChat();
+  document.getElementById("quickChatText").textContent="Thiếu Hiệp: "+v;
+  document.getElementById("quickChat").style.display="block";
+  toast("🌎 Đã gửi: "+v);
+  return false;
+}
+function bindWorldChat(){
+  const btn=document.getElementById("worldSend"),input=document.getElementById("worldInput");
+  if(!btn||!input)return;
+  btn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();sendChat()},{passive:false});
+  btn.addEventListener("pointerup",e=>{if(e.pointerType==="touch"){e.preventDefault();e.stopPropagation();sendChat()}},{passive:false});
+  input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
+}
+
 
 document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};document.getElementById("classBtn").onclick=()=>openM("classModal");document.getElementById("actBtn").onclick=()=>openM("actModal");document.getElementById("comBtn").onclick=()=>{renderChat();openM("comModal")};document.getElementById("teleBtn").onclick=()=>openM("teleModal");
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.4 · NPC";
+classes();sel();bagUI();hud();renderQuestTracker();renderChat();bindWorldChat();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Kênh thế giới";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

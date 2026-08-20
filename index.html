@@ -1,447 +1,97 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Đại Việt Chiến Ký - Bản 1.9</title>
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Đại Việt Chiến Ký - Bản 2.0</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#171f14;color:#fff}
-button{border:0;border-radius:13px;padding:11px 8px;background:#75451f;color:#fff;font-weight:800;box-shadow:0 3px 0 #45270f;font-size:13px}
-button:active{transform:translateY(2px);box-shadow:0 1px 0 #45270f}
-button:disabled{opacity:.42}
-#app{height:100dvh;display:flex;flex-direction:column}
-header{background:#352313;border-bottom:2px solid #aa793e;padding:8px 9px calc(7px + env(safe-area-inset-top))}
-h1{text-align:center;margin:0;color:#ffd86b;font-size:19px}
-.sub{text-align:center;color:#d9c69e;font-size:10px;margin:2px 0 7px}
-.resources{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.res{background:#4b321c;border:1px solid #806038;border-radius:9px;text-align:center;padding:5px 2px;font-size:11px}
-.res b{display:block;color:#ffe08a;font-size:13px}
-main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e49,#405b34 50%,#263b2a)}
-.panel{background:rgba(29,25,17,.96);border:1px solid #a77c42;border-radius:15px;padding:9px;margin-bottom:8px}
-.title{font-weight:900;color:#ffd66b;margin-bottom:7px;font-size:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.card,.stat{background:#3b2b1b;border-radius:10px;padding:8px}
-.card h3{font-size:13px;margin:0 0 4px;color:#ffe08a}
-.card p{font-size:11px;margin:3px 0 7px;color:#d8cfbd;line-height:1.35}
-.card button{width:100%;font-size:11px;padding:9px}
-.stat{font-size:12px}.info{font-size:12px;color:#d9d0bd;line-height:1.45}
-.tabs{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin-bottom:8px}
-.tabs button{font-size:11px;padding:9px 3px;background:#52331c}
-.tabs button.on{background:#9a5e29;color:#ffe69a}
-.view{display:none}.view.on{display:block}
-.progress{height:8px;background:#211910;border-radius:8px;overflow:hidden;margin:5px 0 7px}
-.progress i{display:block;height:100%;background:#d49a35;width:0}
-.hero{display:flex;align-items:center;gap:10px;background:#3b2b1b;border-radius:12px;padding:9px;margin-top:7px}
-.avatar{width:52px;height:52px;border-radius:50%;background:#76502d;border:2px solid #d6b86b;display:flex;align-items:center;justify-content:center;font-size:27px}
-.heroText{flex:1}.heroText b{color:#ffe08a}
-.item{display:flex;justify-content:space-between;align-items:center;gap:6px;background:#3b2b1b;border-radius:10px;padding:8px;margin-top:6px;font-size:11px}
-.item button{padding:8px 9px;white-space:nowrap}
-.rarity{font-size:10px;border-radius:6px;padding:2px 5px;background:#5b4328;color:#ffe08a}
-.log{max-height:105px;overflow:auto;font-size:11px;line-height:1.5;color:#d6cdbb}
-.good{color:#8fe38c}.bad{color:#ff9184}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#27190e;border-top:1px solid #8e693a;padding:7px max(7px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.bottom button{font-size:11px;padding:10px 3px}
+html,body{margin:0;height:100%;overflow:hidden;background:#172013;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{border:0;border-radius:12px;padding:10px 8px;background:#70441f;color:#fff;font-weight:800;box-shadow:0 2px 0 #3c220e;font-size:12px}
+button:active{transform:translateY(1px);box-shadow:none}
+button:disabled{opacity:.45}
+#game{height:100dvh;display:flex;flex-direction:column}
+.top{background:linear-gradient(#3b2919,#24180e);padding:7px 8px 6px;border-bottom:2px solid #a77b3e}
+.brand{display:flex;align-items:center;justify-content:space-between}
+.brand h1{margin:0;color:#ffd66b;font-size:18px}.ver{font-size:9px;color:#cdbb9b}
+.resources{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}
+.res{background:#4b321d;border:1px solid #74562f;border-radius:8px;text-align:center;padding:4px 2px;font-size:10px}.res b{display:block;color:#ffe18b;font-size:12px}
+.scene{position:relative;flex:1;overflow:auto;background:
+ radial-gradient(circle at 50% 35%,rgba(246,213,128,.18),transparent 35%),
+ linear-gradient(#78905a 0 22%,#5e7647 22% 60%,#3e5a38 60% 100%);
+ padding:8px 8px 82px}
+.sky{position:absolute;inset:0 0 auto 0;height:23%;background:linear-gradient(#9bbf78,#78965d);opacity:.7;pointer-events:none}
+.city-wall{position:absolute;left:3%;right:3%;top:16%;height:67%;border:6px solid #8c6238;border-radius:22px;background:rgba(139,101,54,.12);box-shadow:inset 0 0 0 4px #c09254;pointer-events:none}
+.moat{position:absolute;left:0;right:0;bottom:9%;height:12%;background:repeating-linear-gradient(175deg,#4b7d83 0 10px,#6da0a0 10px 18px);border-top:4px solid #a1c1a0;opacity:.9;pointer-events:none}
+.bridge{position:absolute;left:38%;right:38%;bottom:14%;height:10%;background:repeating-linear-gradient(90deg,#70431f 0 18px,#956034 18px 22px);border:3px solid #4a2a15;border-radius:5px;pointer-events:none}
+.flag{position:absolute;font-size:25px;animation:wave 2.5s ease-in-out infinite;pointer-events:none}.f1{top:20%;left:12%}.f2{top:19%;right:12%}
+@keyframes wave{50%{transform:rotate(4deg) translateY(-2px)}}
+.build{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1.35fr 1fr;grid-template-rows:auto auto auto;gap:7px;margin-top:12%}
+.bld{background:rgba(43,31,19,.93);border:1px solid #b4874a;border-radius:13px;padding:7px;text-align:center;min-height:78px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.bld .ico{font-size:28px}.bld b{display:block;color:#ffe08b;font-size:11px}.bld small{color:#d5c8b1;font-size:9px}
+.mainhall{grid-column:2;grid-row:1 / span 2;min-height:175px;background:linear-gradient(#654321,#3b2718);border:2px solid #d1a45b}
+.mainhall .ico{font-size:56px}.mainhall b{font-size:15px}.mainhall small{font-size:10px}
+.notice{position:relative;z-index:3;background:rgba(34,24,15,.94);border:1px solid #9b713b;border-radius:12px;padding:7px;margin:8px 0;font-size:11px}
+.notice b{color:#ffd66b}
+.actions{position:fixed;left:7px;right:7px;bottom:7px;z-index:20;background:rgba(31,20,11,.97);border:1px solid #8f6938;border-radius:15px;padding:6px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.actions button{font-size:10px;padding:9px 2px}
+.overlay{display:none;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.62);align-items:flex-end}
+.overlay.show{display:flex}
+.sheet{width:100%;max-height:82dvh;overflow:auto;background:#24180f;border:1px solid #aa7b40;border-radius:18px 18px 0 0;padding:12px 10px 20px}
+.sheetHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.sheetHead b{color:#ffd66b;font-size:17px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.card{background:#3b2b1b;border-radius:10px;padding:8px;font-size:11px}.card h3{margin:0 0 5px;color:#ffe08b;font-size:13px}.card p{margin:3px 0 7px;color:#d7cdbb;line-height:1.35}
+.item{display:flex;justify-content:space-between;align-items:center;gap:6px;background:#3b2b1b;border-radius:10px;padding:8px;margin-top:6px;font-size:11px}.rarity{background:#5b4328;border-radius:5px;padding:2px 4px;color:#ffe08b;font-size:9px}
+.progress{height:7px;background:#1b120b;border-radius:8px;overflow:hidden;margin:6px 0}.progress i{display:block;height:100%;background:#d59b3b;width:0}
+.log{max-height:120px;overflow:auto;font-size:10px;line-height:1.5;color:#d8cebd}
+.toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);z-index:40;background:#2d2015;border:1px solid #b88a49;border-radius:20px;padding:8px 13px;font-size:11px;display:none}
+.toast.show{display:block}
+@media(min-width:700px){.scene{padding-left:10%;padding-right:10%}.build{margin-top:7%}.actions{left:10%;right:10%}}
 </style>
-</head>
-<body>
-<div id="app">
-<header>
-<h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 1.9 • Bang hội • PvP • Boss • Chiến lợi phẩm</div>
-<div class="resources">
-<div class="res">🌾<b id="food">0</b></div><div class="res">🪵<b id="wood">0</b></div>
-<div class="res">⛏️<b id="iron">0</b></div><div class="res">💰<b id="gold">0</b></div>
-</div>
+</head><body>
+<div id="game">
+<header class="top">
+ <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.0</span></div>
+ <div class="resources">
+  <div class="res">🌾<b id="food">0</b></div><div class="res">💰<b id="gold">0</b></div>
+  <div class="res">🪵<b id="wood">0</b></div><div class="res">⛏️<b id="iron">0</b></div>
+  <div class="res">💎<b id="gems">0</b></div>
+ </div>
 </header>
-<main>
-<div class="tabs">
-<button type="button" id="t-city" class="on" onclick="tab('city')">🏯 Thành</button>
-<button type="button" id="t-hero" onclick="tab('hero')">👑 Tướng</button>
-<button type="button" id="t-shop" onclick="tab('shop')">🏪 Đồ</button>
-<button type="button" id="t-ach" onclick="tab('ach')">🏆 Thành tựu</button><button type="button" id="t-map" onclick="tab('map')">🗺️ Bản đồ</button><button type="button" id="t-campaign" onclick="tab('campaign')">🏹 Chiến dịch</button><button type="button" id="t-city2" onclick="tab('city2')">🏙️ Thành phố</button><button type="button" id="t-tech" onclick="tab('tech')">🔬 Công nghệ</button><button type="button" id="t-arena" onclick="tab('arena')">🏟️ Võ đài</button><button type="button" id="t-boss" onclick="tab('boss')">🐉 Boss</button>
-</div>
 
-<section id="city" class="view on">
-<div class="panel">
-<div class="title">🏯 Thành chính</div>
-<div class="grid">
-<div class="stat">⭐ Cấp thành: <b id="cityLevel">1</b></div><div class="stat">👥 Dân số: <b id="population">100</b></div>
-<div class="stat">🛡️ Phòng thủ: <b id="defense">100</b></div><div class="stat">📦 Kho: <b id="storage">1300</b></div>
-</div>
-<div class="progress"><i id="cityBar"></i></div>
-<div class="info">EXP thành: <b id="cityXp">0</b>/<b id="cityNeed">700</b></div>
-<div class="grid" style="margin-top:7px"><button type="button" onclick="upgradeCity()">🏯 Nâng thành</button><button type="button" onclick="upgradeBarracks()">⚔️ Doanh trại</button></div>
-</div>
-<div class="panel">
-<div class="title">🏗️ Công trình</div>
-<div class="grid">
-<div class="card"><h3>🌾 Nông trại</h3><p>Cấp <b id="farm">0</b> • tăng 🌾.</p><button type="button" onclick="build('farm')">Nâng • gỗ</button></div>
-<div class="card"><h3>⛏️ Lò rèn</h3><p>Cấp <b id="forge">0</b> • tăng ⛏️.</p><button type="button" onclick="build('forge')">Nâng • gỗ</button></div>
-<div class="card"><h3>🏪 Chợ</h3><p>Cấp <b id="market">0</b> • tăng 💰.</p><button type="button" onclick="build('market')">Nâng • gỗ</button></div>
-<div class="card"><h3>⚓ Bến cảng</h3><p>Cấp <b id="port">0</b> • tăng 💰.</p><button type="button" onclick="build('port')">Nâng • gỗ</button></div>
-</div>
-</div>
-<div class="panel">
-<div class="title">⚔️ Chiến tranh</div>
-<div class="grid"><button type="button" onclick="battle(false)">🔥 Đồn địch</button><button type="button" onclick="battle(true)">🔥 Đồn Bắc</button></div>
-</div>
-</section>
+<main class="scene">
+ <div class="sky"></div><div class="city-wall"></div><div class="moat"></div><div class="bridge"></div>
+ <div class="flag f1">🚩</div><div class="flag f2">🚩</div>
 
-<section id="hero" class="view">
-<div class="panel">
-<div class="title">👑 Đại tướng Đại Việt</div>
-<div class="hero">
-<div class="avatar" id="heroAvatar">🧑‍⚔️</div>
-<div class="heroText"><b id="heroName">Trần Hưng Đạo</b><br>Cấp <b id="heroLevel">1</b> • EXP <b id="heroXp">0</b><br><span class="rarity" id="heroRarity">Thường</span></div>
-</div>
-<div class="progress"><i id="heroBar"></i></div>
-<div class="grid" style="margin-top:7px"><button type="button" onclick="trainHero()">📚 Huấn luyện • 120💰</button><button type="button" onclick="promoteHero()">⭐ Thăng cấp • 3💎</button></div>
-</div>
-<div class="panel">
-<div class="title">⚡ Kỹ năng tướng</div>
-<div class="grid">
-<div class="card"><h3>🔥 Hào khí Đại Việt</h3><p>+20% sức mạnh trận kế tiếp.</p><button type="button" onclick="useSkill('warcry')">Kích hoạt</button></div>
-<div class="card"><h3>🛡️ Bày trận</h3><p>Giảm 20% tổn thất trong trận.</p><button type="button" onclick="useSkill('formation')">Kích hoạt</button></div>
-</div>
-</div>
-<div class="panel">
-<div class="title">📊 Chỉ số</div>
-<div class="grid">
-<div class="stat">💪 Bonus tướng: <b id="heroBonus">20%</b></div><div class="stat">❤️ Sinh lực: <b id="heroHp">100</b></div>
-<div class="stat">⭐ Cấp hiếm: <b id="heroTier">1</b></div><div class="stat">🏅 Danh vọng: <b id="fame">0</b></div>
-</div>
-</div>
-</section>
+ <div class="notice">👑 <b>Phủ Thành Chủ</b> • Cấp <b id="cityLevel">1</b> • Sức mạnh <b id="power">0</b> • Dân <b id="population">0</b></div>
 
-<section id="shop" class="view">
-<div class="panel">
-<div class="title">🏪 Kho trang bị</div>
-<div class="info">💎 Ngọc: <b id="gems">0</b></div>
-<div class="item">🗡️ Kiếm Đại Việt <span class="rarity">Hiếm • +35 sức mạnh</span><button type="button" onclick="buyItem('sword')">140💰</button></div>
-<div class="item">🛡️ Khiên Đông Sơn <span class="rarity">Tốt • +25 phòng thủ</span><button type="button" onclick="buyItem('shield')">110💰</button></div>
-<div class="item">🏹 Cung Bách Việt <span class="rarity">Hiếm • +30 cung</span><button type="button" onclick="buyItem('bow')">150💰</button></div>
-<div class="item">👑 Ấn Tướng Quân <span class="rarity">Sử thi • +12%</span><button type="button" onclick="buyItem('seal')">3💎</button></div>
-<div class="item">🧪 Bình hồi quân <span class="rarity">+10% quân sau trận</span><button type="button" onclick="buyItem('potion')">80💰</button></div>
-</div>
-<div class="panel">
-<div class="title">🎒 Đang trang bị</div>
-<div class="grid">
-<div class="stat">🗡️ Kiếm: <b id="sword">Chưa có</b></div><div class="stat">🛡️ Khiên: <b id="shield">Chưa có</b></div>
-<div class="stat">🏹 Cung: <b id="bow">Chưa có</b></div><div class="stat">👑 Ấn: <b id="seal">Chưa có</b></div>
-</div>
-</div>
-</section>
+ <section class="build">
+  <button type="button" class="bld" onclick="openSheet('military')"><span class="ico">⚔️</span><b>Doanh Trại</b><small>Lính • huấn luyện</small></button>
+  <button type="button" class="bld mainhall" onclick="openSheet('hall')"><span class="ico">🏯</span><b>CHÍNH ĐIỆN</b><small>Nâng thành • Chiếu thư • Tổng quan</small></button>
+  <button type="button" class="bld" onclick="openSheet('forge')"><span class="ico">🔨</span><b>Lò Rèn</b><small>Chế tạo • trang bị</small></button>
 
-<section id="ach" class="view">
-<div class="panel">
-<div class="title">🏆 Thành tựu</div>
-<div id="achievements"></div>
-</div>
-<div class="panel">
-<div class="title">🎁 Phần thưởng</div>
-<div class="grid"><button type="button" onclick="dailyReward()">🎁 Nhận thưởng ngày</button><button type="button" onclick="saveGame()">💾 Lưu game</button></div>
-</div>
-</section>
+  <button type="button" class="bld" onclick="openSheet('farm')"><span class="ico">🌾</span><b>Nông Điện</b><small>Thu hoạch lương</small></button>
+  <button type="button" class="bld" onclick="openSheet('mine')"><span class="ico">⛏️</span><b>Mỏ Sắt</b><small>Khai thác sắt</small></button>
+  <button type="button" class="bld" onclick="openSheet('market')"><span class="ico">🛒</span><b>Chợ</b><small>Mua • bán • giao thương</small></button>
+ </section>
 
+ <div class="notice">🛡️ <b>Tường thành</b> • Phòng thủ <b id="defense">0</b> • 🌊 Hào thành • 🚪 Cổng thành</div>
 
+ <div class="notice"><b>📜 Chiếu thư:</b> Thành đang phát triển. Hãy thu hoạch tài nguyên, huấn luyện quân và mở rộng lãnh thổ.</div>
 
-
-<section id="city2" class="view">
-<div class="panel">
-<div class="title">🏙️ Đô thành Đại Việt</div>
-<div class="grid">
-<div class="stat">🏯 Cấp đô thành: <b id="city2Level">1</b></div>
-<div class="stat">🏠 Nhà dân: <b id="houses">10</b></div>
-<div class="stat">😊 Hạnh phúc: <b id="happiness">70</b>%</div>
-<div class="stat">👥 Dân số: <b id="population2">100</b></div>
-</div>
-<div class="progress"><i id="happinessBar"></i></div>
-<div class="grid" style="margin-top:7px">
-<button type="button" onclick="upgradeCity2()">🏙️ Mở rộng • 250🪵</button>
-<button type="button" onclick="festival()">🎉 Lễ hội • 80💰</button>
-</div>
-</div>
-<div class="panel">
-<div class="title">🏘️ Khu dân cư</div>
-<div class="grid">
-<div class="card"><h3>🏠 Nhà dân</h3><p>Tăng dân số và thuế.</p><button type="button" onclick="buildHouse()">Xây • 70🪵</button></div>
-<div class="card"><h3>🌳 Công viên</h3><p>Tăng hạnh phúc.</p><button type="button" onclick="buildPark()">Xây • 100🪵</button></div>
-</div>
-</div>
-</section>
-
-<section id="tech" class="view">
-<div class="panel">
-<div class="title">🔬 Viện Công Nghệ</div>
-<div class="info">Điểm nghiên cứu: <b id="research">0</b> 🔬</div>
-<div class="item"><span>🌾 Thâm canh <span class="rarity">+10% sản lượng</span></span><button type="button" onclick="researchTech('food')">Nghiên cứu</button></div>
-<div class="item"><span>⛏️ Luyện sắt <span class="rarity">+10% sắt</span></span><button type="button" onclick="researchTech('iron')">Nghiên cứu</button></div>
-<div class="item"><span>⚔️ Quân giới <span class="rarity">+8% sức mạnh</span></span><button type="button" onclick="researchTech('army')">Nghiên cứu</button></div>
-<div class="item"><span>💰 Thương mại <span class="rarity">+10% vàng</span></span><button type="button" onclick="researchTech('economy')">Nghiên cứu</button></div>
-</div>
-<div class="panel">
-<div class="title">📊 Tiến bộ</div>
-<div class="grid">
-<div class="stat">🌾 Thâm canh: <b id="techFood">0</b></div>
-<div class="stat">⛏️ Luyện sắt: <b id="techIron">0</b></div>
-<div class="stat">⚔️ Quân giới: <b id="techArmy">0</b></div>
-<div class="stat">💰 Thương mại: <b id="techEconomy">0</b></div>
-</div>
-</div>
-</section>
-
-<section id="arena" class="view">
-<div class="panel">
-<div class="title">🏟️ Võ đài Đại Việt</div>
-<div class="grid">
-<div class="stat">🏅 Xếp hạng: <b id="arenaRating">1000</b></div>
-<div class="stat">🏆 Thắng: <b id="arenaWins">0</b></div>
-<div class="stat">💀 Thua: <b id="arenaLosses">0</b></div>
-<div class="stat">⚔️ Quân lực: <b id="arenaPower">0</b></div>
-</div>
-<div class="card" style="margin-top:7px">
-<h3>⚔️ Đấu hạng</h3>
-<p>Gặp một đối thủ ngẫu nhiên. Thắng nhận vàng, ngọc và điểm xếp hạng.</p>
-<button type="button" onclick="arenaBattle()">⚔️ Khiêu chiến</button>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">📜 Nhiệm vụ ngày</div>
-<div class="item"><span>⚔️ Thắng 1 trận <span class="rarity" id="q1">0/1</span></span><button type="button" onclick="claimQuest(1)">Nhận 100💰</button></div>
-<div class="item"><span>🌾 Thu hoạch 3 lần <span class="rarity" id="q2">0/3</span></span><button type="button" onclick="claimQuest(2)">Nhận 150💰</button></div>
-<div class="item"><span>🔬 Nghiên cứu 1 công nghệ <span class="rarity" id="q3">0/1</span></span><button type="button" onclick="claimQuest(3)">Nhận 2💎</button></div>
-</div>
-
-<div class="panel">
-<div class="title">🛡️ Quân đoàn</div>
-<div class="grid">
-<div class="stat">🏳️ Cấp: <b id="legionLevel">1</b></div>
-<div class="stat">✨ EXP: <b id="legionXp">0</b></div>
-<div class="stat">⚔️ Bonus: <b id="legionBonus">0%</b></div>
-<div class="stat">🎁 Thưởng cấp: <b id="legionReward">100</b>💰</div>
-</div>
-<button type="button" style="width:100%;margin-top:7px" onclick="upgradeLegion()">⬆️ Nâng quân đoàn • 2💎</button>
-</div>
-</section>
-
-
-<section id="market2" class="view">
-<div class="panel">
-<div class="title">🛒 Chợ giao dịch Đại Việt</div>
-<div class="grid">
-<div class="stat">📦 Lệnh mua bán: <b id="marketOrders">0</b></div>
-<div class="stat">💰 Giao dịch: <b id="marketSales">0</b></div>
-<div class="stat">⭐ Cấp chợ: <b id="marketLevel2">1</b></div>
-<div class="stat">📈 Phí: <b>5%</b></div>
-</div>
-<div class="item"><span>🌾 100 Lương thực</span><button type="button" onclick="sellMarket('food')">Bán • +35💰</button></div>
-<div class="item"><span>🪵 100 Gỗ</span><button type="button" onclick="sellMarket('wood')">Bán • +30💰</button></div>
-<div class="item"><span>⛏️ 100 Sắt</span><button type="button" onclick="sellMarket('iron')">Bán • +45💰</button></div>
-<div class="item"><span>💰 100 Vàng</span><button type="button" onclick="buyMarket('gold')">Đổi • 120🌾</button></div>
-</div>
-<div class="panel">
-<div class="title">⚔️ Đội hình</div>
-<div class="grid">
-<button type="button" onclick="setFormation('balanced')">⚖️ Cân bằng</button>
-<button type="button" onclick="setFormation('ranged')">🏹 Xa kích</button>
-<button type="button" onclick="setFormation('charge')">🐎 Xung phong</button>
-<button type="button" onclick="setFormation('defense')">🛡️ Phòng thủ</button>
-</div>
-<div class="info" style="margin-top:7px">Đội hình hiện tại: <b id="formationText">Cân bằng</b></div>
-</div>
-</section>
-
-<section id="generals" class="view">
-<div class="panel">
-<div class="title">👑 Tướng phụ</div>
-<div class="item"><span>🏹 Cung Thần <span class="rarity">+6% cung binh</span></span><button type="button" onclick="recruitGeneral('archer')">Mộ • 2💎</button></div>
-<div class="item"><span>🐎 Kỵ Thần <span class="rarity">+6% kỵ binh</span></span><button type="button" onclick="recruitGeneral('cavalry')">Mộ • 2💎</button></div>
-<div class="item"><span>🛡️ Hộ Quốc <span class="rarity">+6% phòng thủ</span></span><button type="button" onclick="recruitGeneral('guardian')">Mộ • 2💎</button></div>
-</div>
-</section>
-
-<section id="season" class="view">
-<div class="panel">
-<div class="title">🏆 Mùa giải Đại Việt</div>
-<div class="grid">
-<div class="stat">🏅 Điểm mùa: <b id="seasonPoints">0</b></div>
-<div class="stat">⭐ Hạng: <b id="seasonRank">1</b></div>
-<div class="stat">⚔️ Trận thắng: <b id="seasonWins">0</b></div>
-<div class="stat">🎁 Thưởng: <b id="seasonReward">100</b>💰</div>
-</div>
-<div class="progress"><i id="seasonBar"></i></div>
-<div class="info">Đạt mốc điểm để tăng hạng. Mỗi mùa có phần thưởng riêng.</div>
-<button type="button" style="width:100%;margin-top:7px" onclick="claimSeason()">🎁 Nhận thưởng mùa</button>
-</div>
-
-<div class="panel">
-<div class="title">📜 Nhiệm vụ ngày</div>
-<div class="item"><span>🌾 Thu hoạch 3 lần <span class="rarity" id="dailyHarvest">0/3</span></span><button type="button" onclick="claimDaily('harvest')">Nhận 120💰</button></div>
-<div class="item"><span>⚔️ Thắng 2 trận <span class="rarity" id="dailyBattles">0/2</span></span><button type="button" onclick="claimDaily('battles')">Nhận 2💎</button></div>
-</div>
-
-<div class="panel">
-<div class="title">📖 Nhật ký chiến đấu</div>
-<div class="log" id="battleLog"></div>
-</div>
-</section>
-
-<section id="inventory" class="view">
-<div class="panel">
-<div class="title">🎒 Kho đồ & chiến lợi phẩm</div>
-<div class="grid">
-<div class="stat">🗡️ Kiếm rèn: <b id="invSword">0</b></div>
-<div class="stat">🛡️ Giáp rèn: <b id="invArmor">0</b></div>
-<div class="stat">🏹 Cung rèn: <b id="invBow">0</b></div>
-<div class="stat">🧪 Bình hồi quân: <b id="invPotion">0</b></div>
-</div>
-<div class="item"><span>🗡️ Kiếm Rèn <span class="rarity">+45 sức mạnh</span></span><button type="button" onclick="craftItem('sword')">Rèn • 120⛏️ 80🪵</button></div>
-<div class="item"><span>🛡️ Giáp Rèn <span class="rarity">+35 phòng thủ</span></span><button type="button" onclick="craftItem('armor')">Rèn • 150⛏️ 100🪵</button></div>
-<div class="item"><span>🏹 Cung Rèn <span class="rarity">+40 cung</span></span><button type="button" onclick="craftItem('bow')">Rèn • 130⛏️ 90🪵</button></div>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">🧪 Vật phẩm dùng nhanh</div>
-<div class="grid">
-<button type="button" onclick="usePotion()">🧪 Dùng bình hồi quân</button>
-<button type="button" onclick="sellLoot()">💰 Bán chiến lợi phẩm</button>
-</div>
-<div class="info" style="margin-top:7px">Chiến lợi phẩm Boss có thể bán lấy vàng để tái đầu tư quân đội.</div>
-</div>
-</section>
-<section id="boss" class="view">
-<div class="panel">
-<div class="title">🐉 Boss Chiến Trường</div>
-<div class="grid">
-<div class="stat">🐉 Boss cấp: <b id="bossLevel">1</b></div>
-<div class="stat">❤️ HP: <b id="bossHp">100</b>%</div>
-<div class="stat">💥 Sát thương của bạn: <b id="bossDamage">0</b></div>
-<div class="stat">🏆 Đã hạ: <b id="bossDefeated">0</b></div>
-</div>
-<div class="progress"><i id="bossBar"></i></div>
-<div class="card">
-<h3 id="bossName">🐉 Cự Long Biên Ải</h3>
-<p>Boss càng mạnh sau mỗi lần bị đánh bại. Gây đủ sát thương để nhận chiến lợi phẩm.</p>
-<button type="button" type="button" onclick="attackBoss()">⚔️ Đánh Boss</button>
-<button type="button" type="button" onclick="bossSkill()" style="margin-top:6px">⚡ Đại chiêu</button>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">🎁 Chiến lợi phẩm</div>
-<div class="grid">
-<div class="stat">🟣 Đồ Hiếm: <b id="lootRare">0</b></div>
-<div class="stat">🟢 Đồ Tốt: <b id="lootGood">0</b></div>
-<div class="stat">⚪ Đồ Thường: <b id="lootNormal">0</b></div>
-<div class="stat">💎 Ngọc: <b id="bossGems">0</b></div>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">🏳️ Bang hội</div>
-<div class="grid">
-<div class="stat">⭐ Cấp bang: <b id="guildLevel">1</b></div>
-<div class="stat">👥 Thành viên: <b id="guildMembers">1</b></div>
-<div class="stat">✨ EXP: <b id="guildXp">0</b></div>
-<div class="stat">⚔️ Bonus: <b id="guildPower">0%</b></div>
-</div>
-<button type="button" style="width:100%;margin-top:7px" onclick="upgradeGuild16()">⬆️ Nâng bang hội • 3💎</button>
-</div>
-</section>
-<section id="campaign" class="view">
-<div class="panel">
-<div class="title">🏹 Chiến dịch Đại Việt</div>
-<div class="grid">
-<div class="stat">📍 Ải hiện tại: <b id="campaignStage">1</b></div>
-<div class="stat">⭐ Sao chiến dịch: <b id="campaignStars">0</b></div>
-<div class="stat">👑 Cấp đại tướng: <b id="commanderLevel">1</b></div>
-<div class="stat">✨ EXP tướng: <b id="commanderXp">0</b></div>
-</div>
-<div class="card" style="margin-top:7px">
-<h3 id="stageTitle">Ải 1 • Cửa ngõ Đại Việt</h3>
-<p id="stageText">Đánh bại quân địch để mở khóa ải tiếp theo. Mỗi ải có 3 sao.</p>
-<div class="progress"><i id="campaignBar"></i></div>
-<button type="button" onclick="campaignBattle()">⚔️ Tiến công ải</button>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">👑 Bộ chỉ huy</div>
-<div class="hero">
-<div class="avatar">🧑‍✈️</div>
-<div class="heroText"><b id="commanderName">Đại tướng</b><br>
-Cấp <b id="commanderLevel2">1</b> • Uy tín <b id="commanderPrestige">0</b></div>
-</div>
-<div class="grid" style="margin-top:7px">
-<button type="button" onclick="trainCommander()">📚 Huấn luyện • 180💰</button>
-<button type="button" onclick="upgradeGuild()">🏳️ Nâng liên minh • 2💎</button>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">🏳️ Liên minh</div>
-<div class="grid">
-<div class="stat">⭐ Cấp: <b id="guildLevel">1</b></div>
-<div class="stat">🏅 Uy tín: <b id="guildPrestige">0</b></div>
-<div class="stat">⚔️ Bonus chiến dịch: <b id="guildBonus">0%</b></div>
-<div class="stat">🎁 Kho thưởng: <b id="guildReward">0</b>💰</div>
-</div>
-</div>
-</section>
-<section id="map" class="view">
-<div class="panel">
-<div class="title">🗺️ Đại Việt • Bản đồ lãnh thổ</div>
-<div class="grid">
-<div class="stat">🏯 Thành đã chiếm: <b id="territory">1</b></div>
-<div class="stat">🌏 Uy thế: <b id="influence">0</b></div>
-<div class="stat">🤝 Quan hệ: <b id="diplomacy">Trung lập</b></div>
-<div class="stat">🔥 Chiến sự: <b id="war">0</b></div>
-</div>
-<div class="card" style="margin-top:7px">
-<h3>🟢 Đồng bằng</h3><p>Đất màu mỡ, tăng sản lượng lương thực.</p>
-<button type="button" onclick="claimLand('delta')">Khai phá • 180🌾 80💰</button>
-</div>
-<div class="card" style="margin-top:7px">
-<h3>🟤 Biên ải</h3><p>Khó chiếm nhưng tăng sắt và sức mạnh.</p>
-<button type="button" onclick="claimLand('border')">Chinh phục • 180🌾 120⛏️</button>
-</div>
-<div class="card" style="margin-top:7px">
-<h3>🔵 Cảng biển</h3><p>Tăng vàng theo chu kỳ và giao thương.</p>
-<button type="button" onclick="claimLand('port')">Mở cảng • 250🪵 150💰</button>
-</div>
-</div>
-</div>
-
-<div class="panel">
-<div class="title">🤝 Ngoại giao</div>
-<div class="grid">
-<button type="button" onclick="diplomacyAction('peace')">🕊️ Cầu hòa</button>
-<button type="button" onclick="diplomacyAction('trade')">💰 Mở giao thương</button>
-<button type="button" onclick="diplomacyAction('ally')">🤝 Kết minh</button>
-<button type="button" onclick="diplomacyAction('war')">🔥 Tuyên chiến</button>
-</div>
-<div class="info" style="margin-top:7px">Quan hệ ngoại giao ảnh hưởng phần thưởng và sức mạnh khi giao chiến.</div>
-</div>
-
-<div class="panel">
-<div class="title">🎲 Sự kiện Đại Việt</div>
-<div class="card">
-<h3 id="eventTitle">Chưa có sự kiện</h3>
-<p id="eventText">Mỗi lần bấm sẽ xuất hiện một biến cố ngẫu nhiên.</p>
-<button type="button" onclick="randomEvent()">🎲 Gặp sự kiện</button>
-</div>
-</div>
-</section>
-<div class="panel"><div class="title">📜 Nhật ký</div><div class="log" id="log"></div></div>
+ <div class="notice"><b>📖 Nhật ký:</b><div id="log" class="log"></div></div>
 </main>
-<nav class="bottom">
-<button type="button" onclick="collect()">🌾 Thu hoạch</button><button type="button" onclick="collectTax()">💰 Thu thuế</button><button type="button" onclick="saveGame()">💾 Lưu</button><button type="button" onclick="resetGame()">🔄 Chơi lại</button>
-</nav>
-</div>
 
+<nav class="actions">
+ <button type="button" onclick="openSheet('inventory')">🎒 Kho</button>
+ <button type="button" onclick="openSheet('hero')">👑 Tướng</button>
+ <button type="button" onclick="openSheet('quest')">📜 Nhiệm vụ</button>
+ <button type="button" onclick="openSheet('world')">🗺️ Bản đồ</button>
+ <button type="button" onclick="openSheet('more')">☰ Khác</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+<div id="overlay" class="overlay" onclick="if(event.target===this)closeSheet()">
+ <div class="sheet">
+  <div class="sheetHead"><b id="sheetTitle">Thành</b><button type="button" onclick="closeSheet()">✕</button></div>
+  <div id="sheetContent"></div>
+ </div>
+</div>
+</div>
 <script>
 const KEY="daiviet_chienky_11";
 let s=null;
@@ -482,7 +132,7 @@ function normalizeState(x){
 }
 if(!s){
  const old=JSON.parse(localStorage.getItem("daiviet_chienky_10")||localStorage.getItem("daiviet_chienky_09")||null);
- s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 1.9."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 1.9 bắt đầu."]};
+ s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 2.0."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 2.0 bắt đầu."]};
 }
 s=normalizeState(s);
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
@@ -495,84 +145,70 @@ function defense(){return 100+s.cityLevel*45+(s.barracks||0)*12+(s.shield?25:0)+
 function xpNeed(){return 100+s.level*100}
 function cityNeed(){return 400+s.cityLevel*300}
 function heroNeed(){return 120+s.heroLevel*100}
-function render(){
- ["food","wood","iron","gold","gems","infantry","archers","cavalry","elephants","wins","level","xp","fame","cityLevel","cityXp","population","farm","forge","market","port","heroLevel","heroXp","heroTier"].forEach(k=>{let e=document.getElementById(k);if(e)e.textContent=Math.floor(s[k]||0)});
- document.getElementById("storage").textContent=1000+s.cityLevel*300;document.getElementById("defense").textContent=defense();
- document.getElementById("heroBonus").textContent=(20+s.heroLevel*3)+"%";document.getElementById("heroTier").textContent=s.heroTier;document.getElementById("heroHp").textContent=100;
- document.getElementById("heroBar").style.width=Math.min(100,s.heroXp/heroNeed()*100)+"%";
- document.getElementById("cityBar").style.width=Math.min(100,s.cityXp/cityNeed()*100)+"%";
- if(document.getElementById("xpBar"))document.getElementById("xpBar").style.width=Math.min(100,s.xp/xpNeed()*100)+"%";
- document.getElementById("heroRarity").textContent=s.heroTier>=4?"Sử thi":s.heroTier>=3?"Hiếm":s.heroTier>=2?"Tốt":"Thường";
- document.getElementById("sword").textContent=s.sword?"Đã trang bị":"Chưa có";document.getElementById("shield").textContent=s.shield?"Đã trang bị":"Chưa có";
- document.getElementById("bow").textContent=s.bow?"Đã trang bị":"Chưa có";document.getElementById("seal").textContent=s.seal?"Đã trang bị":"Chưa có";
- document.getElementById("invSword").textContent=s.inventory.woodSword;
- document.getElementById("invArmor").textContent=s.inventory.ironArmor;
- document.getElementById("invBow").textContent=s.inventory.warBow;
- document.getElementById("invPotion").textContent=s.inventory.potion;
-document.getElementById("seasonPoints").textContent=s.season.points;
- document.getElementById("seasonRank").textContent=s.season.rank;
- document.getElementById("seasonWins").textContent=s.arena.wins;
- document.getElementById("seasonReward").textContent=100+s.season.rank*50;
- document.getElementById("seasonBar").style.width=Math.min(100,(s.season.points%500)/500*100)+"%";
- document.getElementById("dailyHarvest").textContent=Math.min(3,s.daily.harvest)+"/3";
- document.getElementById("dailyBattles").textContent=Math.min(2,s.daily.battles)+"/2";
- document.getElementById("battleLog").innerHTML=s.battleLog.slice(-10).reverse().map(x=>"<div>"+x+"</div>").join("");
-document.getElementById("marketOrders").textContent=s.market2.orders;
- document.getElementById("marketSales").textContent=s.market2.sales;
- document.getElementById("marketLevel2").textContent=1+s.market2.sales;
- document.getElementById("formationText").textContent={balanced:"Cân bằng",ranged:"Xa kích",charge:"Xung phong",defense:"Phòng thủ"}[s.formation]||"Cân bằng";
-document.getElementById("bossLevel").textContent=s.boss.level;
- document.getElementById("bossHp").textContent=Math.max(0,Math.round(s.boss.hp));
- document.getElementById("bossDamage").textContent=Math.floor(s.boss.damage);
- document.getElementById("bossDefeated").textContent=s.boss.defeated;
- document.getElementById("bossBar").style.width=Math.max(0,s.boss.hp)+"%";
- document.getElementById("lootRare").textContent=s.loot.rare;
- document.getElementById("lootGood").textContent=s.loot.good;
- document.getElementById("lootNormal").textContent=s.loot.normal;
- document.getElementById("bossGems").textContent=s.gems;
- document.getElementById("guildLevel").textContent=s.guild.level;
- document.getElementById("guildMembers").textContent=s.guild.members;
- document.getElementById("guildXp").textContent=s.guild.xp;
- document.getElementById("guildPower").textContent=(s.guild.level*5)+"%";
-document.getElementById("arenaRating").textContent=s.arena.rating;
- document.getElementById("arenaWins").textContent=s.arena.wins;
- document.getElementById("arenaLosses").textContent=s.arena.losses;
- document.getElementById("arenaPower").textContent=power();
- document.getElementById("legionLevel").textContent=s.legion.level;
- document.getElementById("legionXp").textContent=s.legion.xp;
- document.getElementById("legionBonus").textContent=(s.legion.level*4)+"%";
- document.getElementById("legionReward").textContent=s.legion.level*100;
- document.getElementById("q1").textContent=(s.arena.wins>0?1:0)+"/1";
- document.getElementById("q2").textContent=(s.quests.harvest||0)+"/3";
- document.getElementById("q3").textContent=(s.quests.research||0)+"/1";
-document.getElementById("city2Level").textContent=s.city2.level;
- document.getElementById("houses").textContent=s.city2.houses;
- document.getElementById("happiness").textContent=s.city2.happiness;
- document.getElementById("population2").textContent=s.population+s.city2.houses*5;
- document.getElementById("happinessBar").style.width=s.city2.happiness+"%";
- document.getElementById("research").textContent=(s.tech.food+s.tech.iron+s.tech.army+s.tech.economy);
- document.getElementById("techFood").textContent=s.tech.food;
- document.getElementById("techIron").textContent=s.tech.iron;
- document.getElementById("techArmy").textContent=s.tech.army;
- document.getElementById("techEconomy").textContent=s.tech.economy;
-document.getElementById("campaignStage").textContent=s.campaign.stage;
- document.getElementById("campaignStars").textContent=s.campaign.stars;
- document.getElementById("commanderLevel").textContent=s.commander.level;
- document.getElementById("commanderLevel2").textContent=s.commander.level;
- document.getElementById("commanderXp").textContent=s.commander.xp;
- document.getElementById("commanderPrestige").textContent=s.commander.prestige||0;
- document.getElementById("guildLevel").textContent=s.guild.level;
- document.getElementById("guildPrestige").textContent=s.guild.prestige;
- document.getElementById("guildBonus").textContent=(s.guild.level*3)+"%";
- document.getElementById("guildReward").textContent=s.guild.level*100;
- document.getElementById("commanderName").textContent=s.commander.name;
- document.getElementById("campaignBar").style.width=((s.campaign.stage%3)/3*100)+"%";
- const titles=["Cửa ngõ Đại Việt","Đồn biên ải","Thành cổ phương Bắc","Đường sông chiến lược","Kinh thành cuối chiến dịch"];
- document.getElementById("stageTitle").textContent="Ải "+s.campaign.stage+" • "+titles[(s.campaign.stage-1)%titles.length];
- document.getElementById("stageText").textContent="Quân địch cấp "+(180+s.campaign.stage*35)+" lực. Thắng trận để nhận sao và mở ải mới.";
-document.getElementById("territory").textContent=s.territory||1;document.getElementById("influence").textContent=s.influence||0;document.getElementById("diplomacy").textContent=s.diplomacy||"Trung lập";document.getElementById("war").textContent=s.war||0;document.getElementById("log").innerHTML=s.logs.slice(-12).reverse().map(x=>"<div>"+x+"</div>").join("");
- renderAchievements()
+
+function toast(msg){
+ const e=document.getElementById("toast");if(!e)return;
+ e.textContent=msg;e.classList.add("show");clearTimeout(window.__toast);
+ window.__toast=setTimeout(()=>e.classList.remove("show"),1800);
 }
+function openSheet(name){
+ const o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
+ if(!o||!t||!c)return;
+ const views={
+ hall:["🏯 Chính Điện",`<div class="card"><h3>🏯 Thành chính</h3><p>Cấp ${s.cityLevel} • Dân ${s.population} • Phòng thủ ${defense()}</p><div class="progress"><i id="cityBar"></i></div><button type="button" onclick="upgradeCity();openSheet('hall')">🏯 Nâng thành</button></div><div class="card" style="margin-top:7px"><h3>📜 Chiếu thư</h3><p>EXP thành: ${s.cityXp}/${cityNeed()}</p><button type="button" onclick="collectTax();openSheet('hall')">💰 Thu thuế</button></div>`],
+ military:["⚔️ Khu Quân Sự",`<div class="grid2"><div class="card"><h3>⚔️ Doanh trại</h3><p>Cấp ${s.barracks}</p><button type="button" onclick="upgradeBarracks();openSheet('military')">Nâng cấp</button></div><div class="card"><h3>🛡️ Quân đoàn</h3><p>Cấp ${s.legion.level}</p><button type="button" onclick="upgradeLegion();openSheet('military')">Nâng quân đoàn</button></div></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="recruit('infantry')">🗡️ Bộ binh</button><button type="button" onclick="recruit('archers')">🏹 Cung binh</button><button type="button" onclick="recruit('cavalry')">🐎 Kỵ binh</button><button type="button" onclick="recruit('elephants')">🐘 Tượng binh</button></div>`],
+ forge:["🔨 Xưởng Vũ Khí",`<div class="grid2"><button type="button" onclick="craftItem('sword')">🗡️ Rèn Kiếm</button><button type="button" onclick="craftItem('armor')">🛡️ Rèn Giáp</button><button type="button" onclick="craftItem('bow')">🏹 Rèn Cung</button><button type="button" onclick="buyItem('potion')">🧪 Bình hồi quân</button></div><div class="card" style="margin-top:7px">⛏️ Sắt ${s.iron} • 🪵 Gỗ ${s.wood}</div>`],
+ farm:["🌾 Nông Điện",`<div class="card"><h3>🌾 Ruộng lúa</h3><p>Cấp ${s.farm}. Sản lượng tăng theo công trình và công nghệ.</p><button type="button" onclick="collect();openSheet('farm')">🌾 Thu hoạch ngay</button></div>`],
+ mine:["⛏️ Mỏ Sắt",`<div class="card"><h3>⛏️ Mỏ quặng</h3><p>Lò rèn cấp ${s.forge}. Thu sắt để chế tạo.</p><button type="button" onclick="collect();openSheet('mine')">⛏️ Khai thác</button></div>`],
+ market:["🛒 Chợ Thành",`<div class="grid2"><button type="button" onclick="sellMarket('food');openSheet('market')">Bán 100🌾</button><button type="button" onclick="sellMarket('wood');openSheet('market')">Bán 100🪵</button><button type="button" onclick="sellMarket('iron');openSheet('market')">Bán 100⛏️</button><button type="button" onclick="buyMarket('gold');openSheet('market')">Đổi vàng</button></div>`],
+ inventory:["🎒 Kho Đồ",`<div class="grid2"><div class="card">🗡️ Kiếm rèn: ${s.inventory.woodSword}</div><div class="card">🛡️ Giáp rèn: ${s.inventory.ironArmor}</div><div class="card">🏹 Cung rèn: ${s.inventory.warBow}</div><div class="card">🧪 Bình: ${s.inventory.potion}</div></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="usePotion();openSheet('inventory')">🧪 Dùng bình</button><button type="button" onclick="sellLoot();openSheet('inventory')">💰 Bán chiến lợi phẩm</button></div>`],
+ hero:["👑 Tướng Lĩnh",`<div class="card"><h3>👑 Đại tướng</h3><p>Cấp ${s.heroLevel} • Phẩm ${s.heroTier} • EXP ${s.heroXp}/${heroNeed()}</p><button type="button" onclick="trainHero();openSheet('hero')">📚 Huấn luyện</button></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="promoteHero();openSheet('hero')">⭐ Thăng phẩm</button><button type="button" onclick="useSkill('warcry');closeSheet()">🔥 Hào khí</button></div>`],
+ quest:["📜 Nhiệm Vụ",`<div class="card"><h3>🌾 Thu hoạch</h3><p>${s.daily.harvest}/3</p><button type="button" onclick="claimDaily('harvest');openSheet('quest')">🎁 Nhận thưởng</button></div><div class="card" style="margin-top:7px"><h3>⚔️ Võ đài</h3><p>${s.daily.battles}/2</p><button type="button" onclick="claimDaily('battles');openSheet('quest')">🎁 Nhận thưởng</button></div>`],
+ world:["🗺️ Bản Đồ Thế Giới",`<div class="grid2"><button type="button" onclick="campaignBattle();openSheet('world')">🏹 Chiến dịch</button><button type="button" onclick="arenaBattle();openSheet('world')">🏟️ Võ đài</button><button type="button" onclick="attackBoss();openSheet('world')">🐉 Đánh Boss</button><button type="button" onclick="claimLand('delta');openSheet('world')">🗺️ Mở lãnh thổ</button></div><div class="card" style="margin-top:7px">🏯 Lãnh thổ: ${s.territory} • 🏅 Uy thế: ${s.influence}</div>`],
+ more:["☰ Quản Lý",`<div class="grid2"><button type="button" onclick="openSheet('season')">🏆 Mùa giải</button><button type="button" onclick="openSheet('tech')">🔬 Công nghệ</button><button type="button" onclick="openSheet('guild')">🏳️ Bang hội</button><button type="button" onclick="openSheet('generals')">👑 Tướng phụ</button><button type="button" onclick="saveGame();closeSheet()">💾 Lưu game</button><button type="button" onclick="closeSheet()">Đóng</button></div>`],
+ season:["🏆 Mùa Giải",`<div class="card"><h3>🏆 Hạng ${s.season.rank}</h3><p>${s.season.points} điểm mùa</p><button type="button" onclick="claimSeason();openSheet('season')">🎁 Nhận thưởng</button></div>`],
+ tech:["🔬 Công Nghệ",`<div class="grid2"><button type="button" onclick="researchTech('food');openSheet('tech')">🌾 Thâm canh</button><button type="button" onclick="researchTech('iron');openSheet('tech')">⛏️ Luyện sắt</button><button type="button" onclick="researchTech('army');openSheet('tech')">⚔️ Quân giới</button><button type="button" onclick="researchTech('economy');openSheet('tech')">💰 Thương mại</button></div>`],
+ guild:["🏳️ Bang Hội",`<div class="card"><h3>Cấp ${s.guild.level}</h3><p>Thành viên ${s.guild.members} • EXP ${s.guild.xp}</p><button type="button" onclick="upgradeGuild16();openSheet('guild')">⬆️ Nâng bang</button></div>`],
+ generals:["👑 Tướng Phụ",`<div class="grid2"><button type="button" onclick="recruitGeneral('archer');openSheet('generals')">🏹 Cung Thần</button><button type="button" onclick="recruitGeneral('cavalry');openSheet('generals')">🐎 Kỵ Thần</button><button type="button" onclick="recruitGeneral('guardian');openSheet('generals')">🛡️ Hộ Quốc</button></div>`]
+ };
+ const v=views[name]||views.more;t.textContent=v[0];c.innerHTML=v[1];o.classList.add("show");render()
+}
+function closeSheet(){document.getElementById("overlay").classList.remove("show")}
+
+function render(){
+ const ids=["food","wood","iron","gold","gems","level","xp","cityLevel","population","defense","farm","forge","market","port","heroLevel","heroXp","fame","territory","influence","wins","infantry","archers","cavalry","elephants","city2Level","houses","happiness","arenaRating","arenaWins","arenaLosses","bossLevel","bossHp","bossDefeated","bossDamage","lootRare","lootGood","lootNormal","research","techFood","techIron","techArmy","techEconomy","campaignStage","campaignStars","commanderLevel","guildLevel","guildMembers","legionLevel","legionXp","seasonPoints","seasonRank","invSword","invArmor","invBow","invPotion"];
+ ids.forEach(k=>{const e=document.getElementById(k);if(e&&s[k]!==undefined)e.textContent=Math.floor(s[k]||0)});
+ const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+ set("storage",1000+s.cityLevel*300);set("defense",defense());set("power",power());
+ set("heroBonus",(20+s.heroLevel*3)+"%");
+ set("territory",s.territory||1);set("influence",s.influence||0);
+ set("gems",s.gems||0);set("food",Math.floor(s.food));set("wood",Math.floor(s.wood));set("iron",Math.floor(s.iron));set("gold",Math.floor(s.gold));
+ set("population",s.population||0);set("cityLevel",s.cityLevel||1);
+ set("bossHp",Math.max(0,Math.round(s.boss.hp)));set("bossLevel",s.boss.level);set("bossDefeated",s.boss.defeated);set("bossDamage",Math.floor(s.boss.damage));
+ set("lootRare",s.loot.rare);set("lootGood",s.loot.good);set("lootNormal",s.loot.normal);
+ set("marketOrders",s.market2.orders);set("marketSales",s.market2.sales);
+ set("formationText",{balanced:"Cân bằng",ranged:"Xa kích",charge:"Xung phong",defense:"Phòng thủ"}[s.formation]||"Cân bằng");
+ set("city2Level",s.city2.level);set("houses",s.city2.houses);set("happiness",s.city2.happiness);
+ set("arenaRating",s.arena.rating);set("arenaWins",s.arena.wins);set("arenaLosses",s.arena.losses);
+ set("campaignStage",s.campaign.stage);set("campaignStars",s.campaign.stars);
+ set("commanderLevel",s.commander.level);set("guildLevel",s.guild.level);set("guildMembers",s.guild.members);
+ set("legionLevel",s.legion.level);set("legionXp",s.legion.xp);
+ set("seasonPoints",s.season.points);set("seasonRank",s.season.rank);
+ set("invSword",s.inventory.woodSword);set("invArmor",s.inventory.ironArmor);set("invBow",s.inventory.warBow);set("invPotion",s.inventory.potion);
+ set("research",s.tech.food+s.tech.iron+s.tech.army+s.tech.economy);set("techFood",s.tech.food);set("techIron",s.tech.iron);set("techArmy",s.tech.army);set("techEconomy",s.tech.economy);
+ const bars={
+   cityBar:Math.min(100,s.cityXp/cityNeed()*100),
+   heroBar:Math.min(100,s.heroXp/heroNeed()*100),
+   bossBar:Math.max(0,s.boss.hp),
+   happinessBar:Math.max(0,s.city2.happiness),
+   seasonBar:Math.min(100,(s.season.points%500)/500*100)
+ };
+ Object.entries(bars).forEach(([id,w])=>{const e=document.getElementById(id);if(e)e.style.width=w+"%"});
+ set("heroRarity",s.heroTier>=4?"Sử thi":s.heroTier>=3?"Hiếm":s.heroTier>=2?"Tốt":"Thường");
+ const logEl=document.getElementById("log");if(logEl)logEl.innerHTML=s.logs.slice(-8).reverse().map(x=>"<div>"+x+"</div>").join("");
+ const bl=document.getElementById("battleLog");if(bl)bl.innerHTML=s.battleLog.slice(-8).reverse().map(x=>"<div>"+x+"</div>").join("");
+}
+
 function tab(n){
  document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
  document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
@@ -883,10 +519,8 @@ function sellLoot(){
  log("💰 Bán chiến lợi phẩm nhận +"+total+"💰.");render();save()
 }
 
-function saveGame(){save();log("💾 Đã lưu Bản 1.9.")}
-function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 1.9?")){localStorage.removeItem(KEY);location.reload()}}
+function saveGame(){save();log("💾 Đã lưu Bản 2.0.")}
+function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.0?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);
 render();
-</script>
-</body>
-</html>
+</script></body></html>

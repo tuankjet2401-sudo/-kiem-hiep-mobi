@@ -193,6 +193,9 @@ function buildTHComposite(){
   // Chỉ lấy thanh kiếm phía trên của sprite sheet.
   thc.drawImage(thLayers.TH_WEAPON,0,0,135,52,25,52,135,52);
 
+  // Che phần nhãn trắng ở đáy ảnh tham chiếu để sprite trong game sạch.
+  thc.clearRect(0,178,160,12);
+
   thReady=true;
   return true;
 }
@@ -208,7 +211,7 @@ for(const name of thLayerNames){
 
 function drawTHLayer(a,b){
   if(!thReady) return false;
-  const scale=0.88;
+  const scale=0.95;
   const w=160*scale,h=190*scale;
   x.drawImage(thComposite,a-w/2,b-h+8,w,h);
   return true;
@@ -628,14 +631,6 @@ function drawPlayer(a,b){
     x.strokeStyle="#e6e8ef";x.lineWidth=3;x.beginPath();x.moveTo(a+27,b+17);x.lineTo(a+43,b-8);x.stroke();
   }
 
-  /* Tên nhân vật */
-  x.fillStyle="#071016dd";
-  x.beginPath();
-  x.roundRect(a-52,b-92,104,20,8);
-  x.fill();
-  x.fillStyle="#fff";
-  x.font="bold 12px sans-serif";
-  x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",a,b-78);
   x.restore();
 }
 function drawVillageDecor(){

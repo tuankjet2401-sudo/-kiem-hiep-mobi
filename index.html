@@ -407,7 +407,7 @@ function render(){
  document.getElementById("heroBonus").textContent=(20+s.heroLevel*3)+"%";document.getElementById("heroTier").textContent=s.heroTier;document.getElementById("heroHp").textContent=100;
  document.getElementById("heroBar").style.width=Math.min(100,s.heroXp/heroNeed()*100)+"%";
  document.getElementById("cityBar").style.width=Math.min(100,s.cityXp/cityNeed()*100)+"%";
- document.getElementById("xpBar").style.width=Math.min(100,s.xp/xpNeed()*100)+"%";
+ if(document.getElementById("xpBar"))document.getElementById("xpBar").style.width=Math.min(100,s.xp/xpNeed()*100)+"%";
  document.getElementById("heroRarity").textContent=s.heroTier>=4?"Sử thi":s.heroTier>=3?"Hiếm":s.heroTier>=2?"Tốt":"Thường";
  document.getElementById("sword").textContent=s.sword?"Đã trang bị":"Chưa có";document.getElementById("shield").textContent=s.shield?"Đã trang bị":"Chưa có";
  document.getElementById("bow").textContent=s.bow?"Đã trang bị":"Chưa có";document.getElementById("seal").textContent=s.seal?"Đã trang bị":"Chưa có";
@@ -463,7 +463,13 @@ document.getElementById("campaignStage").textContent=s.campaign.stage;
 document.getElementById("territory").textContent=s.territory||1;document.getElementById("influence").textContent=s.influence||0;document.getElementById("diplomacy").textContent=s.diplomacy||"Trung lập";document.getElementById("war").textContent=s.war||0;document.getElementById("log").innerHTML=s.logs.slice(-12).reverse().map(x=>"<div>"+x+"</div>").join("");
  renderAchievements()
 }
-function tab(n){document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));document.getElementById(n).classList.add("on");document.getElementById("t-"+n).classList.add("on")}
+function tab(n){
+ document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
+ document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
+ const v=document.getElementById(n),t=document.getElementById("t-"+n);
+ if(v)v.classList.add("on");
+ if(t)t.classList.add("on");
+}
 function gainXp(n){s.xp+=n;s.fame+=Math.floor(n/30);while(s.xp>=xpNeed()){s.xp-=xpNeed();s.level++;s.gems++;log("⭐ Lên cấp "+s.level+"! +1💎.")}}
 function gainCity(n){s.cityXp+=n;while(s.cityXp>=cityNeed()){s.cityXp-=cityNeed();s.cityLevel++;s.population+=50;s.gems++;log("🏯 Thành lên cấp "+s.cityLevel+"!")}}
 function upgradeCity(){let c=250+s.cityLevel*180;if(s.wood<c||s.gold<100){log("Không đủ tài nguyên.");return}s.wood-=c;s.gold-=100;gainCity(450);log("🏯 Nâng cấp Thành chính.");render();save()}

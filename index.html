@@ -20,7 +20,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 .skills{position:absolute;z-index:10;right:12px;bottom:max(125px,calc(env(safe-area-inset-bottom) + 115px));display:flex;gap:9px;align-items:center}.skills .btn{position:relative;inset:auto;flex:0 0 62px}
 #joy{position:absolute;z-index:10;left:12px;bottom:max(140px,calc(env(safe-area-inset-bottom) + 130px));width:108px;height:108px;border-radius:50%;background:#14221bcc;border:4px solid #43504c}
 #stick{position:absolute;left:50%;top:50%;width:48px;height:48px;border-radius:50%;background:#e8c45c;border:5px solid #fff0b0;transform:translate(-50%,-50%)}
-.menu{position:absolute;z-index:10;right:12px;bottom:max(265px,calc(env(safe-area-inset-bottom) + 255px));display:flex;gap:7px}.menu button,.community{background:#111a20ee;border:3px solid #65727c;color:#fff;border-radius:16px;padding:9px 12px;font-weight:800;font-size:15px}.community{position:absolute;z-index:10;right:12px;bottom:max(200px,calc(env(safe-area-inset-bottom) + 190px))}
+.menu,.community{display:none!important}
 #msg{position:absolute;z-index:20;left:50%;top:43%;transform:translate(-50%,-50%);background:#08100ddd;color:#fff;border-radius:20px;padding:10px 16px;display:none;white-space:nowrap}
 #status{position:absolute;z-index:12;left:16px;bottom:max(10px,env(safe-area-inset-bottom));background:#08100dcc;color:#fff;border-radius:14px;padding:8px 12px}
 .modal{position:absolute;z-index:30;inset:6% 4%;background:#101820f7;border:1px solid #3c4650;border-radius:22px;color:#fff;padding:17px;overflow:auto;display:none}
@@ -167,15 +167,15 @@ const npcs=[
       {id:"elite",name:"🔥 Trận chiến lớn",desc:"Hạ 8 Sơn Tặc.",goal:8,rewardGold:260,rewardExp:140}
     ]
   },
-  {id:"banngua",name:"Chủ Ngựa",icon:"🐴",x:1510,y:1040,title:"Bán ngựa & thú cưỡi",color:"#d8a45c",service:"horse",quests:[]},
-  {id:"duocdien",name:"Dược Điếm",icon:"💊",x:1120,y:1040,title:"Bán thuốc hồi phục",color:"#75dfff",service:"potion",quests:[]},
-  {id:"taphoa",name:"Tạp Hóa",icon:"🛒",x:1040,y:820,title:"Đồ dùng giang hồ",color:"#9fe28c",service:"general",quests:[]},
-  {id:"vukhi",name:"Thợ Rèn",icon:"⚒️",x:1960,y:820,title:"Vũ khí & áo giáp",color:"#f3d46b",service:"weapon",quests:[]},
-  {id:"xaphu",name:"Xa Phu",icon:"🐎",x:1460,y:1080,title:"Dịch chuyển bản đồ",color:"#d9c09b",service:"teleport",quests:[]},
-  {id:"ruong",name:"Thủ Khố",icon:"🧰",x:2180,y:1120,title:"Rương chứa đồ",color:"#caa56a",service:"storage",quests:[]},
-  {id:"npcMonPhai",name:"NPC Môn Phái",icon:"🥋",x:1880,y:1320,title:"Chọn môn phái & xem võ học",color:"#c9b7ff",service:"class",quests:[]},
-  {id:"npcHoatDong",name:"NPC Hoạt Động",icon:"🏆",x:2140,y:1380,title:"Hoạt động & chiến trường",color:"#ffd978",service:"activity",quests:[]},
-  {id:"npcCongDong",name:"NPC Cộng Đồng",icon:"👥",x:2380,y:1320,title:"Bang hội · Tống Kim · Thế giới",color:"#8ddcff",service:"community",quests:[]}
+  {id:"banngua",name:"Chủ Ngựa",icon:"🐴",x:1340,y:1050,title:"Bán ngựa & thú cưỡi",color:"#d8a45c",service:"horse",quests:[]},
+  {id:"duocdien",name:"Dược Điếm",icon:"💊",x:1120,y:1120,title:"Bán thuốc hồi phục",color:"#75dfff",service:"potion",quests:[]},
+  {id:"taphoa",name:"Tạp Hóa",icon:"🛒",x:1040,y:900,title:"Đồ dùng giang hồ",color:"#9fe28c",service:"general",quests:[]},
+  {id:"vukhi",name:"Thợ Rèn",icon:"⚒️",x:1990,y:900,title:"Vũ khí & áo giáp",color:"#f3d46b",service:"weapon",quests:[]},
+  {id:"xaphu",name:"Xa Phu",icon:"🐎",x:1510,y:1080,title:"Dịch chuyển bản đồ",color:"#d9c09b",service:"teleport",quests:[]},
+  {id:"ruong",name:"Thủ Khố",icon:"🧰",x:2180,y:1080,title:"Rương chứa đồ",color:"#caa56a",service:"storage",quests:[]},
+  {id:"npcMonPhai",name:"NPC Môn Phái",icon:"🥋",x:1420,y:1320,title:"Chọn môn phái & xem võ học",color:"#c9b7ff",service:"class",quests:[]},
+  {id:"npcHoatDong",name:"NPC Hoạt Động",icon:"🏆",x:1760,y:1320,title:"Hoạt động & chiến trường",color:"#ffd978",service:"activity",quests:[]},
+  {id:"npcCongDong",name:"NPC Cộng Đồng",icon:"👥",x:2100,y:1320,title:"Bang hội · Tống Kim · Thế giới",color:"#8ddcff",service:"community",quests:[]}
 ];
 let horseOwned=false;
 let bank=[];
@@ -395,19 +395,19 @@ function drawNpc(n){
   x.save();
   if(near){
     x.strokeStyle=n.color+"bb"; x.lineWidth=3;
-    x.beginPath();x.arc(n.x,n.y,43+Math.sin(performance.now()/220)*3,0,Math.PI*2);x.stroke();
+    x.beginPath();x.arc(n.x,n.y,35+Math.sin(performance.now()/220)*2,0,Math.PI*2);x.stroke();
   }
   x.fillStyle="#f0d2b4";x.beginPath();x.arc(n.x,n.y-30,16,0,7);x.fill();
   x.fillStyle=n.color+"dd";x.beginPath();
   x.moveTo(n.x-23,n.y+40);x.lineTo(n.x,n.y-8);x.lineTo(n.x+25,n.y+40);x.lineTo(n.x,n.y+55);x.closePath();x.fill();
-  x.font="27px sans-serif";x.textAlign="center";x.fillText(n.icon,n.x,n.y-52);
-  const label=`${n.icon} ${n.name}`;
-  x.font="bold 12px sans-serif";
-  const tw=x.measureText(label).width+12;
-  x.fillStyle="#071016e8";x.beginPath();x.roundRect(n.x-tw/2,n.y-83,tw,20,8);x.fill();
-  x.fillStyle="#fff";x.fillText(label,n.x,n.y-69);
-  x.font="11px sans-serif";x.fillStyle="#ffd978";
-  x.fillText(n.service?("🏪 "+n.title):"📜 Nhiệm vụ",n.x,n.y+75);
+  x.font="22px sans-serif";x.textAlign="center";x.fillText(n.icon,n.x,n.y-46);
+  const label=`${n.name}`;
+  x.font="bold 10px sans-serif";
+  const tw=Math.min(x.measureText(label).width+10,118);
+  x.fillStyle="#071016df";x.beginPath();x.roundRect(n.x-tw/2,n.y-72,tw,17,7);x.fill();
+  x.fillStyle="#fff";x.fillText(label,n.x,n.y-60);
+  x.font="9px sans-serif";x.fillStyle="#ffd978";
+  x.fillText(n.service?("🏪 "+n.title):"📜 Nhiệm vụ",n.x,n.y+64);
   x.restore();
 }
 

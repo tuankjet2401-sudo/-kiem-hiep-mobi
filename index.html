@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.12.5-M3">
-<meta name="game-protocol" content="4.12.5-M3">
+<meta name="game-version" content="4.12.5-M5">
+<meta name="game-protocol" content="4.12.5-M5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.5-M5-M4 · Skill FX AOE</title>
+<title>Kiếm Thế Mobi – Bản 4.12.5-M5 · 14 Môn Phái · Trang Phục · Vũ Khí</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -28,6 +28,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 .quickChat b{color:#ffd978}.quickChat small{display:block;color:#d5dce1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .quickParty{position:absolute;z-index:11;right:12px;bottom:max(98px,calc(env(safe-area-inset-bottom) + 92px));width:min(280px,64vw);background:#071016e8;color:#fff;border:1px solid #4b5660;border-radius:14px;padding:9px 11px;display:none;box-shadow:0 7px 20px #0005}
 .quickParty b{color:#8ddcff}.quickParty small{display:block;color:#d5dce1;margin-top:3px}
+.menu{position:absolute;z-index:11;right:88px;top:145px;display:flex;flex-direction:column;gap:13px}.menu button,.community{border:2px solid #66717c;background:#0d141bec;color:#fff;border-radius:15px;min-height:46px;padding:7px 12px;font-size:14px;font-weight:800;box-shadow:0 7px 18px #0006}.community{position:absolute;z-index:11;right:88px;top:310px}.menu button:active,.community:active{transform:scale(.96);background:#1a252d}
 
 #msg{position:absolute;z-index:20;left:50%;top:43%;transform:translate(-50%,-50%);background:#08100ddd;color:#fff;border-radius:20px;padding:10px 16px;display:none;white-space:nowrap}
 #status{position:absolute;z-index:12;left:16px;bottom:max(10px,env(safe-area-inset-bottom));background:#08100dcc;color:#fff;border-radius:14px;padding:8px 12px}
@@ -650,7 +651,7 @@ function drawNpc(n){
 function toast(t){let q=document.getElementById("msg");q.textContent=t;q.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>q.style.display="none",1100)}
 function closeM(id){document.getElementById(id).style.display="none"}
 function openM(id){document.getElementById(id).style.display="block"}
-function hud(){let z=cls[pc];document.getElementById("cl").textContent=pc;document.getElementById("el").textContent=icons[z[6]]+" "+z[6];document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("hp").textContent=Math.round(P.hp)+"/220";document.getElementById("mp").textContent=Math.round(P.mp)+"/60";document.getElementById("xp").textContent=exp+"/600";document.getElementById("gold").textContent=gold;document.getElementById("hpbar").style.width=P.hp/220*100+"%";document.getElementById("mpbar").style.width=P.mp/60*100+"%";document.getElementById("xpbar").style.width=exp/600*100+"%";document.getElementById("atk").textContent=P.atk+equip.weapon.a+z[4]+(weaponData[selectedWeapon]?.bonus||0)}
+function hud(){let z=cls[pc];document.getElementById("cl").textContent=pc;document.getElementById("el").textContent=icons[z[6]]+" "+z[6];document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("hp").textContent=Math.round(P.hp)+"/220";document.getElementById("mp").textContent=Math.round(P.mp)+"/60";document.getElementById("xp").textContent=exp+"/600";document.getElementById("gold").textContent=gold;document.getElementById("hpbar").style.width=P.hp/220*100+"%";document.getElementById("mpbar").style.width=P.mp/60*100+"%";document.getElementById("xpbar").style.width=exp/600*100+"%";document.getElementById("atk").textContent=P.atk+(equip.weapon?.a||0)+z[4]+(weaponData[selectedWeapon]?.bonus||0)}
 const featuredClasses=[
   "Thiếu Lâm","Thiên Vương","Võ Đang","Nga Mi","Đường Môn","Ngũ Độc",
   "Côn Lôn Đao","Côn Lôn Kiếm","Cái Bang Chưởng","Cái Bang Bổng",
@@ -736,25 +737,26 @@ function classes(){
     e.className="class"+(n==pending?" sel":"");
     const unlocked = featuredClasses.indexOf(n)<10 ? "Mốc 1–4" : "Mốc 5";
     e.innerHTML=`<div class=icon>${q[0]}</div><b>${n}</b><span class="m5Badge">${unlocked}</span><div class=ct>${q[1]}</div><div class=desc>${q[2]}<br>${q[3]}</div>`;
-    e.onclick=()=>{pending=n;classes();sel()};
+    e.onclick=()=>{pending=n;selectedWeapon=classWeaponDefaults(n);classes();sel();renderM5Options()};
     g.appendChild(e);
   }
 }
 function sel(){let z=cls[pending];document.getElementById("selName").textContent=pending;document.getElementById("selDesc").textContent=z[2]+" · "+z[3]}
 function confirmClass(){
   pc=pending;
+  try{localStorage.setItem("ktm_moc5",JSON.stringify({pc,costume:selectedCostume,weapon:selectedWeapon}))}catch(e){}
   const bonus=weaponData[selectedWeapon]?.bonus||0;
   P.atk=15;
   toast(cls[pc][0]+" Đã chọn "+pc+" · "+selectedCostume+" · "+selectedWeapon+" +"+bonus);
   closeM("classModal"); hud();
 }
 function itemPower(i){return(i?.en||0)*3}
-function bagUI(){document.getElementById("cnt").textContent=bag.length;document.getElementById("equip").innerHTML=["weapon","armor"].map(k=>{let i=equip[k];return`<div class=item>${i.i} <b>${i.n} +${i.en}</b><div class=actions><button class=enh onclick="enhEq('${k}')">⚒️ +${i.en+1}</button><button class=action onclick="uneq('${k}')">Tháo</button></div></div>`}).join("");document.getElementById("items").innerHTML=bag.map((i,k)=>`<div class=item><div>${i.i} <b class=${i.r=="Hiếm"?"rare":i.r=="Tốt"?"good":""}>${i.n} +${i.en}</b><small>${i.r} · ${i.t} · ⚔️ ${i.a+itemPower(i)} · 🛡️ ${i.df+itemPower(i)}</small></div><div class=actions>${i.t=="tiêu hao"?`<button class=action onclick="use(${k})">Dùng</button>`:`<button class=enh onclick="enh(${k})">⚒️ +${i.en+1}</button><button class=action onclick="eq(${k})">Trang bị</button>`}<button class=action onclick="sell(${k})">Bán</button></div></div>`).join("");let s="";for(let i=0;i<24;i++)s+=`<div class=slot>${bag[i]?bag[i].i+" "+bag[i].n+" +"+bag[i].en:"—"}</div>`;document.getElementById("slots").innerHTML=s}
+function bagUI(){document.getElementById("cnt").textContent=bag.length;document.getElementById("equip").innerHTML=["weapon","armor"].map(k=>{let i=equip[k];return i?`<div class=item>${i.i} <b>${i.n} +${i.en}</b><div class=actions><button class=enh onclick="enhEq('${k}')">⚒️ +${i.en+1}</button><button class=action onclick="uneq('${k}')">Tháo</button></div></div>`:`<div class=item>— Chưa trang bị</div>`}).join("");document.getElementById("items").innerHTML=bag.map((i,k)=>`<div class=item><div>${i.i} <b class=${i.r=="Hiếm"?"rare":i.r=="Tốt"?"good":""}>${i.n} +${i.en}</b><small>${i.r} · ${i.t} · ⚔️ ${i.a+itemPower(i)} · 🛡️ ${i.df+itemPower(i)}</small></div><div class=actions>${i.t=="tiêu hao"?`<button class=action onclick="use(${k})">Dùng</button>`:`<button class=enh onclick="enh(${k})">⚒️ +${i.en+1}</button><button class=action onclick="eq(${k})">Trang bị</button>`}<button class=action onclick="sell(${k})">Bán</button></div></div>`).join("");let s="";for(let i=0;i<24;i++)s+=`<div class=slot>${bag[i]?bag[i].i+" "+bag[i].n+" +"+bag[i].en:"—"}</div>`;document.getElementById("slots").innerHTML=s}
 function cost(i){return 50*(i.en+1)}
 function enh(k){let i=bag[k];if(!i||i.t=="tiêu hao")return toast("⚒️ Chỉ cường hoá trang bị");if(i.en>=10)return toast("Đã +10");if(gold<cost(i))return toast("🪙 Không đủ vàng");gold-=cost(i);i.en++;bagUI();hud();toast("⚒️ "+i.n+" +"+i.en)}
 function enhEq(k){let i=equip[k];if(i.en>=10)return toast("Đã +10");if(gold<cost(i))return toast("🪙 Không đủ vàng");gold-=cost(i);i.en++;bagUI();hud();toast("⚒️ "+i.n+" +"+i.en)}
 function eq(k){let i=bag[k];if(i.t=="vũ khí"){bag.push(equip.weapon);equip.weapon=i}else if(i.t=="áo"){bag.push(equip.armor);equip.armor=i}else return;bag.splice(k,1);if(bag.length>24)bag.pop();bagUI();hud()}
-function uneq(k){if(bag.length>=24)return toast("🎒 Túi đầy");bag.push(equip[k]);equip[k]=null;bagUI();hud()}
+function uneq(k){const item=equip[k];if(!item)return toast("❌ Chưa trang bị");if(bag.length>=24)return toast("🎒 Túi đầy");bag.push(item);equip[k]=null;bagUI();hud();toast("🎒 Đã tháo "+item.n)}
 function use(k){
   const it=bag[k]; if(!it||it.t!="tiêu hao")return;
   updateQuestProgress("potion",1);
@@ -780,13 +782,13 @@ function attack(){
   const r=pc=="Thiên Nhẫn Hỏa Tiễn"?500:["Đường Môn","Ngũ Độc"].includes(pc)?350:160;
   if(Math.hypot(P.x-m.x,P.y-m.y)>=r)return toast("⚔️ Mục tiêu quá xa");
   cdA=.45;
-  startCombat("attack",m,P.atk+equip.weapon.a+cls[pc][4],.45,.22);
+  startCombat("attack",m,P.atk+(equip.weapon?.a||0)+cls[pc][4]+(weaponData[selectedWeapon]?.bonus||0),.45,.22);
 }
 function skill(){
   if(cdS>0||combat.type)return;
   cdS=2;updateQuestProgress("sword",1);
   const z=cls[pc];
-  let range=260, radius=125, n=40+z[4]+equip.weapon.a;
+  let range=260, radius=125, n=40+z[4]+(equip.weapon?.a||0)+(weaponData[selectedWeapon]?.bonus||0);
   if(pc==="Cái Bang Chưởng"){
     range=440;radius=185;n+=30;
     toast("🐉 Giáng Long Thập Bát Chưởng!");
@@ -1157,7 +1159,8 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 4 · Skill FX/AOE · NPC";
+try{const save=JSON.parse(localStorage.getItem("ktm_moc5")||"null");if(save&&cls[save.pc])pc=save.pc;if(save&&costumeData[save.costume])selectedCostume=save.costume;if(save&&weaponData[save.weapon])selectedWeapon=save.weapon}catch(e){}
+classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · 14 Môn Phái · Trang Phục · Vũ Khí · NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

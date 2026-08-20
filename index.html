@@ -6,7 +6,7 @@
 <meta name="game-version" content="4.12.5-M3">
 <meta name="game-protocol" content="4.12.5-M3">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.5-M3 · Combat Animation</title>
+<title>Kiếm Thế Mobi – Bản 4.12.5-M4 · Skill FX AOE</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -156,25 +156,72 @@ for(let i=0;i<14;i++){
 const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao Bào","áo","Thường",0,5,"🥋"],["Giáp Tinh Anh","áo","Tốt",0,13,"🛡️"],["Đao Tinh Anh","vũ khí","Hiếm",18,0,"⚔️"],["Đao Sơn Tặc","vũ khí","Thường",9,0,"🗡️"],["Bình Hồi Khí","tiêu hao","Thường",0,0,"🧪"]];
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
 let cdA=0,cdS=0,cdF=0,stun=0,slow=0;
-/* Mốc 3 — Combat Animation trên nền Spine-style Rig (canvas runtime)
+/* Mốc 4 — Skill FX/AOE trên nền Combat Animation + Spine-style Rig (canvas runtime)
    Bone hierarchy: root -> torso/head/hair + legL/legR + weapon.
    Dùng chính các layer PNG hiện có, không cần thêm thư viện ngoài. */
 const rig={attack:0,skill:0,fire:0};
 const combat={type:null,t:0,duration:0,impactAt:0,done:false,target:null,damage:0};
 let shake=0;
 const floatDmg=[];
+const aoeFx=[];
+const particles=[];
+
+function spawnAoeFx(cx,cy,radius,type){
+  aoeFx.push({x:cx,y:cy,r:8,max:radius,t:0,duration:.65,type});
+  const count=type==="fire"?28:type==="skill"?36:20;
+  for(let i=0;i<count;i++){
+    const a=Math.random()*Math.PI*2;
+    const rr=10+Math.random()*radius*.65;
+    particles.push({
+      x:cx+Math.cos(a)*rr*.25,
+      y:cy+Math.sin(a)*rr*.25,
+      vx:Math.cos(a)*(55+Math.random()*120),
+      vy:Math.sin(a)*(55+Math.random()*120)-25,
+      life:.35+Math.random()*.45,
+      maxLife:.7,
+      size:3+Math.random()*5,
+      type
+    });
+  }
+}
+
+function aoeDamage(cx,cy,radius,damage,type){
+  let hitCount=0;
+  for(const m of mobs){
+    if(!m.alive) continue;
+    const d=Math.hypot(m.x-cx,m.y-cy);
+    if(d<=radius){
+      hit(m,damage);
+      hitCount++;
+      floatDmg.push({x:m.x,y:m.y-35,n:Math.round(damage),life:.7,type});
+    }
+  }
+  return hitCount;
+}
 function rigTrigger(type,duration){rig[type]=Math.max(rig[type],duration)}
 function startCombat(type,target,damage,duration,impactAt){
   combat.type=type;combat.t=0;combat.duration=duration;combat.impactAt=impactAt;
-  combat.done=false;combat.target=target;combat.damage=damage;
+  combat.done=false;combat.target=target;combat.damage=damage;combat.aoeX=null;combat.aoeY=null;combat.aoeRadius=0;combat.aoeDone=false;
   rigTrigger(type,duration);
 }
 function impactCombat(){
-  if(combat.done||!combat.target||!combat.target.alive)return;
+  if(combat.done)return;
   combat.done=true;
+
+  if(combat.type==="skill" && combat.aoeX!=null){
+    const hitCount=aoeDamage(combat.aoeX,combat.aoeY,combat.aoeRadius,combat.damage,combat.type);
+    spawnAoeFx(combat.aoeX,combat.aoeY,combat.aoeRadius,combat.type);
+    shake=hitCount>1?12:9;
+    toast(hitCount>1 ? "💥 AOE · Trúng "+hitCount+" Sơn Tặc!" : "💥 Skill trúng mục tiêu!");
+    combat.aoeDone=true;
+    return;
+  }
+
+  if(!combat.target||!combat.target.alive)return;
   const m=combat.target;
   hit(m,combat.damage);
-  shake=combat.type==='attack'?5:combat.type==='skill'?9:7;
+  spawnAoeFx(m.x,m.y,42,combat.type);
+  shake=combat.type==='attack'?5:7;
   floatDmg.push({x:m.x,y:m.y-35,n:Math.round(combat.damage),life:.7,type:combat.type});
 }
 
@@ -670,10 +717,29 @@ function attack(){
 function skill(){
   if(cdS>0||combat.type)return;
   cdS=2;updateQuestProgress("sword",1);
-  let z=cls[pc],r=260,n=40+z[4]+equip.weapon.a;
-  if(pc=="Cái Bang Chưởng"){r=440;n+=30;toast("🐉 Giáng Long Thập Bát Chưởng!");let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<r)startCombat("skill",m,n,.85,.42);return}
-  if(pc=="Thiên Nhẫn Hỏa Tiễn"){r=550;n+=25;toast("🔥 Hỏa Tiễn!")}else toast(z[3]);
-  let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<r)startCombat("skill",m,n,.85,.42);
+  const z=cls[pc];
+  let range=260, radius=125, n=40+z[4]+equip.weapon.a;
+  if(pc==="Cái Bang Chưởng"){
+    range=440;radius=185;n+=30;
+    toast("🐉 Giáng Long Thập Bát Chưởng!");
+  }else if(pc==="Thiên Nhẫn Hỏa Tiễn"){
+    range=550;radius=145;n+=25;
+    toast("🔥 Hỏa Tiễn AOE!");
+  }else{
+    toast(z[3]+" · AOE");
+  }
+
+  const m=nearest();
+  if(!m || Math.hypot(P.x-m.x,P.y-m.y)>=range){
+    toast("☯️ Không có mục tiêu trong tầm");
+    return;
+  }
+
+  startCombat("skill",m,n,.9,.42);
+  combat.aoeX=m.x;
+  combat.aoeY=m.y;
+  combat.aoeRadius=radius;
+  combat.aoeDone=false;
 }
 function fire(){
   if(cdF>0||combat.type)return;
@@ -804,6 +870,43 @@ for(let m of mobs)if(m.alive){
   x.fillRect(m.x-30,m.y+29,60*(m.hp/65),5);
 }
 for(let d0 of drops){x.fillStyle="#e8c64f";x.beginPath();x.arc(d0.x,d0.y,21,0,7);x.fill();x.font="16px sans-serif";x.fillStyle="#111";x.fillText("🎁",d0.x,d0.y+6)}
+for(const fx of aoeFx){
+  const p=Math.min(1,fx.t/fx.duration);
+  const ease=1-Math.pow(1-p,3);
+  const rr=8+(fx.max-8)*ease;
+  x.save();
+  x.globalAlpha=Math.max(0,1-p);
+  x.translate(fx.x,fx.y);
+
+  if(fx.type==="skill"){
+    x.strokeStyle=cls[pc][5];
+    x.lineWidth=7;
+    x.beginPath();x.arc(0,0,rr,0,Math.PI*2);x.stroke();
+    x.strokeStyle="#fff6b0";
+    x.lineWidth=2;
+    x.beginPath();x.arc(0,0,rr*.72,0,Math.PI*2);x.stroke();
+    for(let k=0;k<8;k++){
+      const a=k*Math.PI/4+p*Math.PI;
+      x.fillStyle="#fff2a8";
+      x.beginPath();x.arc(Math.cos(a)*rr*.72,Math.sin(a)*rr*.72,5+4*(1-p),0,Math.PI*2);x.fill();
+    }
+  }else{
+    x.strokeStyle="#ff7b42";
+    x.lineWidth=9;
+    x.beginPath();x.arc(0,0,rr,0,Math.PI*2);x.stroke();
+    x.strokeStyle="#ffd36b";
+    x.lineWidth=3;
+    x.beginPath();x.arc(0,0,rr*.58,0,Math.PI*2);x.stroke();
+  }
+  x.restore();
+}
+for(const pt of particles){
+  x.save();
+  x.globalAlpha=Math.max(0,pt.life/pt.maxLife);
+  x.fillStyle=pt.type==="skill"?"#ffe88a":pt.type==="fire"?"#ff7445":"#ffffff";
+  x.beginPath();x.arc(pt.x,pt.y,pt.size,0,Math.PI*2);x.fill();
+  x.restore();
+}
 for(const fd of floatDmg){x.save();x.globalAlpha=Math.max(0,fd.life/.7);x.font="bold 20px sans-serif";x.textAlign="center";x.fillStyle=fd.type==='skill'?"#ffd95a":fd.type==='fire'?"#ff795c":"#ffffff";x.strokeStyle="#111";x.lineWidth=4;x.strokeText("-"+fd.n,fd.x,fd.y);x.fillText("-"+fd.n,fd.x,fd.y);x.restore()}
 if(mounted){x.save();x.font="48px sans-serif";x.textAlign="center";x.globalAlpha=.96;x.fillText("🐎",P.x,P.y+62);x.restore()}x.strokeStyle="#ffffff55";x.lineWidth=2;
 x.beginPath();x.ellipse(P.x,P.y+55,38,10,0,0,Math.PI*2);x.stroke();
@@ -941,6 +1044,15 @@ for(let i=0;i<living.length;i++){
 checkNpcHint();renderQuestTracker();cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);
 if(combat.type){combat.t+=dt;if(!combat.done&&combat.t>=combat.impactAt)impactCombat();if(combat.t>=combat.duration){combat.type=null;combat.target=null;combat.damage=0}}
 for(let i=floatDmg.length-1;i>=0;i--){floatDmg[i].life-=dt;floatDmg[i].y-=22*dt;if(floatDmg[i].life<=0)floatDmg.splice(i,1)}
+for(let i=aoeFx.length-1;i>=0;i--){aoeFx[i].t+=dt;if(aoeFx[i].t>=aoeFx[i].duration)aoeFx.splice(i,1)}
+for(let i=particles.length-1;i>=0;i--){
+  const pt=particles[i];
+  pt.life-=dt;
+  pt.x+=pt.vx*dt;pt.y+=pt.vy*dt;
+  pt.vx*=Math.pow(.12,dt);pt.vy*=Math.pow(.12,dt);
+  pt.vy+=70*dt;
+  if(pt.life<=0)particles.splice(i,1);
+}
 shake=Math.max(0,shake-dt*24);
 rig.attack=Math.max(0,rig.attack-dt);rig.skill=Math.max(0,rig.skill-dt);rig.fire=Math.max(0,rig.fire-dt);
 stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
@@ -960,7 +1072,7 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 3 · Combat Animation · NPC";
+classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 4 · Skill FX/AOE · NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

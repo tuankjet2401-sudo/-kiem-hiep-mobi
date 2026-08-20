@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Đại Việt Chiến Ký</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#08110e;color:#ffe6a0;font-family:system-ui,-apple-system,sans-serif}
+#game{position:fixed;inset:0;background:#0d1813 center/cover no-repeat;touch-action:none}
+#shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.04) 45%,rgba(0,0,0,.28))}
+.panel{position:absolute;background:rgba(18,12,7,.86);border:2px solid #9b6d25;border-radius:18px;box-shadow:0 5px 18px #0008}
+#status{left:14px;top:14px;width:390px;max-width:calc(100% - 120px);padding:10px 14px}
+.title{font-size:22px;font-weight:900;color:#ffe6a0}
+.row{display:flex;align-items:center;gap:8px;margin-top:5px}
+.bar{height:12px;border-radius:9px;background:#171717;overflow:hidden;flex:1;border:1px solid #5b4320}
+.hp{height:100%;background:#e52e32;width:100%}.mp{height:100%;background:#278ce7;width:100%}
+#zone{top:15px;left:50%;transform:translateX(-50%);padding:10px 24px;font-weight:800;font-size:18px;white-space:nowrap}
+#topBtns{right:12px;top:12px;display:flex;gap:7px}
+.icon{width:58px;height:58px;border-radius:15px;border:2px solid #9b6d25;background:#17100b;color:#ffe6a0;font-size:27px}
+#quest{left:14px;top:155px;width:210px;padding:13px;text-align:center}
+#quest b{display:block;font-size:16px;margin-bottom:5px}
+#rightMenu{right:12px;top:145px;display:flex;flex-direction:column;gap:8px;background:transparent;border:0;box-shadow:none}
+.menuBtn{width:86px;height:66px;border-radius:15px;border:2px solid #9b6d25;background:rgba(18,12,7,.82);color:#ffe6a0;font-weight:800;font-size:13px}
+#enemies{position:absolute;inset:0}
+.enemy{position:absolute;width:90px;text-align:center;font-weight:900;color:#ff4242;text-shadow:2px 2px #000;font-size:15px}
+.enemy .body{font-size:47px;filter:drop-shadow(0 5px 4px #0008)}
+.enemy .ebar{height:7px;background:#260606;border:1px solid #e34b4b;border-radius:6px}.enemy .efill{height:100%;background:#e33;width:100%}
+#hero{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:110px;text-align:center;color:#79ff83;font-weight:900;text-shadow:2px 2px #000}
+#hero .body{font-size:70px;filter:drop-shadow(0 8px 5px #0009)}
+#float{position:absolute;left:50%;top:44%;transform:translateX(-50%);font-weight:900;font-size:20px;color:#ffe36d;text-shadow:2px 2px #000;opacity:0}
+#float.show{animation:pop .65s ease-out}@keyframes pop{0%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-50px)}}
+#controls{position:absolute;left:25px;bottom:175px;width:155px;height:155px;border-radius:50%;border:3px solid #8f6827;background:#1b1209aa}
+#stick{position:absolute;left:50%;top:50%;width:70px;height:70px;transform:translate(-50%,-50%);border-radius:50%;border:3px solid #ffe6a0;background:#8d672eaa}
+#skills{position:absolute;right:22px;bottom:178px;display:flex;gap:12px;align-items:end}
+.skill{width:72px;height:72px;border-radius:50%;border:3px solid #a8782e;background:#1b1209dd;color:white;font-size:31px}
+#attack{width:96px;height:96px;border-color:#d38c35;background:#7e201bdd}
+#bottom{left:14px;right:14px;bottom:12px;height:128px;padding:8px;display:flex;align-items:center;gap:6px}
+.bottomBtn{flex:1;height:80px;border:1px solid #634719;border-radius:13px;background:#16100bdd;color:#ffe6a0;font-weight:800;font-size:14px}
+#xp{position:absolute;left:28px;right:28px;bottom:151px;height:11px;border:1px solid #9b6d25;border-radius:10px;background:#171717}
+#xpfill{height:100%;width:0;background:#d9a83d;border-radius:10px}
+#toast{position:absolute;left:50%;top:20%;transform:translateX(-50%);padding:12px 18px;border-radius:13px;background:#000c;border:1px solid #b88435;color:#ffe6a0;font-weight:800;opacity:0;pointer-events:none}
+#modal{position:absolute;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:25px}
+#modalBox{width:min(420px,92vw);padding:22px;background:#15100c;border:2px solid #b88435;border-radius:20px;text-align:center}
+#modalBox h2{margin-top:0}
+.close{padding:12px 28px;border:0;border-radius:12px;background:#b37b27;color:#160f07;font-weight:900}
+@media(max-width:600px){
+ #status{width:300px}.title{font-size:17px}.zone{font-size:14px}
+ #quest{top:145px;width:170px;font-size:13px}.menuBtn{width:72px;height:60px;font-size:11px}
+ #controls{bottom:150px;width:140px;height:140px}.skills{bottom:150px}
+ #skills{bottom:150px}.skill{width:62px;height:62px;font-size:26px}#attack{width:82px;height:82px}
+ #xp{bottom:130px}#bottom{height:105px}.bottomBtn{height:65px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="shade"></div>
+  <div id="status" class="panel">
+    <div class="title">⚔️ ĐẠI VIỆT CHIẾN KÝ</div>
+    <div>Lv <b id="lvl">1</b> · ❤️ <b id="hpText">120/120</b></div>
+    <div class="row"><div class="bar"><div id="hp" class="hp"></div></div></div>
+    <div>🔵 <b id="mpText">80/80</b></div>
+    <div class="row"><div class="bar"><div id="mp" class="mp"></div></div></div>
+    <div>💰 <b id="gold">900</b> · ⭐ <b id="star">0</b></div>
+  </div>
+  <div id="zone" class="panel">Thành Đại Việt · Rừng Trúc</div>
+  <div id="topBtns">
+    <button class="icon" onclick="openModal('🎒 Túi Đồ','Đồ trang bị: Kiếm Đại Việt · Áo Giáp · Nhẫn')">🎒</button>
+    <button class="icon" onclick="openModal('👤 Nhân Vật','Đại Việt · Lv 1 · Sức mạnh 10')">👤</button>
+    <button class="icon" onclick="saveGame()">💾</button>
+  </div>
+  <div id="quest" class="panel"><b>🎯 NHIỆM VỤ</b>Hạ 3 Sơn Tặc<br>Tiến độ <span id="questCount">0/3</span></div>
+  <div id="rightMenu">
+    <button class="menuBtn" onclick="openModal('🛒 Tiệm','Kiếm +10 · Bình máu · Bánh bao')">🛒<br>Tiệm</button>
+    <button class="menuBtn" onclick="openModal('⚡ Kỹ Năng','🔥 Hỏa Kiếm · ⚡ Lôi Kích')">⚡<br>Kỹ Năng</button>
+    <button class="menuBtn" onclick="openModal('📜 Nhiệm Vụ','Hạ 3 Sơn Tặc để nhận thưởng.')">📜<br>Nhiệm Vụ</button>
+    <button class="menuBtn" onclick="openModal('🐶 Pet','Tiểu Cẩu · hỗ trợ +5% sát thương')">🐶<br>Pet</button>
+    <button class="menuBtn" onclick="openModal('🎁 Sự Kiện','Sự kiện Đại Việt đang mở!')">🎁<br>Sự Kiện</button>
+  </div>
+  <div id="enemies">
+    <div class="enemy" id="e1" style="left:18%;top:49%"><div>Sơn Tặc</div><div class="ebar"><div class="efill"></div></div><div class="body">🥷</div></div>
+    <div class="enemy" id="e2" style="left:61%;top:40%"><div>Sơn Tặc</div><div class="ebar"><div class="efill"></div></div><div class="body">🥷</div></div>
+    <div class="enemy" id="e3" style="left:67%;top:61%"><div>Sơn Tặc</div><div class="ebar"><div class="efill"></div></div><div class="body">🥷</div></div>
+  </div>
+  <div id="hero"><div>ĐạiViệt</div><div class="body">🧑🏻‍🎤</div></div>
+  <div id="float">-25</div>
+  <div id="controls"><div id="stick"></div></div>
+  <div id="skills">
+    <button class="skill" onclick="skill('🔥 Hỏa Kiếm')">🔥</button>
+    <button class="skill" onclick="skill('⚡ Lôi Kích')">⚡</button>
+    <button id="attack" class="skill" onclick="attack()">⚔️</button>
+  </div>
+  <div id="xp"><div id="xpfill"></div></div>
+  <div id="bottom" class="panel">
+    <button class="bottomBtn" onclick="openModal('🧑 Nhân Vật','HP 120 · MP 80 · Sức mạnh 10')">🧑<br>Nhân Vật</button>
+    <button class="bottomBtn" onclick="openModal('🛡️ Trang Bị','Kiếm · Giáp · Mũ · Nhẫn')">🛡️<br>Trang Bị</button>
+    <button class="bottomBtn" onclick="openModal('🏯 Bang Hội','Chưa gia nhập bang hội')">🏯<br>Bang Hội</button>
+    <button class="bottomBtn" onclick="openModal('👥 Bạn Bè','Danh sách bạn bè trống')">👥<br>Bạn Bè</button>
+    <button class="bottomBtn" onclick="openModal('⚙️ Cài Đặt','Âm thanh · Rung · Chất lượng')">⚙️<br>Cài Đặt</button>
+  </div>
+  <div id="toast"></div>
+  <div id="modal"><div id="modalBox"><h2 id="mtitle"></h2><p id="mtext"></p><button class="close" onclick="closeModal()">ĐÓNG</button></div></div>
+</div>
+<script>
+const game=document.getElementById('game');
+game.style.backgroundImage="url('game-art.png')";
+let hp=120,mp=80,gold=900,xp=0,kills=0,lvl=1;
+let enemies=[...document.querySelectorAll('.enemy')].map(e=>({el:e,hp:100,alive:true}));
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.opacity=1;setTimeout(()=>x.style.opacity=0,1300)}
+function update(){document.getElementById('hp').style.width=hp/120*100+'%';document.getElementById('mp').style.width=mp/80*100+'%';document.getElementById('hpText').textContent=hp+'/120';document.getElementById('mpText').textContent=mp+'/80';document.getElementById('gold').textContent=gold;document.getElementById('star').textContent=kills;document.getElementById('questCount').textContent=kills+'/3';document.getElementById('xpfill').style.width=xp+'%';document.getElementById('lvl').textContent=lvl}
+function attack(){let e=enemies.find(x=>x.alive);if(!e){toast('🎉 Đã hoàn thành nhiệm vụ!');return}e.hp-=35; e.el.querySelector('.efill').style.width=Math.max(0,e.hp)+'%';let f=document.getElementById('float');f.textContent='-'+35;f.classList.remove('show');void f.offsetWidth;f.classList.add('show');if(e.hp<=0){e.alive=false;e.el.style.opacity=.15;kills++;xp=Math.min(100,xp+34);gold+=120;if(kills===3){gold+=500;toast('🏆 Nhiệm vụ hoàn thành +500 vàng')}else toast('⚔️ Hạ Sơn Tặc +120 vàng')}else{hp=Math.max(0,hp-4);toast('🥷 Sơn Tặc phản kích -4 HP')}update()}
+function skill(name){if(mp<20){toast('Không đủ MP');return}mp-=20;toast(name+' · +60 sát thương');let e=enemies.find(x=>x.alive);if(e){e.hp-=60;e.el.querySelector('.efill').style.width=Math.max(0,e.hp)+'%';if(e.hp<=0){e.alive=false;e.el.style.opacity=.15;kills++;gold+=120;xp=Math.min(100,xp+34)}}update()}
+function openModal(t,x){document.getElementById('mtitle').textContent=t;document.getElementById('mtext').textContent=x;document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function saveGame(){localStorage.setItem('dv-save',JSON.stringify({hp,mp,gold,xp,kills,lvl}));toast('💾 Đã lưu game trên iPhone')}
+let s=localStorage.getItem('dv-save');if(s){try{Object.assign(window,JSON.parse(s))}catch(e){}}
+update();
+
+// joystick + touch movement
+const ctl=document.getElementById('controls'),stick=document.getElementById('stick'),hero=document.getElementById('hero');
+let drag=false,px=0,py=0;
+function move(x,y){let r=ctl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=x-cx,dy=y-cy,d=Math.hypot(dx,dy),m=52;if(d>m){dx=dx/d*m;dy=dy/d*m}stick.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;hero.style.left=Math.max(7,Math.min(93,(hero.offsetLeft/window.innerWidth*100)+dx*.035))+'%';hero.style.top=Math.max(30,Math.min(76,(hero.offsetTop/window.innerHeight*100)+dy*.035))+'%'}
+ctl.addEventListener('touchstart',e=>{drag=true;move(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
+ctl.addEventListener('touchmove',e=>{if(drag)move(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
+ctl.addEventListener('touchend',()=>{drag=false;stick.style.transform='translate(-50%,-50%)'});
+</script>
+</body>
+</html>

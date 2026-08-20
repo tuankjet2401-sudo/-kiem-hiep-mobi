@@ -208,9 +208,9 @@ for(const name of thLayerNames){
 
 function drawTHLayer(a,b){
   if(!thReady) return false;
-  const scale=1.65;
+  const scale=0.88;
   const w=160*scale,h=190*scale;
-  x.drawImage(thComposite,a-w/2,b-h+18,w,h);
+  x.drawImage(thComposite,a-w/2,b-h+8,w,h);
   return true;
 }
 

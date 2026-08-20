@@ -71,7 +71,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div class="bar"><div id="mpbar" class="mp" style="width:55%"></div></div>
 <div class="bar"><div id="xpbar" class="xp" style="width:86%"></div></div>
 ❤️ <span id="hp">180/220</span> · 💧 <span id="mp">33/60</span> · ✨ <span id="xp">519/600</span><br>⚔️ <span id="atk">37</span></div>
-<div id="town" class="box">📍 Tân Thủ Thôn<br>🌍 <span id="coord">1600,1500</span><br>🪙 <span id="gold">733</span></div>
+<div id="town" class="box">📍 Thôn Trấn Giang Hồ<br>🌍 <span id="coord">1600,1500</span><br>🪙 <span id="gold">733</span></div>
 </div>
 <button id="bagBtn" class="btn" style="right:14px;top:145px">🎒</button>
 <button id="mountBtn" class="btn travel mount" >🐎</button>
@@ -87,11 +87,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div id="msg"></div>
 <div id="npcHint">💬 Chạm NPC để nhận nhiệm vụ</div>
 <div id="questTracker"></div>
+<div id="vlBanner" style="position:absolute;z-index:8;left:50%;top:84px;transform:translateX(-50%);background:#17110bd9;color:#f3d46b;border:1px solid #8f6b2f;border-radius:14px;padding:7px 12px;font-weight:800;box-shadow:0 6px 18px #0006;white-space:nowrap">⚔️ VÕ LÂM 1 · GIANG HỒ LOẠN THẾ</div>
 <div id="status">🔴 Offline · Chế độ local</div>
 
 <div id="classModal" class="modal">
 <button class="close" onclick="closeM('classModal')">×</button>
-<h1>🥋 Môn Phái · Mốc 5</h1>
+<h1>🥋 Võ Lâm 1 · 14 Môn Phái</h1>
 <div class="card">Đang chọn: <b id="selName">Võ Đang</b><br><small id="selDesc"></small><br><span class="m5Badge">14/14 môn phái</span></div>
 <div id="classes" class="classes"></div>
 <div class="m5Panel"><h3>👘 Trang phục</h3><div id="costumes" class="m5Choices"></div></div>
@@ -100,7 +101,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 </div>
 <div id="actModal" class="modal">
 <button class="close" onclick="closeM('actModal')">×</button>
-<h1>🏆 NPC Hoạt Động</h1><div class="card"><b>Chọn hoạt động</b><small>Chạm Tham gia để đăng ký.</small></div>
+<h1>🏆 Hoạt Động Võ Lâm</h1><div class="card"><b>Chọn hoạt động</b><small>Chạm Tham gia để đăng ký.</small></div>
 <div class="card">⚔️ Tống Kim<br><small>Chiến trường phe phái.</small><br><button class="action" onclick="registerActivity('Tống Kim')">Tham gia</button></div>
 <div class="card">🥋 Liên Đấu<br><small>Đối kháng 1v1.</small><br><button class="action" onclick="registerActivity('Liên Đấu')">Tham gia</button></div>
 <div class="card">👑 Săn Boss Hoàng Kim<br><small>Săn boss nhận đồ hiếm.</small><br><button class="action" onclick="registerActivity('Săn Boss Hoàng Kim')">Tham gia</button></div>
@@ -110,7 +111,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 </div>
 <div id="comModal" class="modal">
 <button class="close" onclick="closeM('comModal')">×</button>
-<h1>👥 NPC Cộng Đồng</h1><div class="card"><b>Các hoạt động cộng đồng</b><small>Bang hội, Tống Kim, tổ đội, kênh thế giới và giao dịch.</small></div>
+<h1>👥 Cộng Đồng Võ Lâm</h1><div class="card"><b>Các hoạt động cộng đồng</b><small>Bang hội, Tống Kim, tổ đội, kênh thế giới và giao dịch.</small></div>
 <div class="card">🏯 Bang hội chiến · <b>Thiên Kiếm</b><br>Điểm bang: <b id="gs">1,280</b><br><button class="action" onclick="registerCommunity('Bang hội chiến')">⚔️ Đăng ký</button></div>
 <div class="card">⚔️ Tống Kim<br><button class="action" onclick="registerCommunity('Tống Kim - Phe Kim')">Phe Kim</button> <button class="action" onclick="registerCommunity('Tống Kim - Phe Tống')">Phe Tống</button></div>
 <div class="card">🤝 Tổ đội<br><small>Tìm đồng đội cùng cấp.</small><br><button class="action" onclick="registerCommunity('Tổ đội')">Tìm đội</button></div>
@@ -132,7 +133,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div id="serviceBody"></div>
 </div>
 <div id="bagModal" class="modal"><button class="close" onclick="closeM('bagModal')">×</button><h1>🎒 Túi đồ & Trang bị</h1><div id="equip"></div><h2>🎒 Túi <span id="cnt">0</span>/24</h2><div id="items"></div><h2>24 ô</h2><div id="slots" class="slots"></div></div>
-<div id="teleModal" class="modal"><button class="close" onclick="closeM('teleModal')">×</button><h1>🌀 Dịch chuyển</h1><div class="card">🏠 Tân Thủ Thôn · 1600,800<br><button class="action" onclick="tele('town')">Đi</button></div><div class="card">🏙️ Thành Thị · 2600,700<br><button class="action" onclick="tele('city')">Đi</button></div></div>
+<div id="teleModal" class="modal"><button class="close" onclick="closeM('teleModal')">×</button><h1>🌀 Dịch chuyển</h1><div class="card">🏠 Thôn Trấn · 1600,800<br><button class="action" onclick="tele('town')">Đi</button></div><div class="card">🏙️ Biện Kinh · 2600,700<br><button class="action" onclick="tele('city')">Đi</button></div></div>
 </div>
 
 <script>
@@ -498,8 +499,8 @@ function openService(npc){
       <div class="serviceRow"><div class="info">🛡️ <b>Giáp Tinh Anh</b><small>🛡️ +13 · Tốt</small></div><div><span class="price">🪙 ${servicePrices.armor}</span><br><button class="action" onclick="buyWeapon('armor')">Mua</button></div></div>`;
   }else if(npc.service==="teleport"){
     body.innerHTML=`
-      <div class="card"><b>🏠 Tân Thủ Thôn</b><small>1600,1200</small><button class="action" style="margin-top:8px" onclick="tele('town');closeM('serviceModal')">Dịch chuyển</button></div>
-      <div class="card"><b>🏙️ Thành Thị</b><small>2600,700</small><button class="action" style="margin-top:8px" onclick="tele('city');closeM('serviceModal')">Dịch chuyển</button></div>`;
+      <div class="card"><b>🏠 Thôn Trấn</b><small>1600,800</small><button class="action" style="margin-top:8px" onclick="tele('town');closeM('serviceModal')">Dịch chuyển</button></div>
+      <div class="card"><b>🏯 Biện Kinh</b><small>2600,700</small><button class="action" style="margin-top:8px" onclick="tele('city');closeM('serviceModal')">Dịch chuyển</button></div>`;
   }else if(npc.service==="storage"){
     renderBank();
     body.innerHTML=`
@@ -717,7 +718,7 @@ function toggleQuick(id){
 }
 function openWorldQuick(){
   toggleQuick("quickChat");
-  document.getElementById("quickChatText").textContent="🌎 Kênh thế giới · Thiếu Hiệp đang ở Tân Thủ Thôn.";
+  document.getElementById("quickChatText").textContent="🌎 Kênh thế giới · Võ Lâm đang nổi sóng.";
 }
 function openPartyQuick(){
   toggleQuick("quickParty");
@@ -916,6 +917,25 @@ function drawPlayer(a,b){
   }
   x.restore();
 }
+function drawVLMapLabels(){
+  x.save(); x.textAlign="center";
+  const labels=[
+    [1600,760,"🏯 THÔN TRẤN","Tân thủ · NPC & nhiệm vụ"],
+    [2600,620,"🏮 BIỆN KINH","Thành thị · giao dịch"],
+    [520,560,"⛰️ THIẾU LÂM","Thiền môn · Kim"],
+    [760,1980,"⚔️ VÕ ĐANG","Kiếm khí · Thổ"],
+    [2920,420,"🌸 NGA MI","Thủy · hỗ trợ"],
+    [2800,1800,"🐉 CÁI BANG","Hỏa · chưởng/bổng"]
+  ];
+  for(const [px,py,title,sub] of labels){
+    x.fillStyle="#071016cc"; x.beginPath(); x.roundRect(px-105,py-34,210,58,12); x.fill();
+    x.strokeStyle="#d2a44e88"; x.stroke();
+    x.fillStyle="#ffd978"; x.font="bold 14px sans-serif"; x.fillText(title,px,py-10);
+    x.fillStyle="#d5dce1"; x.font="10px sans-serif"; x.fillText(sub,px,py+9);
+  }
+  x.restore();
+}
+
 function drawVillageDecor(){
   const t=performance.now()/1000;
   x.fillStyle="#c5a85d";for(let r=0;r<5;r++){let yy=980+r*48;x.fillRect(760,yy,420,28)}
@@ -930,9 +950,9 @@ function draw(){x.clearRect(0,0,W,H);x.fillStyle="#32683d";x.fillRect(0,0,W,H);x
 x.strokeStyle="#ffffff12";for(let a=0;a<world.w;a+=160){x.beginPath();x.moveTo(a,0);x.lineTo(a,world.h);x.stroke()}for(let b=0;b<world.h;b+=160){x.beginPath();x.moveTo(0,b);x.lineTo(world.w,b);x.stroke()}
 x.fillStyle="#3f91bd";x.beginPath();x.moveTo(0,1650);x.bezierCurveTo(600,1500,1000,1850,1500,1720);x.bezierCurveTo(2200,1600,2700,1800,3200,1700);x.lineTo(3200,2400);x.lineTo(0,2400);x.closePath();x.fill();
 x.fillStyle="#b49a68";x.beginPath();x.moveTo(0,1850);x.quadraticCurveTo(800,1450,1600,1700);x.quadraticCurveTo(2400,1950,3200,1500);x.lineTo(3200,1760);x.quadraticCurveTo(2300,2150,1600,1950);x.quadraticCurveTo(700,1750,0,2100);x.closePath();x.fill();
-drawVillageDecor();x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
+drawVillageDecor();drawVLMapLabels();x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
 x.strokeStyle="#d9c56a88";x.lineWidth=4;x.setLineDash([16,12]);
-x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 22px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
+x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 22px sans-serif";x.textAlign="center";x.fillText("THÔN TRẤN GIANG HỒ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU TÂN THỦ",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
 npcs.forEach(drawNpc);
 for(let m of mobs)if(m.alive){
   x.fillStyle=m.hit?"#ffbd59":"#814237";

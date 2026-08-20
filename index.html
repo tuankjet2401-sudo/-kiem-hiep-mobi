@@ -56,10 +56,10 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 </header>
 <main>
 <div class="tabs">
-<button id="t-city" class="on" onclick="tab('city')">🏯 Thành</button>
-<button id="t-hero" onclick="tab('hero')">👑 Tướng</button>
-<button id="t-shop" onclick="tab('shop')">🏪 Đồ</button>
-<button id="t-ach" onclick="tab('ach')">🏆 Thành tựu</button><button id="t-map" onclick="tab('map')">🗺️ Bản đồ</button><button id="t-campaign" onclick="tab('campaign')">🏹 Chiến dịch</button><button id="t-city2" onclick="tab('city2')">🏙️ Thành phố</button><button id="t-tech" onclick="tab('tech')">🔬 Công nghệ</button><button id="t-arena" onclick="tab('arena')">🏟️ Võ đài</button><button id="t-boss" onclick="tab('boss')">🐉 Boss</button>
+<button type="button" id="t-city" class="on" onclick="tab('city')">🏯 Thành</button>
+<button type="button" id="t-hero" onclick="tab('hero')">👑 Tướng</button>
+<button type="button" id="t-shop" onclick="tab('shop')">🏪 Đồ</button>
+<button type="button" id="t-ach" onclick="tab('ach')">🏆 Thành tựu</button><button type="button" id="t-map" onclick="tab('map')">🗺️ Bản đồ</button><button type="button" id="t-campaign" onclick="tab('campaign')">🏹 Chiến dịch</button><button type="button" id="t-city2" onclick="tab('city2')">🏙️ Thành phố</button><button type="button" id="t-tech" onclick="tab('tech')">🔬 Công nghệ</button><button type="button" id="t-arena" onclick="tab('arena')">🏟️ Võ đài</button><button type="button" id="t-boss" onclick="tab('boss')">🐉 Boss</button>
 </div>
 
 <section id="city" class="view on">
@@ -71,20 +71,20 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 </div>
 <div class="progress"><i id="cityBar"></i></div>
 <div class="info">EXP thành: <b id="cityXp">0</b>/<b id="cityNeed">700</b></div>
-<div class="grid" style="margin-top:7px"><button onclick="upgradeCity()">🏯 Nâng thành</button><button onclick="upgradeBarracks()">⚔️ Doanh trại</button></div>
+<div class="grid" style="margin-top:7px"><button type="button" onclick="upgradeCity()">🏯 Nâng thành</button><button type="button" onclick="upgradeBarracks()">⚔️ Doanh trại</button></div>
 </div>
 <div class="panel">
 <div class="title">🏗️ Công trình</div>
 <div class="grid">
-<div class="card"><h3>🌾 Nông trại</h3><p>Cấp <b id="farm">0</b> • tăng 🌾.</p><button onclick="build('farm')">Nâng • gỗ</button></div>
-<div class="card"><h3>⛏️ Lò rèn</h3><p>Cấp <b id="forge">0</b> • tăng ⛏️.</p><button onclick="build('forge')">Nâng • gỗ</button></div>
-<div class="card"><h3>🏪 Chợ</h3><p>Cấp <b id="market">0</b> • tăng 💰.</p><button onclick="build('market')">Nâng • gỗ</button></div>
-<div class="card"><h3>⚓ Bến cảng</h3><p>Cấp <b id="port">0</b> • tăng 💰.</p><button onclick="build('port')">Nâng • gỗ</button></div>
+<div class="card"><h3>🌾 Nông trại</h3><p>Cấp <b id="farm">0</b> • tăng 🌾.</p><button type="button" onclick="build('farm')">Nâng • gỗ</button></div>
+<div class="card"><h3>⛏️ Lò rèn</h3><p>Cấp <b id="forge">0</b> • tăng ⛏️.</p><button type="button" onclick="build('forge')">Nâng • gỗ</button></div>
+<div class="card"><h3>🏪 Chợ</h3><p>Cấp <b id="market">0</b> • tăng 💰.</p><button type="button" onclick="build('market')">Nâng • gỗ</button></div>
+<div class="card"><h3>⚓ Bến cảng</h3><p>Cấp <b id="port">0</b> • tăng 💰.</p><button type="button" onclick="build('port')">Nâng • gỗ</button></div>
 </div>
 </div>
 <div class="panel">
 <div class="title">⚔️ Chiến tranh</div>
-<div class="grid"><button onclick="battle(false)">🔥 Đồn địch</button><button onclick="battle(true)">🔥 Đồn Bắc</button></div>
+<div class="grid"><button type="button" onclick="battle(false)">🔥 Đồn địch</button><button type="button" onclick="battle(true)">🔥 Đồn Bắc</button></div>
 </div>
 </section>
 
@@ -96,13 +96,13 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="heroText"><b id="heroName">Trần Hưng Đạo</b><br>Cấp <b id="heroLevel">1</b> • EXP <b id="heroXp">0</b><br><span class="rarity" id="heroRarity">Thường</span></div>
 </div>
 <div class="progress"><i id="heroBar"></i></div>
-<div class="grid" style="margin-top:7px"><button onclick="trainHero()">📚 Huấn luyện • 120💰</button><button onclick="promoteHero()">⭐ Thăng cấp • 3💎</button></div>
+<div class="grid" style="margin-top:7px"><button type="button" onclick="trainHero()">📚 Huấn luyện • 120💰</button><button type="button" onclick="promoteHero()">⭐ Thăng cấp • 3💎</button></div>
 </div>
 <div class="panel">
 <div class="title">⚡ Kỹ năng tướng</div>
 <div class="grid">
-<div class="card"><h3>🔥 Hào khí Đại Việt</h3><p>+20% sức mạnh trận kế tiếp.</p><button onclick="useSkill('warcry')">Kích hoạt</button></div>
-<div class="card"><h3>🛡️ Bày trận</h3><p>Giảm 20% tổn thất trong trận.</p><button onclick="useSkill('formation')">Kích hoạt</button></div>
+<div class="card"><h3>🔥 Hào khí Đại Việt</h3><p>+20% sức mạnh trận kế tiếp.</p><button type="button" onclick="useSkill('warcry')">Kích hoạt</button></div>
+<div class="card"><h3>🛡️ Bày trận</h3><p>Giảm 20% tổn thất trong trận.</p><button type="button" onclick="useSkill('formation')">Kích hoạt</button></div>
 </div>
 </div>
 <div class="panel">
@@ -118,11 +118,11 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="panel">
 <div class="title">🏪 Kho trang bị</div>
 <div class="info">💎 Ngọc: <b id="gems">0</b></div>
-<div class="item">🗡️ Kiếm Đại Việt <span class="rarity">Hiếm • +35 sức mạnh</span><button onclick="buyItem('sword')">140💰</button></div>
-<div class="item">🛡️ Khiên Đông Sơn <span class="rarity">Tốt • +25 phòng thủ</span><button onclick="buyItem('shield')">110💰</button></div>
-<div class="item">🏹 Cung Bách Việt <span class="rarity">Hiếm • +30 cung</span><button onclick="buyItem('bow')">150💰</button></div>
-<div class="item">👑 Ấn Tướng Quân <span class="rarity">Sử thi • +12%</span><button onclick="buyItem('seal')">3💎</button></div>
-<div class="item">🧪 Bình hồi quân <span class="rarity">+10% quân sau trận</span><button onclick="buyItem('potion')">80💰</button></div>
+<div class="item">🗡️ Kiếm Đại Việt <span class="rarity">Hiếm • +35 sức mạnh</span><button type="button" onclick="buyItem('sword')">140💰</button></div>
+<div class="item">🛡️ Khiên Đông Sơn <span class="rarity">Tốt • +25 phòng thủ</span><button type="button" onclick="buyItem('shield')">110💰</button></div>
+<div class="item">🏹 Cung Bách Việt <span class="rarity">Hiếm • +30 cung</span><button type="button" onclick="buyItem('bow')">150💰</button></div>
+<div class="item">👑 Ấn Tướng Quân <span class="rarity">Sử thi • +12%</span><button type="button" onclick="buyItem('seal')">3💎</button></div>
+<div class="item">🧪 Bình hồi quân <span class="rarity">+10% quân sau trận</span><button type="button" onclick="buyItem('potion')">80💰</button></div>
 </div>
 <div class="panel">
 <div class="title">🎒 Đang trang bị</div>
@@ -140,7 +140,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 </div>
 <div class="panel">
 <div class="title">🎁 Phần thưởng</div>
-<div class="grid"><button onclick="dailyReward()">🎁 Nhận thưởng ngày</button><button onclick="saveGame()">💾 Lưu game</button></div>
+<div class="grid"><button type="button" onclick="dailyReward()">🎁 Nhận thưởng ngày</button><button type="button" onclick="saveGame()">💾 Lưu game</button></div>
 </div>
 </section>
 
@@ -158,15 +158,15 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 </div>
 <div class="progress"><i id="happinessBar"></i></div>
 <div class="grid" style="margin-top:7px">
-<button onclick="upgradeCity2()">🏙️ Mở rộng • 250🪵</button>
-<button onclick="festival()">🎉 Lễ hội • 80💰</button>
+<button type="button" onclick="upgradeCity2()">🏙️ Mở rộng • 250🪵</button>
+<button type="button" onclick="festival()">🎉 Lễ hội • 80💰</button>
 </div>
 </div>
 <div class="panel">
 <div class="title">🏘️ Khu dân cư</div>
 <div class="grid">
-<div class="card"><h3>🏠 Nhà dân</h3><p>Tăng dân số và thuế.</p><button onclick="buildHouse()">Xây • 70🪵</button></div>
-<div class="card"><h3>🌳 Công viên</h3><p>Tăng hạnh phúc.</p><button onclick="buildPark()">Xây • 100🪵</button></div>
+<div class="card"><h3>🏠 Nhà dân</h3><p>Tăng dân số và thuế.</p><button type="button" onclick="buildHouse()">Xây • 70🪵</button></div>
+<div class="card"><h3>🌳 Công viên</h3><p>Tăng hạnh phúc.</p><button type="button" onclick="buildPark()">Xây • 100🪵</button></div>
 </div>
 </div>
 </section>
@@ -175,10 +175,10 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="panel">
 <div class="title">🔬 Viện Công Nghệ</div>
 <div class="info">Điểm nghiên cứu: <b id="research">0</b> 🔬</div>
-<div class="item"><span>🌾 Thâm canh <span class="rarity">+10% sản lượng</span></span><button onclick="researchTech('food')">Nghiên cứu</button></div>
-<div class="item"><span>⛏️ Luyện sắt <span class="rarity">+10% sắt</span></span><button onclick="researchTech('iron')">Nghiên cứu</button></div>
-<div class="item"><span>⚔️ Quân giới <span class="rarity">+8% sức mạnh</span></span><button onclick="researchTech('army')">Nghiên cứu</button></div>
-<div class="item"><span>💰 Thương mại <span class="rarity">+10% vàng</span></span><button onclick="researchTech('economy')">Nghiên cứu</button></div>
+<div class="item"><span>🌾 Thâm canh <span class="rarity">+10% sản lượng</span></span><button type="button" onclick="researchTech('food')">Nghiên cứu</button></div>
+<div class="item"><span>⛏️ Luyện sắt <span class="rarity">+10% sắt</span></span><button type="button" onclick="researchTech('iron')">Nghiên cứu</button></div>
+<div class="item"><span>⚔️ Quân giới <span class="rarity">+8% sức mạnh</span></span><button type="button" onclick="researchTech('army')">Nghiên cứu</button></div>
+<div class="item"><span>💰 Thương mại <span class="rarity">+10% vàng</span></span><button type="button" onclick="researchTech('economy')">Nghiên cứu</button></div>
 </div>
 <div class="panel">
 <div class="title">📊 Tiến bộ</div>
@@ -203,15 +203,15 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="card" style="margin-top:7px">
 <h3>⚔️ Đấu hạng</h3>
 <p>Gặp một đối thủ ngẫu nhiên. Thắng nhận vàng, ngọc và điểm xếp hạng.</p>
-<button onclick="arenaBattle()">⚔️ Khiêu chiến</button>
+<button type="button" onclick="arenaBattle()">⚔️ Khiêu chiến</button>
 </div>
 </div>
 
 <div class="panel">
 <div class="title">📜 Nhiệm vụ ngày</div>
-<div class="item"><span>⚔️ Thắng 1 trận <span class="rarity" id="q1">0/1</span></span><button onclick="claimQuest(1)">Nhận 100💰</button></div>
-<div class="item"><span>🌾 Thu hoạch 3 lần <span class="rarity" id="q2">0/3</span></span><button onclick="claimQuest(2)">Nhận 150💰</button></div>
-<div class="item"><span>🔬 Nghiên cứu 1 công nghệ <span class="rarity" id="q3">0/1</span></span><button onclick="claimQuest(3)">Nhận 2💎</button></div>
+<div class="item"><span>⚔️ Thắng 1 trận <span class="rarity" id="q1">0/1</span></span><button type="button" onclick="claimQuest(1)">Nhận 100💰</button></div>
+<div class="item"><span>🌾 Thu hoạch 3 lần <span class="rarity" id="q2">0/3</span></span><button type="button" onclick="claimQuest(2)">Nhận 150💰</button></div>
+<div class="item"><span>🔬 Nghiên cứu 1 công nghệ <span class="rarity" id="q3">0/1</span></span><button type="button" onclick="claimQuest(3)">Nhận 2💎</button></div>
 </div>
 
 <div class="panel">
@@ -222,7 +222,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="stat">⚔️ Bonus: <b id="legionBonus">0%</b></div>
 <div class="stat">🎁 Thưởng cấp: <b id="legionReward">100</b>💰</div>
 </div>
-<button style="width:100%;margin-top:7px" onclick="upgradeLegion()">⬆️ Nâng quân đoàn • 2💎</button>
+<button type="button" style="width:100%;margin-top:7px" onclick="upgradeLegion()">⬆️ Nâng quân đoàn • 2💎</button>
 </div>
 </section>
 
@@ -239,8 +239,8 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="card">
 <h3 id="bossName">🐉 Cự Long Biên Ải</h3>
 <p>Boss càng mạnh sau mỗi lần bị đánh bại. Gây đủ sát thương để nhận chiến lợi phẩm.</p>
-<button type="button" onclick="attackBoss()">⚔️ Đánh Boss</button>
-<button type="button" onclick="bossSkill()" style="margin-top:6px">⚡ Đại chiêu</button>
+<button type="button" type="button" onclick="attackBoss()">⚔️ Đánh Boss</button>
+<button type="button" type="button" onclick="bossSkill()" style="margin-top:6px">⚡ Đại chiêu</button>
 </div>
 </div>
 
@@ -262,7 +262,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="stat">✨ EXP: <b id="guildXp">0</b></div>
 <div class="stat">⚔️ Bonus: <b id="guildPower">0%</b></div>
 </div>
-<button style="width:100%;margin-top:7px" onclick="upgradeGuild16()">⬆️ Nâng bang hội • 3💎</button>
+<button type="button" style="width:100%;margin-top:7px" onclick="upgradeGuild16()">⬆️ Nâng bang hội • 3💎</button>
 </div>
 </section>
 <section id="campaign" class="view">
@@ -278,7 +278,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <h3 id="stageTitle">Ải 1 • Cửa ngõ Đại Việt</h3>
 <p id="stageText">Đánh bại quân địch để mở khóa ải tiếp theo. Mỗi ải có 3 sao.</p>
 <div class="progress"><i id="campaignBar"></i></div>
-<button onclick="campaignBattle()">⚔️ Tiến công ải</button>
+<button type="button" onclick="campaignBattle()">⚔️ Tiến công ải</button>
 </div>
 </div>
 
@@ -290,8 +290,8 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 Cấp <b id="commanderLevel2">1</b> • Uy tín <b id="commanderPrestige">0</b></div>
 </div>
 <div class="grid" style="margin-top:7px">
-<button onclick="trainCommander()">📚 Huấn luyện • 180💰</button>
-<button onclick="upgradeGuild()">🏳️ Nâng liên minh • 2💎</button>
+<button type="button" onclick="trainCommander()">📚 Huấn luyện • 180💰</button>
+<button type="button" onclick="upgradeGuild()">🏳️ Nâng liên minh • 2💎</button>
 </div>
 </div>
 
@@ -316,15 +316,15 @@ Cấp <b id="commanderLevel2">1</b> • Uy tín <b id="commanderPrestige">0</b><
 </div>
 <div class="card" style="margin-top:7px">
 <h3>🟢 Đồng bằng</h3><p>Đất màu mỡ, tăng sản lượng lương thực.</p>
-<button onclick="claimLand('delta')">Khai phá • 180🌾 80💰</button>
+<button type="button" onclick="claimLand('delta')">Khai phá • 180🌾 80💰</button>
 </div>
 <div class="card" style="margin-top:7px">
 <h3>🟤 Biên ải</h3><p>Khó chiếm nhưng tăng sắt và sức mạnh.</p>
-<button onclick="claimLand('border')">Chinh phục • 180🌾 120⛏️</button>
+<button type="button" onclick="claimLand('border')">Chinh phục • 180🌾 120⛏️</button>
 </div>
 <div class="card" style="margin-top:7px">
 <h3>🔵 Cảng biển</h3><p>Tăng vàng theo chu kỳ và giao thương.</p>
-<button onclick="claimLand('port')">Mở cảng • 250🪵 150💰</button>
+<button type="button" onclick="claimLand('port')">Mở cảng • 250🪵 150💰</button>
 </div>
 </div>
 </div>
@@ -332,10 +332,10 @@ Cấp <b id="commanderLevel2">1</b> • Uy tín <b id="commanderPrestige">0</b><
 <div class="panel">
 <div class="title">🤝 Ngoại giao</div>
 <div class="grid">
-<button onclick="diplomacyAction('peace')">🕊️ Cầu hòa</button>
-<button onclick="diplomacyAction('trade')">💰 Mở giao thương</button>
-<button onclick="diplomacyAction('ally')">🤝 Kết minh</button>
-<button onclick="diplomacyAction('war')">🔥 Tuyên chiến</button>
+<button type="button" onclick="diplomacyAction('peace')">🕊️ Cầu hòa</button>
+<button type="button" onclick="diplomacyAction('trade')">💰 Mở giao thương</button>
+<button type="button" onclick="diplomacyAction('ally')">🤝 Kết minh</button>
+<button type="button" onclick="diplomacyAction('war')">🔥 Tuyên chiến</button>
 </div>
 <div class="info" style="margin-top:7px">Quan hệ ngoại giao ảnh hưởng phần thưởng và sức mạnh khi giao chiến.</div>
 </div>
@@ -345,20 +345,21 @@ Cấp <b id="commanderLevel2">1</b> • Uy tín <b id="commanderPrestige">0</b><
 <div class="card">
 <h3 id="eventTitle">Chưa có sự kiện</h3>
 <p id="eventText">Mỗi lần bấm sẽ xuất hiện một biến cố ngẫu nhiên.</p>
-<button onclick="randomEvent()">🎲 Gặp sự kiện</button>
+<button type="button" onclick="randomEvent()">🎲 Gặp sự kiện</button>
 </div>
 </div>
 </section>
 <div class="panel"><div class="title">📜 Nhật ký</div><div class="log" id="log"></div></div>
 </main>
 <nav class="bottom">
-<button onclick="collect()">🌾 Thu hoạch</button><button onclick="collectTax()">💰 Thu thuế</button><button onclick="saveGame()">💾 Lưu</button><button onclick="resetGame()">🔄 Chơi lại</button>
+<button type="button" onclick="collect()">🌾 Thu hoạch</button><button type="button" onclick="collectTax()">💰 Thu thuế</button><button type="button" onclick="saveGame()">💾 Lưu</button><button type="button" onclick="resetGame()">🔄 Chơi lại</button>
 </nav>
 </div>
 
 <script>
 const KEY="daiviet_chienky_11";
-let s=JSON.parse(localStorage.getItem(KEY)||"null");
+let s=null;
+try{s=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){s=null;}
 function normalizeState(x){
  x=x||{};
  x.city2=x.city2||{level:1,houses:10,happiness:70};
@@ -478,7 +479,7 @@ function battle(hard=false){if(army()<5){log("Cần ít nhất 5 quân.");return
 function collect(){s.quests.harvest=(s.quests.harvest||0)+1;let f=(50+s.farm*25)*(1+s.tech.food*.10),w=30+s.farm*8,i=(15+s.forge*12)*(1+s.tech.iron*.10),g=(10+s.market*8+s.port*12)*(1+s.tech.economy*.10);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);gainCity(25);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()}
 function collectTax(){let g=35+s.cityLevel*25+s.market*15+s.port*20;s.gold=cap(s.gold+g);s.food=cap(s.food+15);gainCity(20);log("💰 Thu thuế +"+g+"💰.");render();save()}
 function dailyReward(){if(s.daily){log("🎁 Đã nhận thưởng hôm nay.");return}s.daily=true;s.gold=cap(s.gold+120);s.food=cap(s.food+50);gainXp(25);log("🎁 Nhận thưởng ngày.");render();save()}
-function renderAchievements(){let a=[["first","⚔️ Trận đầu tiên",s.wins>=1,80],["warrior","🏆 5 chiến thắng",s.wins>=5,150],["city","🏯 Thành cấp 2",s.cityLevel>=2,200],["rich","💰 1000 vàng",s.gold>=1000,200],["hero","👑 Tướng cấp 3",s.heroLevel>=3,250]];document.getElementById("achievements").innerHTML=a.map(x=>`<div class="item"><span>${x[2]?"✅":"🔒"} ${x[1]}</span><button ${x[2]&&!s.ach[x[0]]?"":"disabled"} onclick="claimAch('${x[0]}',${x[3]})">+${x[3]}💰</button></div>`).join("")}
+function renderAchievements(){let a=[["first","⚔️ Trận đầu tiên",s.wins>=1,80],["warrior","🏆 5 chiến thắng",s.wins>=5,150],["city","🏯 Thành cấp 2",s.cityLevel>=2,200],["rich","💰 1000 vàng",s.gold>=1000,200],["hero","👑 Tướng cấp 3",s.heroLevel>=3,250]];document.getElementById("achievements").innerHTML=a.map(x=>`<div class="item"><span>${x[2]?"✅":"🔒"} ${x[1]}</span><button type="button" ${x[2]&&!s.ach[x[0]]?"":"disabled"} onclick="claimAch('${x[0]}',${x[3]})">+${x[3]}💰</button></div>`).join("")}
 function claimAch(id,g){s.ach[id]=1;s.gold=cap(s.gold+g);gainXp(30);log("🏆 Nhận thưởng thành tựu.");render();save()}
 
 function claimLand(type){
@@ -684,13 +685,16 @@ function defeatBoss(){
  render();save();
 }
 function upgradeGuild16(){
-
  if(s.gems<3){log("Cần 3💎.");return}
- s.gems-=3;s.guild.level++;s.guild.members+=5;s.guild.xp=0;s.fame+=20;gainXp(50);
+ s.gems-=3;
+ s.guild.level++;
+ s.guild.members+=5;
+ s.guild.xp=0;
+ s.fame+=20;
+ gainXp(50);
  log("🏳️ Bang hội lên cấp "+s.guild.level+"! Thành viên +5.");
- render();save()
+ render();save();
 }
-
 function saveGame(){save();log("💾 Đã lưu Bản 1.6.")}
 function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 1.6?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Đại Việt Chiến Ký - Bản 0.6</title>
+<title>Đại Việt Chiến Ký - Bản 0.7</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#182516;color:#fff}
@@ -15,31 +15,26 @@ header{background:#352313;border-bottom:2px solid #aa793e;padding:8px 9px calc(7
 h1{text-align:center;margin:0;color:#ffd86b;font-size:19px}
 .sub{text-align:center;color:#d9c69e;font-size:10px;margin:2px 0 7px}
 .resources{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.res{background:#4b321c;border:1px solid #806038;border-radius:9px;text-align:center;padding:5px 2px;font-size:11px}
-.res b{display:block;color:#ffe08a;font-size:13px}
+.res{background:#4b321c;border:1px solid #806038;border-radius:9px;text-align:center;padding:5px 2px;font-size:11px}.res b{display:block;color:#ffe08a;font-size:13px}
 main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#6c8549,#425f35 48%,#263c29)}
 .panel{background:rgba(31,27,18,.95);border:1px solid #a77c42;border-radius:15px;padding:9px;margin-bottom:8px}
 .title{font-weight:900;color:#ffd66b;margin-bottom:7px;font-size:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.card,.stat{background:#3b2b1b;border-radius:10px;padding:8px}
-.card h3{font-size:13px;margin:0 0 4px;color:#ffe08a}
-.card p{font-size:11px;margin:3px 0 7px;color:#d8cfbd;line-height:1.35}
-.card button{width:100%;font-size:11px;padding:9px}
-.stat{font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.card,.stat{background:#3b2b1b;border-radius:10px;padding:8px}
+.card h3{font-size:13px;margin:0 0 4px;color:#ffe08a}.card p{font-size:11px;margin:3px 0 7px;color:#d8cfbd;line-height:1.35}.card button{width:100%;font-size:11px;padding:9px}.stat{font-size:12px}
 .info{font-size:12px;color:#d9d0bd;line-height:1.45}
-.good{color:#8fe38c}.bad{color:#ff9184}.gold{color:#ffd34d}
-#map{height:330px;position:relative;overflow:hidden;border-radius:13px;border:2px solid #b58b4e;background:#536f42}
+#map{height:340px;position:relative;overflow:hidden;border-radius:13px;border:2px solid #b58b4e;background:#536f42}
 .river{position:absolute;background:#4f91a5;width:24px;height:130%;left:47%;top:-15%;transform:rotate(12deg);opacity:.75}
-.road{position:absolute;background:#9c8554;height:15px;width:120%;left:-10%;top:54%;transform:rotate(-8deg);opacity:.8}
-.road2{position:absolute;background:#9c8554;height:10px;width:95%;left:2%;top:29%;transform:rotate(35deg);opacity:.65}
-.node{position:absolute;width:60px;height:60px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:800;border:2px solid #d7b36d;box-shadow:0 3px 7px #172012;z-index:4}
-.node strong{font-size:21px}.castle{background:#6d4122}.village{background:#58673a}.enemy{background:#6d2722}.mine{background:#4a4a45}.neutral{background:#725c32}
+.road{position:absolute;background:#9c8554;height:14px;width:125%;left:-12%;top:54%;transform:rotate(-8deg);opacity:.8}
+.road2{position:absolute;background:#9c8554;height:9px;width:95%;left:2%;top:29%;transform:rotate(35deg);opacity:.65}
+.node{position:absolute;width:58px;height:58px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:9px;font-weight:800;border:2px solid #d7b36d;box-shadow:0 3px 7px #172012;z-index:4}
+.node strong{font-size:20px}.castle{background:#6d4122}.village{background:#58673a}.enemy{background:#6d2722}.mine{background:#4a4a45}.neutral{background:#725c32}.ally{background:#305d68}
 .selected{outline:3px solid #ffe07a;transform:scale(1.05)}
-.locked{filter:grayscale(.7);opacity:.6}
 #armyToken{position:absolute;width:42px;height:42px;border-radius:50%;background:#1c5b35;border:3px solid #e7cf75;display:flex;align-items:center;justify-content:center;font-size:23px;z-index:8;transition:left .35s,top .35s}
-#battleInfo{margin-top:6px}
+#enemyToken{position:absolute;width:40px;height:40px;border-radius:50%;background:#7d2b25;border:3px solid #e8a06b;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:7;transition:left .45s,top .45s}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
 .bar{height:7px;background:#211910;border-radius:8px;overflow:hidden;margin:5px 0}.bar i{display:block;height:100%;background:#b83d31}
 .log{max-height:90px;overflow:auto;font-size:11px;line-height:1.5;color:#d6cdbb}
+.good{color:#8fe38c}.bad{color:#ff9184}.gold{color:#ffd34d}
 .bottom{position:fixed;left:0;right:0;bottom:0;background:#27190e;border-top:1px solid #8e693a;padding:7px max(7px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
 .bottom button{font-size:11px;padding:10px 3px}
 </style>
@@ -48,7 +43,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#6c854
 <div id="app">
 <header>
 <h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 0.6 • Lãnh thổ • Nhiều thành • Chiếm cứ điểm</div>
+<div class="sub">Bản 0.7 • Liên minh • Địch chiếm đất • Chiến tranh lãnh thổ</div>
 <div class="resources">
 <div class="res">🌾<b id="food">0</b></div><div class="res">🪵<b id="wood">0</b></div>
 <div class="res">⛏️<b id="iron">0</b></div><div class="res">💰<b id="gold">0</b></div>
@@ -56,167 +51,146 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#6c854
 </header>
 <main>
 <section class="panel">
-<div class="title">🗺️ Bản đồ Lãnh thổ Đại Việt</div>
+<div class="title">🗺️ Bản đồ chiến tranh</div>
 <div id="map">
 <div class="river"></div><div class="road"></div><div class="road2"></div>
-<div class="node castle" data-type="capital" style="left:8%;top:59%" onclick="selectNode('capital')"><strong>🏯</strong>Thành Đông</div>
-<div class="node village" data-type="village" style="left:40%;top:10%" onclick="selectNode('village')"><strong>🏘️</strong>Làng Việt</div>
-<div class="node mine" data-type="mine" style="left:66%;top:59%" onclick="selectNode('mine')"><strong>⛏️</strong>Mỏ sắt</div>
-<div class="node enemy" data-type="enemy" style="left:72%;top:12%" onclick="selectNode('enemy')"><strong>👹</strong>Đồn địch</div>
-<div class="node neutral" data-type="fort" style="left:35%;top:63%" onclick="selectNode('fort')"><strong>🏰</strong>Pháo đài</div>
-<div class="node neutral" data-type="port" style="left:12%;top:15%" onclick="selectNode('port')"><strong>⚓</strong>Bến cảng</div>
-<div id="armyToken">⚔️</div>
+<div class="node castle" data-type="capital" style="left:7%;top:59%" onclick="selectNode('capital')"><strong>🏯</strong>Thành Đông</div>
+<div class="node village" data-type="village" style="left:39%;top:9%" onclick="selectNode('village')"><strong>🏘️</strong>Làng Việt</div>
+<div class="node mine" data-type="mine" style="left:65%;top:60%" onclick="selectNode('mine')"><strong>⛏️</strong>Mỏ sắt</div>
+<div class="node enemy" data-type="enemy" style="left:72%;top:11%" onclick="selectNode('enemy')"><strong>👹</strong>Đồn địch</div>
+<div class="node neutral" data-type="fort" style="left:34%;top:63%" onclick="selectNode('fort')"><strong>🏰</strong>Pháo đài</div>
+<div class="node ally" data-type="ally" style="left:10%;top:10%" onclick="selectNode('ally')"><strong>🤝</strong>Minh hữu</div>
+<div class="node enemy" data-type="enemy2" style="left:73%;top:63%" onclick="selectNode('enemy2')"><strong>🔥</strong>Đồn Bắc</div>
+<div id="armyToken">⚔️</div><div id="enemyToken">👹</div>
 </div>
 <div class="info" id="selection" style="text-align:center;margin-top:5px"></div>
-<div class="grid" style="margin-top:7px">
-<button onclick="moveArmy()">⚔️ Di chuyển</button><button onclick="attack()">🔥 Tấn công</button>
-<button onclick="capturePoint()">🚩 Chiếm cứ điểm</button><button onclick="switchCity()">🏯 Đổi thành</button>
-</div>
-<div id="battleInfo" class="info"></div>
+<div class="actions"><button onclick="moveArmy()">⚔️ Di chuyển</button><button onclick="attack()">🔥 Tấn công</button></div>
+<div class="actions"><button onclick="capturePoint()">🚩 Chiếm đất</button><button onclick="defend()">🛡️ Phòng thủ</button></div>
 </section>
 
 <section class="panel">
-<div class="title">🏯 Các thành trì</div>
+<div class="title">🤝 Liên minh Đại Việt</div>
 <div class="grid">
-<div class="card"><h3>🏯 Thành Đông</h3><p>Thủ phủ • Cấp <b id="cityLevel">1</b> • Phòng thủ <b id="defense">100</b></p><button onclick="upgradeCity()">Nâng thành</button></div>
-<div class="card"><h3>🏰 Pháo đài Tây</h3><p id="fortStatus">Chưa chiếm • Chiếm để mở sản lượng sắt.</p><button onclick="captureFromCard('fort')">Chiếm Pháo đài</button></div>
-<div class="card"><h3>⚓ Bến cảng</h3><p id="portStatus">Chưa chiếm • Tăng vàng theo thời gian.</p><button onclick="captureFromCard('port')">Chiếm Bến cảng</button></div>
-<div class="card"><h3>👑 Lãnh thổ</h3><p>Đã kiểm soát: <b id="territory">1</b> / 6</p><button onclick="collectTerritory()">Thu thuế lãnh thổ</button></div>
+<div class="card"><h3>🟦 Hội Lam Sơn</h3><p id="allyText">Chưa liên minh. Nhận +5% sức mạnh khi kết giao.</p><button id="allyBtn" onclick="joinAlliance()">🤝 Kết giao • 150💰</button></div>
+<div class="card"><h3>📈 Danh vọng</h3><p>Danh vọng: <b id="fame">0</b> • Cấp liên minh: <b id="allianceLevel">1</b></p><button onclick="upgradeAlliance()">Nâng liên minh • 200💰</button></div>
 </div>
 </section>
 
 <section class="panel">
-<div class="title">⚔️ Quân đội & Tướng</div>
+<div class="title">🚩 Lãnh thổ</div>
 <div class="grid">
-<div class="stat">🛡️ Quân: <b id="army">0</b></div><div class="stat">💪 Sức mạnh: <b id="power">0</b></div>
-<div class="stat">🏆 Thắng: <b id="wins">0</b></div><div class="stat">👑 Tướng cấp: <b id="hero">1</b></div>
+<div class="stat">Kiểm soát: <b id="territory">1</b>/7</div><div class="stat">Địch kiểm soát: <b id="enemyTerritory">2</b></div>
+<div class="stat">🛡️ Phòng thủ: <b id="defense">100</b></div><div class="stat">⚔️ Sức mạnh: <b id="power">0</b></div>
 </div>
-<div class="actions" style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px">
-<button onclick="recruit()">🛡️ Tuyển 10</button><button onclick="trainHero()">👑 Huấn luyện</button>
-</div>
+<div class="info" id="warStatus" style="margin-top:7px"></div>
 </section>
 
 <section class="panel">
-<div class="title">📜 Nhật ký</div><div class="log" id="log"></div>
+<div class="title">👑 Quân đội</div>
+<div class="grid">
+<div class="stat">🛡️ Quân: <b id="army">0</b></div><div class="stat">🏆 Thắng: <b id="wins">0</b></div>
+<div class="stat">👑 Tướng: Cấp <b id="hero">1</b></div><div class="stat">⭐ Kinh nghiệm: <b id="xp">0</b></div>
+</div>
+<div class="actions"><button onclick="recruit()">🛡️ Tuyển 10</button><button onclick="trainHero()">👑 Huấn luyện</button></div>
+</section>
+
+<section class="panel">
+<div class="title">📜 Nhật ký chiến tranh</div><div class="log" id="log"></div>
 </section>
 </main>
 <nav class="bottom">
-<button onclick="collect()">🌾 Thu hoạch</button><button onclick="collectTerritory()">💰 Thu thuế</button><button onclick="saveGame()">💾 Lưu</button><button onclick="resetGame()">🔄 Chơi lại</button>
+<button onclick="collect()">🌾 Thu hoạch</button><button onclick="collectTax()">💰 Thu thuế</button><button onclick="saveGame()">💾 Lưu</button><button onclick="resetGame()">🔄 Chơi lại</button>
 </nav>
 </div>
 
 <script>
-const KEY="daiviet_chienky_06";
+const KEY="daiviet_chienky_07";
 let s=JSON.parse(localStorage.getItem(KEY)||"null");
 if(!s){
- const old=JSON.parse(localStorage.getItem("daiviet_chienky_05")||localStorage.getItem("daiviet_chienky_04")||localStorage.getItem("daiviet_chienky_03")||localStorage.getItem("daiviet_chienky_02")||localStorage.getItem("daiviet_chienky_01")||"null");
+ const old=JSON.parse(localStorage.getItem("daiviet_chienky_06")||localStorage.getItem("daiviet_chienky_05")||localStorage.getItem("daiviet_chienky_04")||localStorage.getItem("daiviet_chienky_03")||"null");
  s=old?{
-  ...old,heroLevel:old.heroLevel||1,territory:old.territory||1,fort:false,port:false,ownedCities:1,
-  currentCity:"capital",position:old.position||"capital",selected:old.selected||"capital",
-  enemyPower:old.enemyPower||170,logs:["• Đã chuyển tiến trình lên Bản 0.6."]
+  ...old,alliance:false,allianceLevel:1,enemyTerritory:2,defenseMode:false,
+  enemy2Power:210,warTurn:0,position:old.position||"capital",selected:old.selected||"capital",
+  logs:["• Đã chuyển tiến trình lên Bản 0.7."]
  }:{
   food:500,wood:500,iron:250,gold:300,army:20,xp:0,wins:0,farm:0,barracks:0,
-  cityLevel:1,storage:1000,population:100,heroLevel:1,territory:1,fort:false,port:false,ownedCities:1,
-  currentCity:"capital",position:"capital",selected:"capital",enemyPower:170,
-  logs:["• Đại Việt Chiến Ký Bản 0.6 bắt đầu."]
+  cityLevel:1,storage:1000,population:100,heroLevel:1,territory:1,fame:0,
+  alliance:false,allianceLevel:1,enemyTerritory:2,fort:false,port:false,
+  enemyPower:180,enemy2Power:210,defenseMode:false,warTurn:0,
+  position:"capital",selected:"capital",logs:["• Đại Việt Chiến Ký Bản 0.7 bắt đầu."]
  };
 }
 const nodes={
- capital:{name:"Thành Đông",x:8,y:59},village:{name:"Làng Việt",x:40,y:10},mine:{name:"Mỏ sắt",x:66,y:59},
- enemy:{name:"Đồn địch",x:72,y:12},fort:{name:"Pháo đài Tây",x:35,y:63},port:{name:"Bến cảng",x:12,y:15}
+ capital:{name:"Thành Đông",x:7,y:59},village:{name:"Làng Việt",x:39,y:9},mine:{name:"Mỏ sắt",x:65,y:60},
+ enemy:{name:"Đồn địch",x:72,y:11},fort:{name:"Pháo đài",x:34,y:63},ally:{name:"Minh hữu",x:10,y:10},enemy2:{name:"Đồn Bắc",x:73,y:63}
 };
-function maxStorage(){return s.storage+s.cityLevel*250}
+function maxStorage(){return (s.storage||1000)+(s.cityLevel||1)*250}
 function cap(v){return Math.min(maxStorage(),Math.floor(v))}
-function power(){return Math.floor((s.army*5+(s.barracks||0)*18+(s.archers||0)*3)*(1+s.heroLevel*.2)*(1+(s.territory-1)*.03))}
+function power(){return Math.floor((s.army*5+(s.barracks||0)*18+(s.archers||0)*3)*(1+s.heroLevel*.2)*(1+(s.territory-1)*.03)*(s.alliance?1+s.allianceLevel*.05:1))}
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
-function log(v){s.logs.push("• "+v);if(s.logs.length>35)s.logs.shift();save();render()}
+function log(v){s.logs.push("• "+v);if(s.logs.length>40)s.logs.shift();save();render()}
 function render(){
- ["food","wood","iron","gold","army","wins","hero"].forEach(k=>{const e=document.getElementById(k);if(e)e.textContent=Math.floor(k==="hero"?s.heroLevel:s[k]||0)});
- document.getElementById("power").textContent=power();
- document.getElementById("cityLevel").textContent=s.cityLevel;
- document.getElementById("defense").textContent=100+s.cityLevel*45+(s.barracks||0)*12;
- document.getElementById("territory").textContent=s.territory;
- document.getElementById("fortStatus").textContent=s.fort?"ĐÃ CHIẾM • +sắt theo thời gian.":"Chưa chiếm • Chiếm để mở sản lượng sắt.";
- document.getElementById("portStatus").textContent=s.port?"ĐÃ CHIẾM • +vàng theo thời gian.":"Chưa chiếm • Chiếm để mở sản lượng vàng.";
+ ["food","wood","iron","gold","army","wins","hero","xp","fame","territory","enemyTerritory","allianceLevel","power"].forEach(k=>{const e=document.getElementById(k);if(e)e.textContent=Math.floor(k==="hero"?s.heroLevel:(s[k]||0))});
+ document.getElementById("defense").textContent=100+(s.cityLevel||1)*45+(s.barracks||0)*12+(s.defenseMode?80:0);
+ document.getElementById("allyText").textContent=s.alliance?"Đã liên minh • +"+(s.allianceLevel*5)+"% sức mạnh.":"Chưa liên minh. Nhận +5% sức mạnh khi kết giao.";
+ document.getElementById("allyBtn").disabled=s.alliance;document.getElementById("allyBtn").textContent=s.alliance?"✅ Đã liên minh":"🤝 Kết giao • 150💰";
+ document.getElementById("warStatus").textContent=s.defenseMode?"🛡️ Đang phòng thủ Thành Đông. Mỗi chu kỳ giảm nguy cơ bị địch chiếm.":"⚠️ Chiến tranh đang diễn ra. Địch có thể phản công sau mỗi chu kỳ.";
  document.querySelectorAll(".node").forEach(e=>e.classList.toggle("selected",e.dataset.type===s.selected));
- const p=nodes[s.position],a=document.getElementById("armyToken");
- a.style.left="calc("+p.x+"% + 9px)";a.style.top="calc("+p.y+"% + 9px)";
- document.getElementById("selection").textContent="📍 "+nodes[s.selected].name+" • Quân: "+nodes[s.position].name;
- document.getElementById("battleInfo").textContent=s.selected==="enemy"?"👹 Địch hiện có khoảng "+s.enemyPower+" sức mạnh.":"";
+ const p=nodes[s.position],a=document.getElementById("armyToken");a.style.left="calc("+p.x+"% + 8px)";a.style.top="calc("+p.y+"% + 8px)";
+ const ep=nodes.enemy2,et=document.getElementById("enemyToken");et.style.left="calc("+ep.x+"% + 8px)";et.style.top="calc("+ep.y+"% + 8px)";
+ document.getElementById("selection").textContent="📍 "+nodes[s.selected].name+" • Quân đang ở: "+nodes[s.position].name;
  document.getElementById("log").innerHTML=s.logs.slice(-10).reverse().map(v=>"<div>"+v+"</div>").join("");
 }
-function saveGame(){save();log("Đã lưu Bản 0.6.")}
+function saveGame(){save();log("Đã lưu Bản 0.7.")}
 function selectNode(t){s.selected=t;render()}
+function joinAlliance(){if(s.alliance)return;if(s.gold<150){log("Không đủ vàng.");return}s.gold-=150;s.alliance=true;s.fame+=30;log("🤝 Hội Lam Sơn đã trở thành đồng minh của Đại Việt.");render();save()}
+function upgradeAlliance(){if(!s.alliance){log("Hãy kết giao liên minh trước.");return}const c=200+s.allianceLevel*100;if(s.gold<c){log("Không đủ vàng.");return}s.gold-=c;s.allianceLevel++;s.fame+=20;log("🟦 Liên minh lên cấp "+s.allianceLevel+"!");render();save()}
 function moveArmy(){
  if(s.selected===s.position){log("Quân đã ở địa điểm này.");return}
- if(s.selected==="fort"&&!s.fort){log("🚩 Hãy chiếm Pháo đài sau khi đưa quân tới.");}
  s.position=s.selected;
  if(s.position==="village"){s.food=cap(s.food+50);s.gold=cap(s.gold+20);log("🏘️ Đến Làng: +50🌾 +20💰.")}
- else if(s.position==="mine"){s.iron=cap(s.iron+30);log("⛏️ Đến Mỏ: +30 sắt.")}
- else if(s.position==="port"&&s.port){s.gold=cap(s.gold+60);log("⚓ Bến cảng đã thuộc Đại Việt: +60💰.")}
- else if(s.position==="fort"&&s.fort){s.iron=cap(s.iron+40);log("🏰 Pháo đài cung cấp +40⛏️.")}
- else if(s.position==="enemy")log("👹 Đã áp sát Đồn địch.");
+ else if(s.position==="mine"){s.iron=cap(s.iron+30);log("⛏️ Đến Mỏ: +30⛏️.")}
+ else if(s.position==="ally"){log("🤝 Đã tới vùng Minh hữu. Có thể kết giao liên minh.")}
+ else if(s.position==="enemy"||s.position==="enemy2"){log("👹 Đã áp sát vùng địch. Sẵn sàng chiến đấu.")}
+ else if(s.position==="fort"){log("🏰 Đã tới Pháo đài. Có thể chiếm cứ điểm.")}
  else log("🏯 Quân trở về Thành Đông.");
  render();save()
 }
 function capturePoint(){
- if(!["fort","port"].includes(s.position)){log("Hãy di chuyển tới Pháo đài hoặc Bến cảng.");return}
- if((s.position==="fort"&&s.fort)||(s.position==="port"&&s.port)){log("Cứ điểm này đã thuộc Đại Việt.");return}
- if(s.army<12){log("Cần ít nhất 12 quân để chiếm cứ điểm.");return}
- const loss=Math.max(1,Math.floor(s.army*.08));s.army-=loss;
- if(s.position==="fort")s.fort=true;else s.port=true;
- s.territory++;s.ownedCities++;s.fame=(s.fame||0)+25;
- log("🚩 Chiếm thành công "+nodes[s.position].name+"! Mất "+loss+" quân.");
- render();save()
+ if(!["fort","enemy","enemy2"].includes(s.position)){log("Hãy tới Pháo đài hoặc vùng địch để chiếm đất.");return}
+ if(s.army<12){log("Cần ít nhất 12 quân để chiếm đất.");return}
+ const loss=Math.max(1,Math.floor(s.army*.08));s.army-=loss;s.territory++;
+ if(s.position==="enemy"||s.position==="enemy2"){s.enemyTerritory=Math.max(0,s.enemyTerritory-1);s.gold=cap(s.gold+100);s.fame+=30;log("🚩 Chiếm đất địch thành công! Mất "+loss+" quân, +100💰.")}
+ else{s.fame+=25;log("🚩 Chiếm Pháo đài! Mất "+loss+" quân.")}
+ s.position="capital";s.selected="capital";render();save()
 }
-function captureFromCard(t){s.selected=t;s.position=t;capturePoint()}
 function attack(){
- if(s.position!=="enemy"){s.selected="enemy";log("Hãy di chuyển quân tới Đồn địch.");render();return}
+ if(!["enemy","enemy2"].includes(s.position)){s.selected="enemy";log("Hãy di chuyển quân tới vùng địch.");render();return}
  if(s.army<5){log("Không đủ quân.");return}
- const my=power(),enemy=s.enemyPower;
+ const enemy=s.position==="enemy"?s.enemyPower:s.enemy2Power,my=power();
  if(my+Math.random()*35-17>=enemy){
-  const loss=Math.max(1,Math.floor(s.army*(.05+Math.random()*.09)));
-  s.army=Math.max(1,s.army-loss);s.wins++;s.xp+=60;s.gold=cap(s.gold+120);s.iron=cap(s.iron+45);s.enemyPower+=20;
-  log("🎉 Đại Việt thắng trận! Mất "+loss+" quân, nhận +120💰 +45⛏️.");
+  const loss=Math.max(1,Math.floor(s.army*(.05+Math.random()*.09)));s.army=Math.max(1,s.army-loss);s.wins++;s.xp+=70;s.gold=cap(s.gold+130);s.iron=cap(s.iron+45);s.fame+=15;
+  log("🎉 THẮNG! Mất "+loss+" quân, nhận +130💰 +45⛏️.");if(s.position==="enemy")s.enemyPower+=20;else s.enemy2Power+=25;
  }else{
-  const loss=Math.max(3,Math.floor(s.army*(.14+Math.random()*.15)));
-  s.army=Math.max(1,s.army-loss);s.xp+=20;log("⚠️ Bại trận! Mất "+loss+" quân.");
+  const loss=Math.max(3,Math.floor(s.army*(.15+Math.random()*.15)));s.army=Math.max(1,s.army-loss);s.xp+=20;log("⚠️ Bại trận! Mất "+loss+" quân.");
  }
  s.position="capital";s.selected="capital";render();save()
 }
-function recruit(){
- const limit=50+(s.barracks||0)*20+s.cityLevel*15+s.territory*10;
- if(s.army+10>limit){log("⚠️ Quân số đạt giới hạn. Nâng Doanh trại hoặc chiếm lãnh thổ.");return}
- if(s.food<100||s.gold<40){log("Không đủ 🌾 hoặc 💰.");return}
- s.food-=100;s.gold-=40;s.army+=10;log("🛡️ Tuyển 10 bộ binh.");render();save()
-}
+function defend(){s.defenseMode=!s.defenseMode;log(s.defenseMode?"🛡️ Bật chế độ phòng thủ.":"⚔️ Hủy chế độ phòng thủ.");render();save()}
+function recruit(){const limit=50+(s.barracks||0)*20+(s.cityLevel||1)*15+s.territory*10;if(s.army+10>limit){log("⚠️ Quân số đạt giới hạn.");return}if(s.food<100||s.gold<40){log("Không đủ 🌾 hoặc 💰.");return}s.food-=100;s.gold-=40;s.army+=10;log("🛡️ Tuyển 10 bộ binh.");render();save()}
 function trainHero(){if(s.gold<120){log("Không đủ vàng.");return}s.gold-=120;s.heroLevel++;log("👑 Tướng lên cấp "+s.heroLevel+".");render();save()}
-function collect(){
- const f=50+(s.farm||0)*20,w=30+(s.farm||0)*8,i=10+(s.ironMine||0)*7+(s.fort?20:0),g=10+s.cityLevel*2+(s.port?20:0);
- s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);
- log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()
-}
-function collectTerritory(){
- const g=30+s.territory*25+(s.port?30:0),f=20+s.territory*10;
- s.gold=cap(s.gold+g);s.food=cap(s.food+f);log("💰 Thu thuế lãnh thổ: +"+g+"💰 +"+f+"🌾.");render();save()
-}
-function upgradeCity(){
- const lv=s.cityLevel,c={food:200+lv*120,wood:150+lv*100,iron:80+lv*60,gold:80+lv*50};
- if(s.food<c.food||s.wood<c.wood||s.iron<c.iron||s.gold<c.gold){log("Không đủ tài nguyên nâng Thành.");return}
- s.food-=c.food;s.wood-=c.wood;s.iron-=c.iron;s.gold-=c.gold;s.cityLevel++;s.population+=50;s.storage+=250;
- log("🏯 Thành Đông lên cấp "+s.cityLevel+"!");render();save()
-}
-function switchCity(){
- if(!s.fort&&!s.port){log("Chưa có thành phụ để đổi.");return}
- if(s.currentCity==="capital"){s.currentCity=s.fort?"fort":"port";log("🏯 Chuyển quản lý sang "+nodes[s.currentCity].name+".")}
- else{s.currentCity="capital";log("🏯 Trở về quản lý Thành Đông.")}
- render();save()
-}
-function resetGame(){if(confirm("Xóa tiến trình Bản 0.6?")){localStorage.removeItem(KEY);location.reload()}}
+function collect(){const f=50+(s.farm||0)*20,w=30+(s.farm||0)*8,i=10+(s.ironMine||0)*7+(s.fort?20:0),g=10+(s.cityLevel||1)*2+(s.port?20:0);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()}
+function collectTax(){const g=30+s.territory*25+(s.port?30:0)+(s.alliance?10:0),f=20+s.territory*10;s.gold=cap(s.gold+g);s.food=cap(s.food+f);log("💰 Thu thuế: +"+g+"💰 +"+f+"🌾.");render();save()}
+function resetGame(){if(confirm("Xóa tiến trình Bản 0.7?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{
- s.food=cap(s.food+(s.farm||0)*2);s.wood=cap(s.wood+(s.farm||0));
- s.iron=cap(s.iron+Math.floor((s.barracks||0)/2)+(s.fort?2:0));
- s.gold=cap(s.gold+Math.floor(s.cityLevel/2)+(s.port?3:0));
+ s.food=cap(s.food+(s.farm||0)*2);s.wood=cap(s.wood+(s.farm||0));s.iron=cap(s.iron+Math.floor((s.barracks||0)/2)+(s.fort?2:0));s.gold=cap(s.gold+Math.floor((s.cityLevel||1)/2)+(s.port?3:0));
+ s.warTurn++;
+ if(s.warTurn>=3){
+  s.warTurn=0;
+  const chance=s.defenseMode?.08:.20;
+  if(Math.random()<chance&&s.enemyTerritory>0){s.enemyTerritory++;s.territory=Math.max(1,s.territory-1);s.fame=Math.max(0,s.fame-5);log("⚠️ Quân địch phản công và chiếm một vùng lãnh thổ!");}
+  else if(s.alliance&&Math.random()<.35){s.fame+=5;log("🤝 Đồng minh hỗ trợ biên giới: +5 danh vọng.");}
+ }
  render();save()
 },10000);
 render();

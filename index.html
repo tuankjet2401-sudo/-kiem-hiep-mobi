@@ -70,8 +70,26 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div id="status">🔴 Offline · Chế độ local</div>
 
 <div id="classModal" class="modal"><button class="close" onclick="closeM('classModal')">×</button><h1>🥋 Chọn Môn Phái Nổi Bật</h1><div class="card">Đang chọn: <b id="selName">Võ Đang</b><br><small id="selDesc"></small></div><div id="classes" class="classes"></div><button class="action" onclick="confirmClass()">⚔️ Chọn môn phái này</button></div>
-<div id="actModal" class="modal"><button class="close" onclick="closeM('actModal')">×</button><h1>🏆 Hoạt động kinh điển</h1><div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚔️ Đã đăng ký Tống Kim')">Tham gia</button></div><div class="card">🥋 Liên Đấu<br><button class="action" onclick="toast('🥋 Đã đăng ký Liên Đấu')">Tham gia</button></div><div class="card">👑 Săn Boss Hoàng Kim<br><button class="action" onclick="toast('👑 Đã đăng ký săn Boss')">Tham gia</button></div></div>
-<div id="comModal" class="modal"><button class="close" onclick="closeM('comModal')">×</button><h1>👥 Cộng đồng giang hồ</h1><div class="card">🏯 Bang hội chiến · <b>Thiên Kiếm</b><br>Điểm bang: <b id="gs">1,280</b><br><button class="action" onclick="guild()">⚔️ Đăng ký</button></div><div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚙️ Phe Kim')">Phe Kim</button> <button class="action" onclick="toast('🏯 Phe Tống')">Phe Tống</button></div><div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." style="width:70%;padding:9px;border-radius:9px"><button class="action" onclick="sendChat()">Gửi</button></div></div>
+<div id="actModal" class="modal">
+<button class="close" onclick="closeM('actModal')">×</button>
+<h1>🏆 Hoạt động kinh điển</h1>
+<div class="card">⚔️ Tống Kim<br><small>Chiến trường phe phái.</small><br><button class="action" onclick="toast('⚔️ Đã đăng ký Tống Kim')">Tham gia</button></div>
+<div class="card">🥋 Liên Đấu<br><small>Đối kháng 1v1.</small><br><button class="action" onclick="toast('🥋 Đã đăng ký Liên Đấu')">Tham gia</button></div>
+<div class="card">👑 Săn Boss Hoàng Kim<br><small>Săn boss nhận đồ hiếm.</small><br><button class="action" onclick="toast('👑 Đã đăng ký săn Boss')">Tham gia</button></div>
+<div class="card">🏯 Vượt Ải<br><small>Đánh quái qua từng cửa ải.</small><br><button class="action" onclick="toast('🏯 Đã đăng ký Vượt Ải')">Tham gia</button></div>
+<div class="card">⚔️ Chiến Bang<br><small>Bang hội tranh tài.</small><br><button class="action" onclick="toast('⚔️ Đã đăng ký Chiến Bang')">Tham gia</button></div>
+<div class="card">🐉 Bí Cảnh Hoàng Kim<br><small>Phó bản tổ đội.</small><br><button class="action" onclick="toast('🐉 Đã vào Bí Cảnh')">Tham gia</button></div>
+</div>
+<div id="comModal" class="modal">
+<button class="close" onclick="closeM('comModal')">×</button>
+<h1>👥 Cộng đồng giang hồ</h1>
+<div class="card">🏯 Bang hội chiến · <b>Thiên Kiếm</b><br>Điểm bang: <b id="gs">1,280</b><br><button class="action" onclick="guild()">⚔️ Đăng ký</button></div>
+<div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚙️ Đã chọn phe Kim')">Phe Kim</button> <button class="action" onclick="toast('🏯 Đã chọn phe Tống')">Phe Tống</button></div>
+<div class="card">🤝 Tổ đội<br><small>Tìm đồng đội cùng cấp.</small><br><button class="action" onclick="toast('🤝 Đã tìm tổ đội')">Tìm đội</button></div>
+<div class="card">📢 Kênh thế giới<br><small>Trao đổi với người chơi.</small></div>
+<div class="card">💱 Giao dịch<br><small>Mở giao dịch với người chơi gần đó.</small><br><button class="action" onclick="toast('💱 Chế độ giao dịch đã mở')">Giao dịch</button></div>
+<div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." style="width:70%;padding:9px;border-radius:9px"><button class="action" onclick="sendChat()">Gửi</button></div>
+</div>
 
 <div id="questModal" class="modal">
 <button class="close" onclick="closeM('questModal')">×</button>
@@ -415,7 +433,20 @@ function toast(t){let q=document.getElementById("msg");q.textContent=t;q.style.d
 function closeM(id){document.getElementById(id).style.display="none"}
 function openM(id){document.getElementById(id).style.display="block"}
 function hud(){let z=cls[pc];document.getElementById("cl").textContent=pc;document.getElementById("el").textContent=icons[z[6]]+" "+z[6];document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("hp").textContent=Math.round(P.hp)+"/220";document.getElementById("mp").textContent=Math.round(P.mp)+"/60";document.getElementById("xp").textContent=exp+"/600";document.getElementById("gold").textContent=gold;document.getElementById("hpbar").style.width=P.hp/220*100+"%";document.getElementById("mpbar").style.width=P.mp/60*100+"%";document.getElementById("xpbar").style.width=exp/600*100+"%";document.getElementById("atk").textContent=P.atk+equip.weapon.a+z[4]}
-function classes(){let g=document.getElementById("classes");g.innerHTML="";for(let n in cls){let q=cls[n];let e=document.createElement("div");e.className="class"+(n==pending?" sel":"");e.innerHTML=`<div class=icon>${q[0]}</div><b>${n}</b><div class=ct>${q[1]}</div><div class=desc>${q[2]}<br>${q[3]}</div>`;e.onclick=()=>{pending=n;classes();sel()};g.appendChild(e)}}
+const featuredClasses=["Thiếu Lâm","Thiên Vương","Võ Đang","Nga Mi","Đường Môn","Ngũ Độc","Côn Lôn Đao","Côn Lôn Kiếm","Cái Bang Chưởng","Cái Bang Bổng"];
+function classes(){
+  let g=document.getElementById("classes");
+  g.innerHTML="";
+  for(const n of featuredClasses){
+    const q=cls[n];
+    if(!q) continue;
+    let e=document.createElement("div");
+    e.className="class"+(n==pending?" sel":"");
+    e.innerHTML=`<div class=icon>${q[0]}</div><b>${n}</b><div class=ct>${q[1]}</div><div class=desc>${q[2]}<br>${q[3]}</div>`;
+    e.onclick=()=>{pending=n;classes();sel()};
+    g.appendChild(e);
+  }
+}
 function sel(){let z=cls[pending];document.getElementById("selName").textContent=pending;document.getElementById("selDesc").textContent=z[2]+" · "+z[3]}
 function confirmClass(){pc=pending;toast(cls[pc][0]+" Đã chọn "+pc);closeM("classModal");hud()}
 function itemPower(i){return(i?.en||0)*3}
@@ -484,16 +515,37 @@ x.beginPath();x.roundRect(P.x-52,P.y-82,104,20,8);x.fill();
 x.fillStyle="#fff";x.font="bold 12px sans-serif";
 x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-68);x.restore()}
 
+function canvasToWorld(clientX,clientY){
+  return {
+    x:(clientX-W/2)/Z+cam.x,
+    y:(clientY-H/2)/Z+cam.y
+  };
+}
+function handleNpcTap(clientX,clientY){
+  const pos=canvasToWorld(clientX,clientY);
+  let hitNpc=null,bd=155;
+  for(const n of npcs){
+    const dd=Math.hypot(pos.x-n.x,pos.y-n.y);
+    if(dd<bd){bd=dd;hitNpc=n}
+  }
+  if(!hitNpc)return false;
+  openNpcQuest(hitNpc);
+  return true;
+}
+c.addEventListener("pointerdown",e=>{
+  if(e.pointerType==="mouse" || e.pointerType==="touch" || e.pointerType==="pen"){
+    if(handleNpcTap(e.clientX,e.clientY)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+},{passive:false});
 c.addEventListener("touchstart",e=>{
   const t=e.touches[0]; if(!t)return;
-  const sx=(t.clientX-W/2)/Z+(cam.x), sy=(t.clientY-H/2)/Z+(cam.y);
-  let hitNpc=null,bd=105;
-  for(const n of npcs){const dd=Math.hypot(sx-n.x,sy-n.y);if(dd<bd){bd=dd;hitNpc=n}}
-  if(hitNpc){
-    if(npcDistance(hitNpc)<=150) openNpcQuest(hitNpc);
-    else toast("💬 Hãy đến gần "+hitNpc.name);
+  if(handleNpcTap(t.clientX,t.clientY)){
+    e.preventDefault();
   }
-},{passive:true});
+},{passive:false});
 
 function update(dt){let dx=joy.x,dy=joy.y,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
 let living=mobs.filter(m=>m.alive);

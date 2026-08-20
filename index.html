@@ -6,7 +6,7 @@
 <meta name="game-version" content="4.12.5">
 <meta name="game-protocol" content="4.12.5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.5 · Kênh thế giới</title>
+<title>Kiếm Thế Mobi – Bản 4.12.5 · Nghệ Thuật Làng Quê</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -99,7 +99,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div class="card">🤝 Tổ đội<br><small>Tìm đồng đội cùng cấp.</small><br><button class="action" onclick="registerCommunity('Tổ đội')">Tìm đội</button></div>
 <div class="card">📢 Kênh thế giới<br><small>Trao đổi với người chơi.</small></div>
 <div class="card">💱 Giao dịch<br><small>Mở giao dịch với người chơi gần đó.</small><br><button class="action" onclick="registerCommunity('Giao dịch')">Giao dịch</button></div>
-<div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." id="worldInput" type="text" autocomplete="off" enterkeyhint="send" style="width:70%;padding:9px;border-radius:9px;touch-action:manipulation;position:relative;z-index:100"><button id="worldSend" type="button" class="action" style="position:relative;z-index:101;touch-action:manipulation;pointer-events:auto">Gửi</button></div>
+<div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." style="width:70%;padding:9px;border-radius:9px"><button class="action" onclick="sendChat()">Gửi</button></div>
 </div>
 
 <div id="questModal" class="modal">
@@ -420,27 +420,24 @@ function checkNpcHint(){
 }
 
 function drawNpc(n){
-  const near=npcDistance(n)<150;
-  const mainNpc=n.service==="class"||n.service==="activity"||n.service==="community";
+  const near=npcDistance(n)<150,mainNpc=n.service==="class"||n.service==="activity"||n.service==="community";
+  const t=performance.now()/1000,wind=Math.sin(t*2+n.x*.01)*3;
   x.save();
-  if(near || mainNpc){
-    x.strokeStyle=n.color+"bb"; x.lineWidth=mainNpc?4:3;
-    x.beginPath();x.arc(n.x,n.y,(mainNpc?40:35)+Math.sin(performance.now()/220)*2,0,Math.PI*2);x.stroke();
-  }
+  if(near||mainNpc){x.strokeStyle=n.color+"bb";x.lineWidth=mainNpc?4:3;x.beginPath();x.arc(n.x,n.y,(mainNpc?40:35)+Math.sin(t*3)*2,0,7);x.stroke()}
+  x.fillStyle="#00000035";x.beginPath();x.ellipse(n.x,n.y+57,35,10,0,0,7);x.fill();
+  if(["general","potion","storage"].includes(n.service)){x.fillStyle="#9a6b3b";x.fillRect(n.x-34,n.y+5,12,28);x.strokeStyle="#d2a66b";x.strokeRect(n.x-36,n.y+3,16,31)}
+  if(n.service==="horse"){x.font="22px sans-serif";x.fillText("🐴",n.x+31,n.y+25)}
+  if(n.service==="weapon"){x.font="21px sans-serif";x.fillText("⚒️",n.x+30,n.y+25)}
+  x.fillStyle=n.color+"dd";x.beginPath();x.moveTo(n.x-23,n.y+40);x.lineTo(n.x,n.y-8);x.lineTo(n.x+25,n.y+40);x.lineTo(n.x+wind,n.y+55);x.lineTo(n.x-12,n.y+55);x.closePath();x.fill();
   x.fillStyle="#f0d2b4";x.beginPath();x.arc(n.x,n.y-30,16,0,7);x.fill();
-  x.fillStyle=n.color+"dd";x.beginPath();
-  x.moveTo(n.x-23,n.y+40);x.lineTo(n.x,n.y-8);x.lineTo(n.x+25,n.y+40);x.lineTo(n.x,n.y+55);x.closePath();x.fill();
-  x.font="26px sans-serif";x.textAlign="center";x.fillText(n.icon,n.x,n.y-46);
-  const label=`${n.name}`;
-  x.font="bold 10px sans-serif";
-  const tw=Math.min(x.measureText(label).width+10,118);
-  x.fillStyle="#071016df";x.beginPath();x.roundRect(n.x-tw/2,n.y-72,tw,17,7);x.fill();
-  x.fillStyle="#fff";x.fillText(label,n.x,n.y-60);
-  x.font="9px sans-serif";x.fillStyle="#ffd978";
-  x.fillText(n.service?("🏪 "+n.title):"📜 Nhiệm vụ",n.x,n.y+64);
+  x.fillStyle="#3a2a22";x.beginPath();x.arc(n.x,n.y-40,14,Math.PI,7);x.fill();
+  x.fillStyle="#d8bc72";x.beginPath();x.moveTo(n.x-23,n.y-39);x.quadraticCurveTo(n.x,n.y-53,n.x+23,n.y-39);x.quadraticCurveTo(n.x,n.y-34,n.x-23,n.y-39);x.fill();
+  x.font="26px sans-serif";x.textAlign="center";x.fillText(n.icon,n.x,n.y-48);
+  const label=n.name;x.font="bold 10px sans-serif";const tw=Math.min(x.measureText(label).width+12,140);
+  x.fillStyle="#071016e8";x.beginPath();x.roundRect(n.x-tw/2,n.y-76,tw,18,7);x.fill();x.fillStyle="#fff";x.fillText(label,n.x,n.y-63);
+  x.font="9px sans-serif";x.fillStyle="#ffd978";x.fillText(n.service?("🏪 "+n.title):"📜 Nhiệm vụ",n.x,n.y+68);
   x.restore();
 }
-
 function toast(t){let q=document.getElementById("msg");q.textContent=t;q.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>q.style.display="none",1100)}
 function closeM(id){document.getElementById(id).style.display="none"}
 function openM(id){document.getElementById(id).style.display="block"}
@@ -516,13 +513,43 @@ const joy={x:0,y:0,on:false},je=document.getElementById("joy"),st=document.getEl
 function joySet(t){let r=je.getBoundingClientRect(),dx=t.clientX-r.left-r.width/2,dy=t.clientY-r.top-r.height/2,l=r.width*.36,d=Math.hypot(dx,dy);if(d>l){dx*=l/d;dy*=l/d}joy.x=dx/l;joy.y=dy/l;st.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`}
 function joyEnd(){joy.x=joy.y=0;joy.on=false;st.style.transform="translate(-50%,-50%)"}
 je.addEventListener("touchstart",e=>{joy.on=true;joySet(e.touches[0])},{passive:true});je.addEventListener("touchmove",e=>joy.on&&joySet(e.touches[0]),{passive:true});je.addEventListener("touchend",joyEnd,{passive:true});
-function drawTree(a,b){x.fillStyle="#704a30";x.fillRect(a-8,b+25,16,45);x.fillStyle="#285d37";x.beginPath();x.arc(a,b,56,0,7);x.fill();x.fillStyle="#347447";x.beginPath();x.arc(a-18,b-18,34,0,7);x.fill()}
-function drawPlayer(a,b){let z=cls[pc];x.strokeStyle=z[5];x.lineWidth=3;x.beginPath();x.arc(a,b,40+Math.sin(performance.now()/180)*3,0,7);x.stroke();if(cape){x.fillStyle=z[5]+"88";x.beginPath();x.moveTo(a-30,b+8);x.quadraticCurveTo(a,b+40,a+30,b+8);x.lineTo(a+18,b+55);x.lineTo(a-18,b+55);x.closePath();x.fill()}x.fillStyle="#f0d2b4";x.beginPath();x.arc(a,b-30,17,0,7);x.fill();x.fillStyle="#f5f1e4";x.beginPath();x.moveTo(a-23,b+42);x.lineTo(a,b-7);x.lineTo(a+27,b+42);x.lineTo(a,b+57);x.closePath();x.fill()}
+function drawTree(a,b){
+  x.fillStyle="#6a432b";x.fillRect(a-9,b+24,18,52);
+  x.fillStyle="#8a5a35";x.fillRect(a-4,b+25,7,48);
+  x.fillStyle="#1f5532";x.beginPath();x.arc(a,b,59,0,7);x.fill();
+  x.fillStyle="#2f7041";x.beginPath();x.arc(a-22,b-18,38,0,7);x.fill();
+  x.fillStyle="#4c8b4b";x.beginPath();x.arc(a+21,b-12,31,0,7);x.fill();
+  x.fillStyle="#78a95a";x.globalAlpha=.55;x.beginPath();x.arc(a-15,b-30,13,0,7);x.fill();x.globalAlpha=1;
+}
+function drawPlayer(a,b){
+  let z=cls[pc],t=performance.now()/1000,wind=Math.sin(t*2.2)*4;
+  x.strokeStyle=z[5]+"88";x.lineWidth=3;x.beginPath();x.arc(a,b,40+Math.sin(t*4)*3,0,7);x.stroke();
+  x.fillStyle="#00000035";x.beginPath();x.ellipse(a,b+57,39,11,0,0,7);x.fill();
+  if(cape){x.fillStyle=z[5]+"66";x.beginPath();x.moveTo(a-31,b+7);x.quadraticCurveTo(a+wind,b+35,a+33,b+8);x.lineTo(a+20+wind,b+58);x.lineTo(a-22,b+58);x.closePath();x.fill();x.strokeStyle=z[5]+"aa";x.stroke()}
+  x.fillStyle="#f5f1e4";x.beginPath();x.moveTo(a-25,b+42);x.lineTo(a,b-8);x.lineTo(a+28,b+42);x.lineTo(a,b+60);x.closePath();x.fill();
+  x.fillStyle=z[5]+"aa";x.beginPath();x.moveTo(a,b-8);x.lineTo(a+28,b+42);x.lineTo(a+8,b+45);x.closePath();x.fill();
+  x.strokeStyle="#d9c7aa";x.lineWidth=7;x.beginPath();x.moveTo(a-10,b+6);x.lineTo(a-29+wind,b+28);x.moveTo(a+10,b+6);x.lineTo(a+30+wind,b+25);x.stroke();
+  x.fillStyle="#f0d2b4";x.beginPath();x.arc(a,b-31,18,0,7);x.fill();
+  x.fillStyle="#3b2a23";x.beginPath();x.arc(a,b-42,15,Math.PI,7);x.fill();
+  x.fillStyle="#d8bc72";x.beginPath();x.moveTo(a-26,b-42);x.quadraticCurveTo(a,b-57,a+26,b-42);x.quadraticCurveTo(a,b-36,a-26,b-42);x.fill();
+  x.strokeStyle="#9b7a3c";x.lineWidth=1;x.stroke();
+  x.strokeStyle="#e6e8ef";x.lineWidth=3;x.beginPath();x.moveTo(a+27,b+17);x.lineTo(a+43,b-8);x.stroke();
+}
+function drawVillageDecor(){
+  const t=performance.now()/1000;
+  x.fillStyle="#c5a85d";for(let r=0;r<5;r++){let yy=980+r*48;x.fillRect(760,yy,420,28)}
+  x.strokeStyle="#e5d27d";x.lineWidth=2;for(let r=0;r<5;r++)for(let i=0;i<15;i++){let xx=775+i*27,yy=992+r*48;x.beginPath();x.moveTo(xx,yy+18);x.lineTo(xx+4,yy-2);x.moveTo(xx+4,yy+18);x.lineTo(xx+9,yy+3);x.stroke()}
+  x.globalAlpha=.18;for(let i=0;i<4;i++){let yy=690-i*28+Math.sin(t+i)*5;x.fillStyle="#eee4cc";x.beginPath();x.arc(1160+i*8,yy,18+i*2,0,7);x.fill()}x.globalAlpha=1;
+  x.fillStyle="#9d713e";x.beginPath();x.roundRect(1210,1050,45,34,9);x.fill();x.strokeStyle="#d5ae6c";x.stroke();
+  x.fillStyle="#9b5c32";x.beginPath();x.arc(1300,1080,13,0,7);x.arc(1316,1080,10,0,7);x.fill();x.fillStyle="#d3b067";x.fillRect(1300,1063,7,8);
+  for(let i=0;i<18;i++){let xx=(i*347+performance.now()/40)%world.w,yy=520+(i*97)%800;x.fillStyle="#f7e79b";x.globalAlpha=.35+.3*Math.sin(t*3+i);x.beginPath();x.arc(xx,yy,2.5,0,7);x.fill()}x.globalAlpha=1;
+}
+
 function draw(){x.clearRect(0,0,W,H);x.fillStyle="#32683d";x.fillRect(0,0,W,H);x.save();x.translate(W/2,H/2);x.scale(Z,Z);x.translate(-cam.x,-cam.y);
 x.strokeStyle="#ffffff12";for(let a=0;a<world.w;a+=160){x.beginPath();x.moveTo(a,0);x.lineTo(a,world.h);x.stroke()}for(let b=0;b<world.h;b+=160){x.beginPath();x.moveTo(0,b);x.lineTo(world.w,b);x.stroke()}
 x.fillStyle="#3f91bd";x.beginPath();x.moveTo(0,1650);x.bezierCurveTo(600,1500,1000,1850,1500,1720);x.bezierCurveTo(2200,1600,2700,1800,3200,1700);x.lineTo(3200,2400);x.lineTo(0,2400);x.closePath();x.fill();
 x.fillStyle="#b49a68";x.beginPath();x.moveTo(0,1850);x.quadraticCurveTo(800,1450,1600,1700);x.quadraticCurveTo(2400,1950,3200,1500);x.lineTo(3200,1760);x.quadraticCurveTo(2300,2150,1600,1950);x.quadraticCurveTo(700,1750,0,2100);x.closePath();x.fill();
-x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
+drawVillageDecor();x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
 x.strokeStyle="#d9c56a88";x.lineWidth=4;x.setLineDash([16,12]);
 x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 22px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
 npcs.forEach(drawNpc);
@@ -585,7 +612,7 @@ function handleNpcTap(clientX,clientY){
     const dx=clientX-s.x;
     const dy=clientY-s.y;
     const d=Math.hypot(dx,dy);
-    if(d<90 && d<best){
+    if(d<105 && d<best){
       best=d;
       hitNpc=n;
     }
@@ -596,7 +623,7 @@ function handleNpcTap(clientX,clientY){
     const pos=canvasToWorld(clientX,clientY);
     for(const n of npcs){
       const d=Math.hypot(pos.x-n.x,pos.y-n.y);
-      if(d<170 && d<best){
+      if(d<190 && d<best){
         best=d;
         hitNpc=n;
       }
@@ -692,33 +719,13 @@ for(let i=drops.length-1;i>=0;i--)if(Math.hypot(P.x-drops[i].x,P.y-drops[i].y)<7
 }hud()}
 function tele(where){let q=where=="city"?city:town;P.x=q.x;P.y=q.y;cam.x=P.x;cam.y=P.y;closeM("teleModal");toast("🌀 Đã dịch chuyển")}
 function guild(){let q=Number(document.getElementById("gs").textContent.replace(",",""))+50;document.getElementById("gs").textContent=q.toLocaleString("en-US");toast("🏯 Đã đăng ký chiến bang")}
-let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];
-function renderChat(){const box=document.getElementById("chat");box.innerHTML=chat.map(v=>"<div style=\"padding:4px 0\">"+v+"</div>").join("");box.scrollTop=box.scrollHeight}
-function sendChat(){
-  const i=document.getElementById("worldInput"),v=(i.value||"").trim();
-  if(!v){toast("📢 Hãy nhập tin nhắn");i.focus();return false}
-  chat.push("Thiếu Hiệp: "+v);
-  i.value="";
-  renderChat();
-  document.getElementById("quickChatText").textContent="Thiếu Hiệp: "+v;
-  document.getElementById("quickChat").style.display="block";
-  toast("🌎 Đã gửi: "+v);
-  return false;
-}
-function bindWorldChat(){
-  const btn=document.getElementById("worldSend"),input=document.getElementById("worldInput");
-  if(!btn||!input)return;
-  btn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();sendChat()},{passive:false});
-  btn.addEventListener("pointerup",e=>{if(e.pointerType==="touch"){e.preventDefault();e.stopPropagation();sendChat()}},{passive:false});
-  input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
-}
-
+let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];function renderChat(){document.getElementById("chat").innerHTML=chat.map(v=>"<div>"+v+"</div>").join("")}function sendChat(){let i=document.getElementById("input"),v=i.value.trim();if(v){chat.push("Thiếu Hiệp: "+v);i.value="";renderChat();toast("🌎 Đã gửi")}}
 
 document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};document.getElementById("classBtn").onclick=()=>openM("classModal");document.getElementById("actBtn").onclick=()=>openM("actModal");document.getElementById("comBtn").onclick=()=>{renderChat();openM("comModal")};document.getElementById("teleBtn").onclick=()=>openM("teleModal");
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();renderQuestTracker();renderChat();bindWorldChat();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Kênh thế giới";
+classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Đại Việt Chiến Ký - Bản 1.4</title>
+<title>Đại Việt Chiến Ký - Bản 1.5</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#171f14;color:#fff}
@@ -26,7 +26,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 .card p{font-size:11px;margin:3px 0 7px;color:#d8cfbd;line-height:1.35}
 .card button{width:100%;font-size:11px;padding:9px}
 .stat{font-size:12px}.info{font-size:12px;color:#d9d0bd;line-height:1.45}
-.tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
+.tabs{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:8px}
 .tabs button{font-size:11px;padding:9px 3px;background:#52331c}
 .tabs button.on{background:#9a5e29;color:#ffe69a}
 .view{display:none}.view.on{display:block}
@@ -48,7 +48,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div id="app">
 <header>
 <h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 1.4 • Thành phố • Tướng • Công nghệ • PvE</div>
+<div class="sub">Bản 1.5 • Võ đài • Nhiệm vụ • Quân đoàn • Phần thưởng</div>
 <div class="resources">
 <div class="res">🌾<b id="food">0</b></div><div class="res">🪵<b id="wood">0</b></div>
 <div class="res">⛏️<b id="iron">0</b></div><div class="res">💰<b id="gold">0</b></div>
@@ -59,7 +59,7 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <button id="t-city" class="on" onclick="tab('city')">🏯 Thành</button>
 <button id="t-hero" onclick="tab('hero')">👑 Tướng</button>
 <button id="t-shop" onclick="tab('shop')">🏪 Đồ</button>
-<button id="t-ach" onclick="tab('ach')">🏆 Thành tựu</button><button id="t-map" onclick="tab('map')">🗺️ Bản đồ</button><button id="t-campaign" onclick="tab('campaign')">🏹 Chiến dịch</button><button id="t-city2" onclick="tab('city2')">🏙️ Thành phố</button><button id="t-tech" onclick="tab('tech')">🔬 Công nghệ</button>
+<button id="t-ach" onclick="tab('ach')">🏆 Thành tựu</button><button id="t-map" onclick="tab('map')">🗺️ Bản đồ</button><button id="t-campaign" onclick="tab('campaign')">🏹 Chiến dịch</button><button id="t-city2" onclick="tab('city2')">🏙️ Thành phố</button><button id="t-tech" onclick="tab('tech')">🔬 Công nghệ</button><button id="t-arena" onclick="tab('arena')">🏟️ Võ đài</button>
 </div>
 
 <section id="city" class="view on">
@@ -190,6 +190,41 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 </div>
 </div>
 </section>
+
+<section id="arena" class="view">
+<div class="panel">
+<div class="title">🏟️ Võ đài Đại Việt</div>
+<div class="grid">
+<div class="stat">🏅 Xếp hạng: <b id="arenaRating">1000</b></div>
+<div class="stat">🏆 Thắng: <b id="arenaWins">0</b></div>
+<div class="stat">💀 Thua: <b id="arenaLosses">0</b></div>
+<div class="stat">⚔️ Quân lực: <b id="arenaPower">0</b></div>
+</div>
+<div class="card" style="margin-top:7px">
+<h3>⚔️ Đấu hạng</h3>
+<p>Gặp một đối thủ ngẫu nhiên. Thắng nhận vàng, ngọc và điểm xếp hạng.</p>
+<button onclick="arenaBattle()">⚔️ Khiêu chiến</button>
+</div>
+</div>
+
+<div class="panel">
+<div class="title">📜 Nhiệm vụ ngày</div>
+<div class="item"><span>⚔️ Thắng 1 trận <span class="rarity" id="q1">0/1</span></span><button onclick="claimQuest(1)">Nhận 100💰</button></div>
+<div class="item"><span>🌾 Thu hoạch 3 lần <span class="rarity" id="q2">0/3</span></span><button onclick="claimQuest(2)">Nhận 150💰</button></div>
+<div class="item"><span>🔬 Nghiên cứu 1 công nghệ <span class="rarity" id="q3">0/1</span></span><button onclick="claimQuest(3)">Nhận 2💎</button></div>
+</div>
+
+<div class="panel">
+<div class="title">🛡️ Quân đoàn</div>
+<div class="grid">
+<div class="stat">🏳️ Cấp: <b id="legionLevel">1</b></div>
+<div class="stat">✨ EXP: <b id="legionXp">0</b></div>
+<div class="stat">⚔️ Bonus: <b id="legionBonus">0%</b></div>
+<div class="stat">🎁 Thưởng cấp: <b id="legionReward">100</b>💰</div>
+</div>
+<button style="width:100%;margin-top:7px" onclick="upgradeLegion()">⬆️ Nâng quân đoàn • 2💎</button>
+</div>
+</section>
 <section id="campaign" class="view">
 <div class="panel">
 <div class="title">🏹 Chiến dịch Đại Việt</div>
@@ -286,14 +321,14 @@ const KEY="daiviet_chienky_11";
 let s=JSON.parse(localStorage.getItem(KEY)||"null");
 if(!s){
  const old=JSON.parse(localStorage.getItem("daiviet_chienky_10")||localStorage.getItem("daiviet_chienky_09")||null);
- s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,logs:["• Đã chuyển tiến trình lên Bản 1.4."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,logs:["• Đại Việt Chiến Ký Bản 1.4 bắt đầu."]};
+ s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},logs:["• Đã chuyển tiến trình lên Bản 1.5."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},logs:["• Đại Việt Chiến Ký Bản 1.5 bắt đầu."]};
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
 function log(v){s.logs.push("• "+v);if(s.logs.length>50)s.logs.shift();save();render()}
 function cap(v){return Math.min(1000+s.cityLevel*300,Math.max(0,Math.floor(v)))}
 function army(){return s.infantry+s.archers+s.cavalry+s.elephants}
 function equipBonus(){return (s.sword?35:0)+(s.bow?30:0)+(s.shield?10:0)}
-function power(){let p=s.infantry*5+s.archers*8+s.cavalry*9+s.elephants*35+(s.barracks||0)*18+equipBonus();p*=1+s.heroLevel*.20;p*=1+(s.territory-1)*.03;p*=1+s.tech.army*.08;if(s.seal)p*=1.12;if(s.heroSkill==="warcry")p*=1.2;return Math.floor(p)}
+function power(){let p=s.infantry*5+s.archers*8+s.cavalry*9+s.elephants*35+(s.barracks||0)*18+equipBonus();p*=1+s.heroLevel*.20;p*=1+(s.territory-1)*.03;p*=1+s.tech.army*.08;p*=1+s.legion.level*.04;if(s.seal)p*=1.12;if(s.heroSkill==="warcry")p*=1.2;return Math.floor(p)}
 function defense(){return 100+s.cityLevel*45+(s.barracks||0)*12+(s.shield?25:0)}
 function xpNeed(){return 100+s.level*100}
 function cityNeed(){return 400+s.cityLevel*300}
@@ -308,7 +343,18 @@ function render(){
  document.getElementById("heroRarity").textContent=s.heroTier>=4?"Sử thi":s.heroTier>=3?"Hiếm":s.heroTier>=2?"Tốt":"Thường";
  document.getElementById("sword").textContent=s.sword?"Đã trang bị":"Chưa có";document.getElementById("shield").textContent=s.shield?"Đã trang bị":"Chưa có";
  document.getElementById("bow").textContent=s.bow?"Đã trang bị":"Chưa có";document.getElementById("seal").textContent=s.seal?"Đã trang bị":"Chưa có";
- document.getElementById("city2Level").textContent=s.city2.level;
+ document.getElementById("arenaRating").textContent=s.arena.rating;
+ document.getElementById("arenaWins").textContent=s.arena.wins;
+ document.getElementById("arenaLosses").textContent=s.arena.losses;
+ document.getElementById("arenaPower").textContent=power();
+ document.getElementById("legionLevel").textContent=s.legion.level;
+ document.getElementById("legionXp").textContent=s.legion.xp;
+ document.getElementById("legionBonus").textContent=(s.legion.level*4)+"%";
+ document.getElementById("legionReward").textContent=s.legion.level*100;
+ document.getElementById("q1").textContent=(s.arena.wins>0?1:0)+"/1";
+ document.getElementById("q2").textContent=(s.quests.harvest||0)+"/3";
+ document.getElementById("q3").textContent=(s.quests.research||0)+"/1";
+document.getElementById("city2Level").textContent=s.city2.level;
  document.getElementById("houses").textContent=s.city2.houses;
  document.getElementById("happiness").textContent=s.city2.happiness;
  document.getElementById("population2").textContent=s.population+s.city2.houses*5;
@@ -349,7 +395,7 @@ function recruit(t){let d={infantry:[10,100,0,40],archers:[5,80,0,60],cavalry:[5
 function buyItem(t){let ok=true;if(t==="sword"){if(s.sword||s.gold<140)ok=false;else{s.gold-=140;s.sword=true}}if(t==="shield"){if(s.shield||s.gold<110)ok=false;else{s.gold-=110;s.shield=true}}if(t==="bow"){if(s.bow||s.gold<150)ok=false;else{s.gold-=150;s.bow=true}}if(t==="seal"){if(s.seal||s.gems<3)ok=false;else{s.gems-=3;s.seal=true}}if(t==="potion"){if(s.gold<80)ok=false;else{s.gold-=80;s.potion++}}if(!ok){log("Không đủ tiền hoặc vật phẩm đã có.");return}gainXp(12);log("🏪 Mua vật phẩm thành công.");render();save()}
 function removeLoss(n){while(n>0&&army()>1){let ks=["infantry","archers","cavalry","elephants"].sort((a,b)=>s[b]-s[a]),k=ks.find(x=>s[x]>0);if(!k)break;s[k]--;n--}}
 function battle(hard=false){if(army()<5){log("Cần ít nhất 5 quân.");return}let enemy=hard?230:190,my=power(),chance=my/(my+enemy),win=Math.random()<Math.min(.92,Math.max(.12,chance));let loss=Math.max(1,Math.floor(army()*(win?.06:.15)));if(s.heroSkill==="formation")loss=Math.floor(loss*.8);removeLoss(Math.min(army()-1,loss));if(win){s.wins++;s.gold=cap(s.gold+150+(hard?60:0));s.iron=cap(s.iron+50);gainXp(100);gainCity(50);s.fame+=20;log("🏆 THẮNG trận! Mất "+loss+" quân.");}else{gainXp(30);log("⚠️ Thất bại! Mất "+loss+" quân.")}s.heroSkill="none";render();save()}
-function collect(){let f=(50+s.farm*25)*(1+s.tech.food*.10),w=30+s.farm*8,i=(15+s.forge*12)*(1+s.tech.iron*.10),g=(10+s.market*8+s.port*12)*(1+s.tech.economy*.10);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);gainCity(25);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()}
+function collect(){s.quests.harvest=(s.quests.harvest||0)+1;let f=(50+s.farm*25)*(1+s.tech.food*.10),w=30+s.farm*8,i=(15+s.forge*12)*(1+s.tech.iron*.10),g=(10+s.market*8+s.port*12)*(1+s.tech.economy*.10);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);gainCity(25);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()}
 function collectTax(){let g=35+s.cityLevel*25+s.market*15+s.port*20;s.gold=cap(s.gold+g);s.food=cap(s.food+15);gainCity(20);log("💰 Thu thuế +"+g+"💰.");render();save()}
 function dailyReward(){if(s.daily){log("🎁 Đã nhận thưởng hôm nay.");return}s.daily=true;s.gold=cap(s.gold+120);s.food=cap(s.food+50);gainXp(25);log("🎁 Nhận thưởng ngày.");render();save()}
 function renderAchievements(){let a=[["first","⚔️ Trận đầu tiên",s.wins>=1,80],["warrior","🏆 5 chiến thắng",s.wins>=5,150],["city","🏯 Thành cấp 2",s.cityLevel>=2,200],["rich","💰 1000 vàng",s.gold>=1000,200],["hero","👑 Tướng cấp 3",s.heroLevel>=3,250]];document.getElementById("achievements").innerHTML=a.map(x=>`<div class="item"><span>${x[2]?"✅":"🔒"} ${x[1]}</span><button ${x[2]&&!s.ach[x[0]]?"":"disabled"} onclick="claimAch('${x[0]}',${x[3]})">+${x[3]}💰</button></div>`).join("")}
@@ -464,12 +510,49 @@ function researchTech(type){
  if(current>=5){log("🔬 Công nghệ này đã đạt cấp tối đa.");return}
  const cost=120+current*100;
  if(s.iron<cost){log("Cần "+cost+"⛏️ để nghiên cứu.");return}
- s.iron-=cost;s.tech[type]=current+1;gainXp(35);
+ s.iron-=cost;s.tech[type]=current+1;s.quests.research=(s.quests.research||0)+1;gainXp(35);
  log("🔬 Nghiên cứu thành công: "+type+" cấp "+s.tech[type]+".");render();save()
 }
 
-function saveGame(){save();log("💾 Đã lưu Bản 1.4.")}
-function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 1.4?")){localStorage.removeItem(KEY);location.reload()}}
+
+function arenaBattle(){
+ if(army()<8){log("🏟️ Cần ít nhất 8 quân.");return}
+ const enemy=power()*(0.75+Math.random()*0.55);
+ const my=power()*(1+s.legion.level*.04);
+ const win=Math.random()<Math.min(.9,Math.max(.1,my/(my+enemy)));
+ const loss=Math.max(1,Math.floor(army()*(win?.05:.12)));
+ removeLoss(Math.min(army()-1,loss));
+ if(win){
+   s.arena.wins++;s.arena.rating+=20;s.gold=cap(s.gold+120);s.gems+=1;
+   s.legion.xp+=45;gainXp(70);s.fame+=15;
+   log("🏟️ THẮNG võ đài! +20🏅 +120💰 +1💎.");
+ }else{
+   s.arena.losses++;s.arena.rating=Math.max(0,s.arena.rating-15);
+   s.legion.xp+=15;gainXp(25);
+   log("🏟️ Thua võ đài. Mất "+loss+" quân.");
+ }
+ while(s.legion.xp>=100+s.legion.level*80){
+   s.legion.xp-=100+s.legion.level*80;s.legion.level++;s.gold=cap(s.gold+100);
+   log("🛡️ Quân đoàn lên cấp "+s.legion.level+"! +100💰.");
+ }
+ render();save()
+}
+function claimQuest(id){
+ let ok=false;
+ if(id===1 && s.arena.wins>0 && !s.quests.q1){s.quests.q1=1;s.gold=cap(s.gold+100);ok=true}
+ if(id===2 && (s.quests.harvest||0)>=3 && !s.quests.q2){s.quests.q2=1;s.gold=cap(s.gold+150);ok=true}
+ if(id===3 && (s.quests.research||0)>=1 && !s.quests.q3){s.quests.q3=1;s.gems+=2;ok=true}
+ if(!ok){log("📜 Chưa đủ điều kiện hoặc đã nhận thưởng.");return}
+ s.quests.claimed=(s.quests.claimed||0)+1;gainXp(30);log("🎁 Nhận thưởng nhiệm vụ ngày.");render();save()
+}
+function upgradeLegion(){
+ if(s.gems<2){log("Cần 2💎 để nâng quân đoàn.");return}
+ s.gems-=2;s.legion.level++;s.legion.xp=0;s.gold=cap(s.gold+100);gainXp(40);
+ log("🛡️ Quân đoàn lên cấp "+s.legion.level+".");render();save()
+}
+
+function saveGame(){save();log("💾 Đã lưu Bản 1.5.")}
+function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 1.5?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);
 render();
 </script>

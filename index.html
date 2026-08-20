@@ -674,7 +674,7 @@ for(let m of mobs)if(m.alive){
   x.fillRect(m.x-30,m.y+29,60*(m.hp/65),5);
 }
 for(let d0 of drops){x.fillStyle="#e8c64f";x.beginPath();x.arc(d0.x,d0.y,21,0,7);x.fill();x.font="16px sans-serif";x.fillStyle="#111";x.fillText("🎁",d0.x,d0.y+6)}
-if(mounted){x.save();x.font="38px sans-serif";x.textAlign="center";x.globalAlpha=.96;x.fillText("🐎",P.x,P.y+112);x.restore()}x.strokeStyle="#ffffff55";x.lineWidth=2;
+if(mounted){x.save();x.font="48px sans-serif";x.textAlign="center";x.globalAlpha=.96;x.fillText("🐎",P.x,P.y+62);x.restore()}x.strokeStyle="#ffffff55";x.lineWidth=2;
 x.beginPath();x.ellipse(P.x,P.y+55,38,10,0,0,Math.PI*2);x.stroke();
 drawPlayer(P.x,P.y);x.fillStyle="#071016dd";
 x.beginPath();x.roundRect(P.x-52,P.y-88,104,20,8);x.fill();

@@ -6,7 +6,7 @@
 <meta name="game-version" content="4.12.3">
 <meta name="game-protocol" content="4.12.3">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.3</title>
+<title>Kiếm Thế Mobi – Bản 4.12.3 · NPC Dịch Vụ</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -26,7 +26,20 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 .modal{position:absolute;z-index:30;inset:6% 4%;background:#101820f7;border:1px solid #3c4650;border-radius:22px;color:#fff;padding:17px;overflow:auto;display:none}
 .questTracker{position:absolute;z-index:9;left:12px;top:145px;width:250px;max-width:42vw;background:#071016e8;color:#fff;border:1px solid #4a555e;border-radius:14px;padding:9px 11px;box-shadow:0 6px 18px #0004;display:none;pointer-events:none}
 .questTracker b{color:#ffd978}.questTracker small{display:block;color:#d5dce1;margin-top:3px}
-.npcHint{position:absolute;z-index:15;left:50%;top:52%;transform:translate(-50%,-50%);background:#071016ee;color:#fff;border:1px solid #d2a44e;border-radius:14px;padding:9px 13px;font-weight:800;display:none;white-space:nowrap;box-shadow:0 8px 20px #0005}.modal h1{margin:0 0 12px;font-size:27px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:10px;font-size:26px;padding:5px 12px}
+.npcHint{position:absolute;z-index:15;left:50%;top:52%;transform:translate(-50%,-50%);background:#071016ee;color:#fff;border:1px solid #d2a44e;border-radius:14px;padding:9px 13px;font-weight:800;display:none;white-space:nowrap;box-shadow:0 8px 20px #0005}
+.serviceGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.serviceCard{background:#20282f;border:1px solid #3b454e;border-radius:16px;padding:13px}
+.serviceCard h3{margin:0 0 6px;font-size:18px}
+.serviceCard small{display:block;color:#cfd5da;line-height:1.35}
+.price{color:#ffd95a;font-weight:800;margin:7px 0}
+.serviceRow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#182126;border-radius:12px;padding:9px;margin:7px 0}
+.serviceRow .info{min-width:0}
+.serviceRow b{font-size:16px}
+.serviceRow small{display:block;color:#cfd5da}
+.bankGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px}
+.bankSlot{min-height:54px;background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;font-size:11px}
+.npcShopBadge{color:#ffd978;font-weight:800}
+@media(max-width:700px){.serviceGrid{grid-template-columns:1fr}.bankGrid{grid-template-columns:repeat(4,1fr)}}.modal h1{margin:0 0 12px;font-size:27px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:10px;font-size:26px;padding:5px 12px}
 .card,.class{background:#20282f;border:1px solid #3b454e;border-radius:15px;padding:11px;margin:8px 0}.action{background:#d2a44e;color:#fff;border:0;border-radius:11px;padding:9px 12px;font-weight:800}.classes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.class{min-height:125px}.class.sel{border:2px solid #f3d46b}.icon{font-size:29px}.ct{color:#ffd978;font-size:12px}.desc{color:#d0d6db;font-size:12px;margin-top:5px;line-height:1.3}.item{background:#20282f;border-radius:14px;padding:10px;margin:7px 0;display:flex;justify-content:space-between;gap:8px}.rare{color:#c47cff}.good{color:#77e36a}.actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.enh{background:#6f4fd8;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:800}.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.slot{background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;min-height:58px;font-size:11px}
 @media(max-width:700px){#stats{max-width:63vw}.name{font-size:21px}.sub{font-size:14px}#town{max-width:30vw;font-size:13px}.classes{grid-template-columns:1fr}.menu button,.community{font-size:14px}}
 </style>
@@ -65,6 +78,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <h1>📜 Nhiệm vụ giang hồ</h1>
 <div id="questNpcTitle" class="card"></div>
 <div id="questList"></div>
+</div>
+
+<div id="serviceModal" class="modal">
+<button class="close" onclick="closeM('serviceModal')">×</button>
+<h1 id="serviceTitle">🏪 NPC</h1>
+<div id="serviceBody"></div>
 </div>
 <div id="bagModal" class="modal"><button class="close" onclick="closeM('bagModal')">×</button><h1>🎒 Túi đồ & Trang bị</h1><div id="equip"></div><h2>🎒 Túi <span id="cnt">0</span>/24</h2><div id="items"></div><h2>24 ô</h2><div id="slots" class="slots"></div></div>
 <div id="teleModal" class="modal"><button class="close" onclick="closeM('teleModal')">×</button><h1>🌀 Dịch chuyển</h1><div class="card">🏠 Tân Thủ Thôn · 1600,800<br><button class="action" onclick="tele('town')">Đi</button></div><div class="card">🏙️ Thành Thị · 2600,700<br><button class="action" onclick="tele('city')">Đi</button></div></div>
@@ -147,8 +166,26 @@ const npcs=[
       {id:"hunt",name:"🏹 Săn Sơn Tặc",desc:"Hạ 5 Sơn Tặc.",goal:5,rewardGold:180,rewardExp:100},
       {id:"elite",name:"🔥 Trận chiến lớn",desc:"Hạ 8 Sơn Tặc.",goal:8,rewardGold:260,rewardExp:140}
     ]
-  }
+  },
+  {id:"banngua",name:"Chủ Ngựa",icon:"🐴",x:1510,y:1040,title:"Bán ngựa & thú cưỡi",color:"#d8a45c",service:"horse",quests:[]},
+  {id:"duocdien",name:"Dược Điếm",icon:"💊",x:1120,y:1040,title:"Bán thuốc hồi phục",color:"#75dfff",service:"potion",quests:[]},
+  {id:"taphoa",name:"Tạp Hóa",icon:"🛒",x:1040,y:820,title:"Đồ dùng giang hồ",color:"#9fe28c",service:"general",quests:[]},
+  {id:"vukhi",name:"Thợ Rèn",icon:"⚒️",x:1960,y:820,title:"Vũ khí & áo giáp",color:"#f3d46b",service:"weapon",quests:[]},
+  {id:"xaphu",name:"Xa Phu",icon:"🐎",x:1460,y:1080,title:"Dịch chuyển bản đồ",color:"#d9c09b",service:"teleport",quests:[]},
+  {id:"ruong",name:"Thủ Khố",icon:"🧰",x:2180,y:1120,title:"Rương chứa đồ",color:"#caa56a",service:"storage",quests:[]}
 ];
+let horseOwned=false;
+let bank=[];
+const BANK_MAX=48;
+const servicePrices={
+  horse:500,
+  hpPotion:25,
+  mpPotion:30,
+  food:15,
+  sword:180,
+  blade:220,
+  armor:200
+};
 let activeNpc=null;
 let activeQuest=null;
 const questState={};
@@ -189,7 +226,114 @@ function claimQuest(id){
   renderQuestList(); renderQuestTracker(); hud();
   toast("🎁 +"+q.rewardGold+" vàng · +"+q.rewardExp+" EXP");
 }
+
+function openService(npc){
+  activeNpc=npc;
+  const title=document.getElementById("serviceTitle");
+  const body=document.getElementById("serviceBody");
+  title.textContent=npc.icon+" "+npc.name;
+  if(npc.service==="horse"){
+    body.innerHTML=`
+      <div class="card"><b>🐴 Ngựa chiến</b><small>Mua ngựa để mở khóa tốc độ di chuyển nhanh.</small>
+      <div class="price">🪙 ${servicePrices.horse} vàng</div>
+      <button class="action" onclick="buyHorse()">Mua ngựa</button></div>
+      <div class="card"><b>🏇 Trạng thái</b><small id="horseShopState">${horseOwned?"Đã sở hữu ngựa":"Chưa có ngựa"}</small></div>`;
+  }else if(npc.service==="potion"){
+    body.innerHTML=`
+      <div class="serviceRow"><div class="info">❤️ <b>Bình Hồi Máu</b><small>Hồi 60 HP</small></div><div><span class="price">🪙 ${servicePrices.hpPotion}</span><br><button class="action" onclick="buyPotion('hp')">Mua</button></div></div>
+      <div class="serviceRow"><div class="info">💧 <b>Bình Hồi Khí</b><small>Hồi 30 MP</small></div><div><span class="price">🪙 ${servicePrices.mpPotion}</span><br><button class="action" onclick="buyPotion('mp')">Mua</button></div></div>`;
+  }else if(npc.service==="general"){
+    body.innerHTML=`
+      <div class="serviceRow"><div class="info">🥟 <b>Lương khô</b><small>Vật phẩm tạp hóa</small></div><div><span class="price">🪙 ${servicePrices.food}</span><br><button class="action" onclick="buyGeneral()">Mua</button></div></div>
+      <div class="card"><b>🎒 Quy tắc</b><small>Tạp hóa chỉ bán vật phẩm thông dụng. Túi tối đa 24 ô.</small></div>`;
+  }else if(npc.service==="weapon"){
+    body.innerHTML=`
+      <div class="serviceRow"><div class="info">🗡️ <b>Kiếm Tân Thủ+</b><small>⚔️ +5 · Thường</small></div><div><span class="price">🪙 ${servicePrices.sword}</span><br><button class="action" onclick="buyWeapon('sword')">Mua</button></div></div>
+      <div class="serviceRow"><div class="info">⚔️ <b>Đao Tinh Anh</b><small>⚔️ +18 · Hiếm</small></div><div><span class="price">🪙 ${servicePrices.blade}</span><br><button class="action" onclick="buyWeapon('blade')">Mua</button></div></div>
+      <div class="serviceRow"><div class="info">🛡️ <b>Giáp Tinh Anh</b><small>🛡️ +13 · Tốt</small></div><div><span class="price">🪙 ${servicePrices.armor}</span><br><button class="action" onclick="buyWeapon('armor')">Mua</button></div></div>`;
+  }else if(npc.service==="teleport"){
+    body.innerHTML=`
+      <div class="card"><b>🏠 Tân Thủ Thôn</b><small>1600,1200</small><button class="action" style="margin-top:8px" onclick="tele('town');closeM('serviceModal')">Dịch chuyển</button></div>
+      <div class="card"><b>🏙️ Thành Thị</b><small>2600,700</small><button class="action" style="margin-top:8px" onclick="tele('city');closeM('serviceModal')">Dịch chuyển</button></div>`;
+  }else if(npc.service==="storage"){
+    renderBank();
+    body.innerHTML=`
+      <div class="card"><b>🧰 Rương chứa đồ</b><small>Kho riêng: <span id="bankCount">${bank.length}</span>/${BANK_MAX} ô.</small>
+      <p><button class="action" onclick="depositAll()">📥 Cất toàn bộ túi</button>
+      <button class="action" onclick="withdrawAll()">📤 Lấy đồ</button></p>
+      <div id="bankGrid" class="bankGrid"></div></div>`;
+    renderBank();
+  }
+  openM("serviceModal");
+}
+function ensureBagSpace(){
+  if(bag.length>=24){toast("🎒 Túi đầy");return false}
+  return true;
+}
+function buyHorse(){
+  if(horseOwned){toast("🐴 Bạn đã có ngựa");return}
+  if(gold<servicePrices.horse){toast("🪙 Không đủ vàng");return}
+  gold-=servicePrices.horse;horseOwned=true;mounted=true;
+  hud();updateMountUI();
+  toast("🐴 Mua ngựa thành công!");
+  openService(activeNpc);
+}
+function makeItem(n,t,r,a,df,icon){
+  return {n,t,r,a,df,i:icon,en:0}
+}
+function buyPotion(kind){
+  const price=kind==="hp"?servicePrices.hpPotion:servicePrices.mpPotion;
+  if(gold<price)return toast("🪙 Không đủ vàng");
+  if(!ensureBagSpace())return;
+  gold-=price;
+  bag.push(kind==="hp"
+    ?makeItem("Bình Hồi Máu","tiêu hao","Thường",0,0,"❤️")
+    :makeItem("Bình Hồi Khí","tiêu hao","Thường",0,0,"🧪"));
+  bagUI();hud();toast("🛒 Đã mua thuốc");
+}
+function buyGeneral(){
+  if(gold<servicePrices.food)return toast("🪙 Không đủ vàng");
+  if(!ensureBagSpace())return;
+  gold-=servicePrices.food;
+  bag.push(makeItem("Lương khô","tiêu hao","Thường",0,0,"🥟"));
+  bagUI();hud();toast("🛒 Đã mua lương khô");
+}
+function buyWeapon(kind){
+  const data={
+    sword:[servicePrices.sword,makeItem("Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️")],
+    blade:[servicePrices.blade,makeItem("Đao Tinh Anh","vũ khí","Hiếm",18,0,"⚔️")],
+    armor:[servicePrices.armor,makeItem("Giáp Tinh Anh","áo","Tốt",0,13,"🛡️")]
+  }[kind];
+  if(!data)return;
+  if(gold<data[0])return toast("🪙 Không đủ vàng");
+  if(!ensureBagSpace())return;
+  gold-=data[0];bag.push(data[1]);bagUI();hud();toast("⚒️ Đã mua "+data[1].n);
+}
+function renderBank(){
+  const grid=document.getElementById("bankGrid");
+  if(!grid)return;
+  const count=document.getElementById("bankCount");
+  if(count)count.textContent=bank.length;
+  let s="";
+  for(let i=0;i<BANK_MAX;i++){
+    const it=bank[i];
+    s+=`<div class="bankSlot">${it?it.i+" "+it.n+" +"+(it.en||0):"—"}</div>`;
+  }
+  grid.innerHTML=s;
+}
+function depositAll(){
+  while(bag.length && bank.length<BANK_MAX) bank.push(bag.pop());
+  bagUI();renderBank();hud();
+  toast(bank.length>=BANK_MAX?"🧰 Rương đầy":"📥 Đã cất đồ");
+}
+function withdrawAll(){
+  while(bank.length && bag.length<24) bag.push(bank.pop());
+  bagUI();renderBank();hud();
+  toast(bag.length>=24?"🎒 Túi đầy":"📤 Đã lấy đồ");
+}
+
 function openNpcQuest(npc){
+  if(npc.service){openService(npc);return}
   activeNpc=npc;
   document.getElementById("questNpcTitle").innerHTML=
     `<b>${npc.icon} ${npc.name}</b><br><small>${npc.title} · Đứng gần để nhận nhiệm vụ</small>`;
@@ -235,7 +379,7 @@ function nearestNpc(max=125){
 function checkNpcHint(){
   const n=nearestNpc(150),hint=document.getElementById("npcHint");
   if(n){
-    hint.textContent=`💬 ${n.icon} ${n.name} · Chạm để nhận nhiệm vụ`;
+    hint.textContent=n.service?`💬 ${n.icon} ${n.name} · Chạm để giao dịch`:`💬 ${n.icon} ${n.name} · Chạm để nhận nhiệm vụ`;
     hint.style.display="block";
   }else hint.style.display="none";
 }
@@ -257,7 +401,7 @@ function drawNpc(n){
   x.fillStyle="#071016e8";x.beginPath();x.roundRect(n.x-tw/2,n.y-83,tw,20,8);x.fill();
   x.fillStyle="#fff";x.fillText(label,n.x,n.y-69);
   x.font="11px sans-serif";x.fillStyle="#ffd978";
-  x.fillText("📜 Nhiệm vụ",n.x,n.y+75);
+  x.fillText(n.service?("🏪 "+n.title):"📜 Nhiệm vụ",n.x,n.y+75);
   x.restore();
 }
 
@@ -275,7 +419,14 @@ function enh(k){let i=bag[k];if(!i||i.t=="tiêu hao")return toast("⚒️ Chỉ 
 function enhEq(k){let i=equip[k];if(i.en>=10)return toast("Đã +10");if(gold<cost(i))return toast("🪙 Không đủ vàng");gold-=cost(i);i.en++;bagUI();hud();toast("⚒️ "+i.n+" +"+i.en)}
 function eq(k){let i=bag[k];if(i.t=="vũ khí"){bag.push(equip.weapon);equip.weapon=i}else if(i.t=="áo"){bag.push(equip.armor);equip.armor=i}else return;bag.splice(k,1);if(bag.length>24)bag.pop();bagUI();hud()}
 function uneq(k){if(bag.length>=24)return toast("🎒 Túi đầy");bag.push(equip[k]);equip[k]=null;bagUI();hud()}
-function use(k){if(bag[k].t=="tiêu hao"){updateQuestProgress("potion",1);P.mp=Math.min(60,P.mp+30);bag.splice(k,1);bagUI();hud();toast("💧 Hồi 30 khí")}}
+function use(k){
+  const it=bag[k]; if(!it||it.t!="tiêu hao")return;
+  updateQuestProgress("potion",1);
+  if(it.n.includes("Hồi Máu")){P.hp=Math.min(220,P.hp+60);toast("❤️ Hồi 60 máu")}
+  else if(it.n.includes("Hồi Khí")){P.mp=Math.min(60,P.mp+30);toast("💧 Hồi 30 khí")}
+  else {P.hp=Math.min(220,P.hp+20);toast("🥟 Hồi 20 máu")}
+  bag.splice(k,1);bagUI();hud();
+}
 function sell(k){bag.splice(k,1);gold+=20;bagUI();hud();toast("🪙 +20 vàng")}
 function nearest(){let b=null,bd=1e9;for(let m of mobs)if(m.alive){let d=Math.hypot(P.x-m.x,P.y-m.y);if(d<bd){bd=d;b=m}}return b}
 function hit(m,n){m.hp=Math.max(0,m.hp-Math.round(n));m.hit=.2;updateQuestProgress("training",1);if(m.hp<=0){m.alive=false;exp=Math.min(600,exp+20);updateQuestProgress("bandit",1);updateQuestProgress("hunt",1);updateQuestProgress("elite",1);drops.push({x:m.x,y:m.y,g:10+Math.floor(Math.random()*30),i:its[Math.floor(Math.random()*5)]});updateQuestProgress("herb",1);toast("🎁 Sơn Tặc rơi đồ")}}

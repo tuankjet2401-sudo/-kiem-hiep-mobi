@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Đại Việt Chiến Ký">
 <meta name="theme-color" content="#20150e">
-<title>Đại Việt Chiến Ký 3.5</title>
+<title>Đại Việt Chiến Ký 3.5.1</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#18100b;touch-action:none;font-family:system-ui,-apple-system,sans-serif}
@@ -151,27 +151,27 @@ function drawMap(){
 
 
 function shadow(cx,cy,rx,ry){
- x.fillStyle="#0004";x.beginPath();x.ellipse(cx-cam.x,cy-cam.y,rx,ry,0,0,Math.PI*2);x.fill();
+ x.fillStyle="#0004";x.beginPath();x.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);x.fill();
 }
 function tree(xx,yy){
  shadow(xx,yy+30,34,10);
  x.fillStyle="#704827";x.fillRect(xx-7-cam.x,yy-18-cam.y,14,55);
- x.fillStyle="#294f31";x.beginPath();x.arc(xx-cam.x,yy-40-cam.y,43,0,Math.PI*2);x.fill();
+ x.fillStyle="#294f31";x.beginPath();x.arc(xx,yy-40-cam.y,43,0,Math.PI*2);x.fill();
  x.fillStyle="#3f733a";x.beginPath();x.arc(xx-22-cam.x,yy-57-cam.y,30,0,Math.PI*2);x.fill();
  x.fillStyle="#5c8d46";x.beginPath();x.arc(xx+21-cam.x,yy-58-cam.y,27,0,Math.PI*2);x.fill();
  x.fillStyle="#76a754";x.beginPath();x.arc(xx-5-cam.x,yy-76-cam.y,18,0,Math.PI*2);x.fill();
 }
 function house(xx,yy){
  shadow(xx+70,yy+96,72,12);
- x.fillStyle="#9b693b";x.fillRect(xx-cam.x,yy-cam.y,140,92);
- x.fillStyle="#6b3b22";x.beginPath();x.moveTo(xx-16-cam.x,yy-cam.y);x.lineTo(xx+70-cam.x,yy-65-cam.y);x.lineTo(xx+156-cam.x,yy-cam.y);x.closePath();x.fill();
+ x.fillStyle="#9b693b";x.fillRect(xx,yy,140,92);
+ x.fillStyle="#6b3b22";x.beginPath();x.moveTo(xx-16-cam.x,yy);x.lineTo(xx+70-cam.x,yy-65-cam.y);x.lineTo(xx+156-cam.x,yy);x.closePath();x.fill();
  x.fillStyle="#3b2418";x.fillRect(xx+54-cam.x,yy+45-cam.y,34,47);
  x.fillStyle="#d9c58e";x.fillRect(xx+15-cam.x,yy+25-cam.y,30,25);x.fillRect(xx+96-cam.x,yy+25-cam.y,30,25);
 }
 function castle(xx,yy,w,h){
  shadow(xx+w/2,yy+h+10,w*.47,18);
- x.fillStyle="#a99568";x.fillRect(xx-cam.x,yy-cam.y,w,h);
- x.fillStyle="#d0bc89";x.fillRect(xx-cam.x,yy-cam.y,w,46);
+ x.fillStyle="#a99568";x.fillRect(xx,yy,w,h);
+ x.fillStyle="#d0bc89";x.fillRect(xx,yy,w,46);
  x.fillStyle="#826b48";x.fillRect(xx+45-cam.x,yy+46-cam.y,w-90,h-92);
  const towers=[[xx,yy],[xx+w-100,yy],[xx,yy+h-100],[xx+w-100,yy+h-100]];
  towers.forEach(t=>{
@@ -186,20 +186,20 @@ function castle(xx,yy,w,h){
 }
 function npc(n){
  shadow(n.x,n.y+22,24,8);
- x.font="30px serif";x.textAlign="center";x.fillText(n.i,n.x-cam.x,n.y+8-cam.y);
- x.fillStyle="#fff0b2";x.font="12px Arial";x.fillText(n.n,n.x-cam.x,n.y-28-cam.y);
+ x.font="30px serif";x.textAlign="center";x.fillText(n.i,n.x,n.y+8-cam.y);
+ x.fillStyle="#fff0b2";x.font="12px Arial";x.fillText(n.n,n.x,n.y-28-cam.y);
 }
 function mob(m){
  if(!m.alive)return;
  shadow(m.x,m.y+19,22,8);
  const icon=m.n.includes("Sói")?"🐺":m.n.includes("Lang")?"🐯":"👹";
- x.font="30px serif";x.textAlign="center";x.fillText(icon,m.x-cam.x,m.y+8-cam.y);
- x.fillStyle="#2d1515";x.fillRect(m.x-cam.x-25,m.y-cam.y-34,50,6);
- x.fillStyle="#dc3c35";x.fillRect(m.x-cam.x-25,m.y-cam.y-34,50*Math.max(0,m.hp/m.maxHp),6);
- if(m.hit){x.strokeStyle="#ffe7a2";x.lineWidth=3;x.beginPath();x.arc(m.x-cam.x,m.y-cam.y,28,0,Math.PI*2);x.stroke()}
+ x.font="30px serif";x.textAlign="center";x.fillText(icon,m.x,m.y+8-cam.y);
+ x.fillStyle="#2d1515";x.fillRect(m.x-25,m.y-34,50,6);
+ x.fillStyle="#dc3c35";x.fillRect(m.x-25,m.y-34,50*Math.max(0,m.hp/m.maxHp),6);
+ if(m.hit){x.strokeStyle="#ffe7a2";x.lineWidth=3;x.beginPath();x.arc(m.x,m.y,28,0,Math.PI*2);x.stroke()}
 }
 function player(){
- const sx=p.x-cam.x,sy=p.y-cam.y;
+ const sx=p.x,sy=p.y;
  x.fillStyle="#0005";x.beginPath();x.ellipse(sx,sy+29,30,11,0,0,Math.PI*2);x.fill();
  // áo nhiều lớp
  x.fillStyle="#183b5b";x.beginPath();x.moveTo(sx-19,sy-1);x.lineTo(sx+19,sy-1);x.lineTo(sx+23,sy+26);x.lineTo(sx-23,sy+26);x.closePath();x.fill();

@@ -13,7 +13,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 #game,canvas{position:fixed;inset:0;width:100%;height:100%}canvas{display:block}
 .hud{position:absolute;z-index:5;top:max(10px,env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
 .box{background:#071016ee;color:#fff;border:1px solid #39434d;border-radius:18px;padding:10px 13px;box-shadow:0 8px 25px #0005}
-#stats{width:470px;max-width:62vw}.name{font-size:24px;font-weight:800}.sub{font-size:15px}.bar{height:9px;background:#30363b;border-radius:9px;margin:5px 0;overflow:hidden}.hp{height:100%;background:#df5d58}.mp{height:100%;background:#62b7ed}.xp{height:100%;background:#e7ca5e}
+#stats{width:470px;max-width:62vw}.name{font-size:24px;font-weight:800}.sub{font-size:15px}.bar{height:7px;background:#30363b;border-radius:9px;margin:5px 0;overflow:hidden}.hp{height:100%;background:#df5d58}.mp{height:100%;background:#62b7ed}.xp{height:100%;background:#e7ca5e}
 #town{width:250px;max-width:31vw;text-align:right;font-size:15px}
 .btn{position:absolute;z-index:10;width:62px;height:62px;border-radius:50%;border:3px solid #68727d;background:#0d141be8;color:#fff;font-size:27px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px #0005}
 #bag{right:14px;top:145px}.travel{right:14px}.mount{top:220px}.tele{top:295px}.cape{top:370px}.on{box-shadow:0 0 0 3px #f3d46b,0 8px 20px #0005}
@@ -172,7 +172,10 @@ const npcs=[
   {id:"taphoa",name:"Tạp Hóa",icon:"🛒",x:1040,y:820,title:"Đồ dùng giang hồ",color:"#9fe28c",service:"general",quests:[]},
   {id:"vukhi",name:"Thợ Rèn",icon:"⚒️",x:1960,y:820,title:"Vũ khí & áo giáp",color:"#f3d46b",service:"weapon",quests:[]},
   {id:"xaphu",name:"Xa Phu",icon:"🐎",x:1460,y:1080,title:"Dịch chuyển bản đồ",color:"#d9c09b",service:"teleport",quests:[]},
-  {id:"ruong",name:"Thủ Khố",icon:"🧰",x:2180,y:1120,title:"Rương chứa đồ",color:"#caa56a",service:"storage",quests:[]}
+  {id:"ruong",name:"Thủ Khố",icon:"🧰",x:2180,y:1120,title:"Rương chứa đồ",color:"#caa56a",service:"storage",quests:[]},
+  {id:"npcMonPhai",name:"NPC Môn Phái",icon:"🥋",x:1880,y:1320,title:"Chọn môn phái & xem võ học",color:"#c9b7ff",service:"class",quests:[]},
+  {id:"npcHoatDong",name:"NPC Hoạt Động",icon:"🏆",x:2140,y:1380,title:"Hoạt động & chiến trường",color:"#ffd978",service:"activity",quests:[]},
+  {id:"npcCongDong",name:"NPC Cộng Đồng",icon:"👥",x:2380,y:1320,title:"Bang hội · Tống Kim · Thế giới",color:"#8ddcff",service:"community",quests:[]}
 ];
 let horseOwned=false;
 let bank=[];
@@ -229,6 +232,9 @@ function claimQuest(id){
 
 function openService(npc){
   activeNpc=npc;
+  if(npc.service==="class"){openClassModal();return}
+  if(npc.service==="activity"){openActivity();return}
+  if(npc.service==="community"){openCommunity();return}
   const title=document.getElementById("serviceTitle");
   const body=document.getElementById("serviceBody");
   title.textContent=npc.icon+" "+npc.name;
@@ -379,7 +385,7 @@ function nearestNpc(max=125){
 function checkNpcHint(){
   const n=nearestNpc(150),hint=document.getElementById("npcHint");
   if(n){
-    hint.textContent=n.service?`💬 ${n.icon} ${n.name} · Chạm để giao dịch`:`💬 ${n.icon} ${n.name} · Chạm để nhận nhiệm vụ`;
+    hint.textContent=(n.service==="class"||n.service==="activity"||n.service==="community")?`💬 ${n.icon} ${n.name} · Chạm để mở`:(n.service?`💬 ${n.icon} ${n.name} · Chạm để giao dịch`:`💬 ${n.icon} ${n.name} · Chạm để nhận nhiệm vụ`);
     hint.style.display="block";
   }else hint.style.display="none";
 }
@@ -396,7 +402,7 @@ function drawNpc(n){
   x.moveTo(n.x-23,n.y+40);x.lineTo(n.x,n.y-8);x.lineTo(n.x+25,n.y+40);x.lineTo(n.x,n.y+55);x.closePath();x.fill();
   x.font="27px sans-serif";x.textAlign="center";x.fillText(n.icon,n.x,n.y-52);
   const label=`${n.icon} ${n.name}`;
-  x.font="bold 13px sans-serif";
+  x.font="bold 12px sans-serif";
   const tw=x.measureText(label).width+12;
   x.fillStyle="#071016e8";x.beginPath();x.roundRect(n.x-tw/2,n.y-83,tw,20,8);x.fill();
   x.fillStyle="#fff";x.fillText(label,n.x,n.y-69);
@@ -475,7 +481,7 @@ if(mounted){x.font="38px sans-serif";x.fillText("🐎",P.x,P.y+30)}x.strokeStyle
 x.beginPath();x.ellipse(P.x,P.y+55,38,10,0,0,Math.PI*2);x.stroke();
 drawPlayer(P.x,P.y);x.fillStyle="#071016dd";
 x.beginPath();x.roundRect(P.x-52,P.y-82,104,20,8);x.fill();
-x.fillStyle="#fff";x.font="bold 13px sans-serif";
+x.fillStyle="#fff";x.font="bold 12px sans-serif";
 x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-68);x.restore()}
 
 c.addEventListener("touchstart",e=>{
@@ -543,7 +549,7 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.3 · Nhiệm vụ NPC";
+classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.3 · NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

@@ -157,34 +157,62 @@ const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao B�
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
 let cdA=0,cdS=0,cdF=0,stun=0,slow=0;
 
-/* ================= THIẾU HIỆP - 9 LAYER PNG ================= */
+/* ================= THIẾU HIỆP - LAYER FIX =================
+   Các PNG là ảnh tham chiếu: một số có nhãn ở đáy và
+   ACCESSORY/WEAPON là sprite sheet. Không chồng toàn bộ ảnh.
+   Ta crop phần nhân vật cần dùng rồi ghép thành 1 sprite sạch.
+*/
 const TH_ASSET_PATH="assets/thieuhiep/";
-const thLayerNames=[
-  "TH_LEG_L","TH_LEG_R","TH_BODY","TH_ARM_L","TH_ARM_R",
-  "TH_HEAD","TH_HAIR","TH_ACCESSORY","TH_WEAPON"
-];
+const thLayerNames=["TH_LEG_L","TH_LEG_R","TH_BODY","TH_HEAD","TH_HAIR","TH_WEAPON"];
 const thLayers={};
 let thReady=false;
+const thComposite=document.createElement("canvas");
+thComposite.width=160;
+thComposite.height=190;
+const thc=thComposite.getContext("2d");
+
+function thLoaded(){
+  return thLayerNames.every(n=>thLayers[n]&&thLayers[n].complete&&thLayers[n].naturalWidth>0);
+}
+
+function buildTHComposite(){
+  if(!thLoaded()) return false;
+  thc.clearRect(0,0,160,190);
+
+  // Chân
+  thc.drawImage(thLayers.TH_LEG_L,0,0,85,78,36,108,85,78);
+  thc.drawImage(thLayers.TH_LEG_R,0,0,90,78,76,108,90,78);
+
+  // Thân đã có tay áo + bàn tay nên không chồng ARM_L/ARM_R.
+  thc.drawImage(thLayers.TH_BODY,0,0,115,94,22,38,115,94);
+
+  // Đầu + tóc
+  thc.drawImage(thLayers.TH_HEAD,0,0,80,90,40,0,80,90);
+  thc.drawImage(thLayers.TH_HAIR,0,0,105,90,28,0,105,90);
+
+  // Chỉ lấy thanh kiếm phía trên của sprite sheet.
+  thc.drawImage(thLayers.TH_WEAPON,0,0,135,52,25,52,135,52);
+
+  thReady=true;
+  return true;
+}
 
 for(const name of thLayerNames){
   const img=new Image();
   img.decoding="async";
   img.src=TH_ASSET_PATH+name+".png";
-  img.onload=()=>{
-    thReady=thLayerNames.every(n=>thLayers[n]&&thLayers[n].complete&&thLayers[n].naturalWidth>0);
-  };
+  img.onload=()=>buildTHComposite();
   img.onerror=()=>console.warn("Không tải được layer Thiếu Hiệp:",img.src);
   thLayers[name]=img;
 }
 
-function drawTHLayer(name,a,b,size=150){
-  const img=thLayers[name];
-  if(!img||!img.complete||!img.naturalWidth)return false;
-  x.drawImage(img,a-size/2,b-size/2-8,size,size);
+function drawTHLayer(a,b){
+  if(!thReady) return false;
+  const scale=1.65;
+  const w=160*scale,h=190*scale;
+  x.drawImage(thComposite,a-w/2,b-h+18,w,h);
   return true;
 }
-
-
 
 /* ================= NPC + NHIỆM VỤ ================= */
 const npcs=[
@@ -583,19 +611,8 @@ function drawPlayer(a,b){
     x.restore();
   }
 
-  /* Nhân vật 9 layer: chân -> thân -> tay -> đầu -> tóc -> phụ kiện -> vũ khí */
-  if(thReady){
-    const size=150;
-    drawTHLayer("TH_LEG_L",a,b,size);
-    drawTHLayer("TH_LEG_R",a,b,size);
-    drawTHLayer("TH_BODY",a,b,size);
-    drawTHLayer("TH_ARM_L",a,b,size);
-    drawTHLayer("TH_ARM_R",a,b,size);
-    drawTHLayer("TH_HEAD",a,b,size);
-    drawTHLayer("TH_HAIR",a,b,size);
-    drawTHLayer("TH_ACCESSORY",a,b,size);
-    drawTHLayer("TH_WEAPON",a,b,size);
-  }else{
+  /* Nhân vật layer sạch: ghép các phần đã crop đúng vị trí */
+  if(!drawTHLayer(a,b)){
     /* Fallback: nhân vật Canvas cũ trong lúc ảnh đang tải */
     x.fillStyle="#f5f1e4";
     x.beginPath();

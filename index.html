@@ -49,6 +49,19 @@ button:disabled{opacity:.45}
 .npc-captain{right:17%;top:29%}.npc-farmer{left:27%;top:60%}.npc-miner{right:28%;top:61%}.npc-scout{right:7%;top:23%}
 @keyframes walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .event-badge{display:inline-block;padding:3px 7px;border-radius:8px;background:#7d2d20;color:#ffe3a0;font-weight:900}
+
+.tutorial{position:fixed;inset:0;z-index:80;background:rgba(5,8,5,.82);display:none;align-items:flex-end}
+.tutorial.show{display:flex}
+.tutbox{width:100%;max-height:88dvh;overflow:auto;background:linear-gradient(#3b2919,#20140c);border:2px solid #d1a45b;border-radius:20px 20px 0 0;padding:14px 12px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.45)}
+.tuttop{display:flex;justify-content:space-between;align-items:center}.tuttop b{font-size:18px;color:#ffd66b}
+.tutnpc{display:flex;gap:10px;align-items:center;background:#302015;border-radius:14px;padding:9px;margin:8px 0}
+.tutnpc .face{font-size:46px}.tutnpc p{margin:3px 0;font-size:12px;line-height:1.45;color:#eee2ce}
+.tutstep{color:#d8c5a6;font-size:11px}.tuttitle{font-size:14px;color:#ffe08b;font-weight:900}
+.tutbtn{width:100%;margin-top:8px;background:#8b5a26;border:1px solid #d0a25c}
+.tutreward{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.tutreward div{background:#44301d;border-radius:10px;text-align:center;padding:10px;color:#ffe08b;font-weight:900}
+.highlight{animation:highlight 1s infinite}
+@keyframes highlight{50%{box-shadow:0 0 0 5px rgba(255,211,91,.35),0 0 25px rgba(255,211,91,.75)}}
 </style>
 </head><body>
 <div id="game">
@@ -101,6 +114,15 @@ button:disabled{opacity:.45}
 </nav>
 
 <div id="toast" class="toast"></div>
+<div id="tutorial" class="tutorial">
+ <div class="tutbox">
+  <div class="tuttop"><b>📜 KHỞI SỰ CƠ ĐỒ</b><button type="button" onclick="skipTutorial()">Bỏ qua</button></div>
+  <div class="tutstep" id="tutStep">Bước 1/4</div>
+  <div class="tutnpc"><div class="face">👑</div><div><div class="tuttitle" id="tutTitle"></div><p id="tutText"></p></div></div>
+  <div id="tutAction"></div>
+ </div>
+</div>
+
 <div id="overlay" class="overlay" onclick="if(event.target===this)closeSheet()">
  <div class="sheet">
   <div class="sheetHead"><b id="sheetTitle">Thành</b><button type="button" onclick="closeSheet()">✕</button></div>
@@ -126,6 +148,7 @@ function normalizeState(x){
  x.season=x.season||{points:0,rank:1,claimed:false};
  x.battleLog=x.battleLog||[];
  x.daily=x.daily||{harvest:0,battles:0,claimed:false};
+ x.tutorial=x.tutorial||{step:0,done:false};
  x.inventory=x.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0};
  x.craft=x.craft||{sword:0,armor:0,bow:0};
  x.loot=x.loot||{rare:0,good:0,normal:0};
@@ -208,6 +231,58 @@ function openSheet(name){
  const v=views[name]||views.more;t.textContent=v[0];c.innerHTML=v[1];o.classList.add("show");render()
 }
 function closeSheet(){document.getElementById("overlay").classList.remove("show")}
+
+
+const TUTORIAL_KEY="dv_tutorial_20";
+const tutData=[
+ {title:"Khởi Sự Cơ Đồ",text:"Chúa công! Trải qua loạn lạc, trăm họ lầm than, bờ cõi hoang phế. Nay thiên mệnh trao tay, giang sơn này đang chờ ngài đứng ra định quốc an dân!",button:"👆 Nhấp để bắt đầu"},
+ {title:"Bước 1 • Phục hồi nông nghiệp",text:"Binh mã chưa động, lương thảo đã phải đi trước. Dân dĩ thực vi thiên. Xin Chúa công hạ lệnh khai hoang, xây dựng Nông Điền đầu tiên!",button:"🌾 Xây / thu hoạch Nông Điền"},
+ {title:"Bước 2 • Củng cố Chính Điện",text:"Phủ Đường chính là long mạch của thành trì. Kính xin Chúa công nâng cấp Phủ Thành Chủ lên Cấp 2!",button:"🏯 Nâng cấp Chính Điện"},
+ {title:"Bước 3 • Chiêu binh mãi mã",text:"Thảo khấu ngoài thành đang lăm le bờ cõi. Xin ngài dựng Binh Doanh và huấn luyện 100 Bộ Binh!",button:"⚔️ Xây doanh trại / tuyển quân"},
+ {title:"Bước 4 • Xuất chinh",text:"Thế trận đã sẵn sàng! Xin Chúa công thân chinh cầm quân, dẹp tan lũ phỉ tặc để lập uy với thiên hạ!",button:"🏹 Xuất chinh trận đầu"}
+];
+function showTutorial(){
+ const t=document.getElementById("tutorial");if(!t)return;
+ t.classList.add("show");renderTutorial()
+}
+function renderTutorial(){
+ const i=s.tutorial.step||0,d=tutData[Math.min(i,tutData.length-1)];
+ document.getElementById("tutStep").textContent=i===0?"Mở đầu":"Bước "+i+"/4";
+ document.getElementById("tutTitle").textContent=d.title;
+ document.getElementById("tutText").textContent=d.text;
+ const a=document.getElementById("tutAction");
+ a.innerHTML='<button type="button" class="tutbtn" onclick="tutorialNext()">'+d.button+'</button>';
+}
+function tutorialNext(){
+ const i=s.tutorial.step||0;
+ if(i===0){s.tutorial.step=1;log("📜 Bắt đầu hành trình Khởi Sự Cơ Đồ.");}
+ else if(i===1){s.farm=Math.max(1,s.farm);s.food=cap(s.food+300);s.tutorial.step=2;gainXp(40);log("🌾 Đã phục hồi Nông Điền đầu tiên.");}
+ else if(i===2){if(s.cityLevel<2){s.cityLevel=2;s.cityXp=0;s.city2.level=Math.max(2,s.city2.level);gainXp(60);log("🏯 Chính Điện đã lên Cấp 2.");}s.tutorial.step=3;}
+ else if(i===3){s.barracks=Math.max(1,s.barracks);s.infantry=Math.max(100,s.infantry);s.tutorial.step=4;gainXp(80);log("⚔️ Đã huấn luyện 100 Bộ Binh.");}
+ else if(i===4){finishTutorial();return}
+ save();render();renderTutorial()
+}
+function finishTutorial(){
+ s.tutorial.done=true;
+ s.tutorial.step=5;
+ s.gold=cap(s.gold+1000);
+ s.food=cap(s.food+1000);
+ s.gems+=100;
+ s.heroTier=Math.max(s.heroTier,3);
+ s.heroLevel=Math.max(s.heroLevel,3);
+ s.fame+=100;
+ s.battleLog.push("🎆 Đại thắng trận đầu • Hoàn thành hướng dẫn tân thủ");
+ log("🎆 Đại thắng! Nhận 1000💰 +1000🌾 +100💎 + Tướng tím.");
+ document.getElementById("tutTitle").textContent="🎆 ĐẠI THẮNG!";
+ document.getElementById("tutStep").textContent="Hoàn thành hướng dẫn";
+ document.getElementById("tutText").textContent="Đại thắng trở về, oai danh chấn động bốn phương! Thần xin nguyện đem hết lòng phò tá!";
+ document.getElementById("tutAction").innerHTML='<div class="tutreward"><div>💰 1000</div><div>🌾 1000</div><div>💎 100</div></div><button type="button" class="tutbtn" onclick="skipTutorial()">🏯 Bắt đầu trị vì</button>';
+ save();render()
+}
+function skipTutorial(){
+ s.tutorial.done=true;s.tutorial.step=5;save();
+ document.getElementById("tutorial").classList.remove("show");render()
+}
 
 function render(){
  const ids=["food","wood","iron","gold","gems","level","xp","cityLevel","population","defense","farm","forge","market","port","heroLevel","heroXp","fame","territory","influence","wins","infantry","archers","cavalry","elephants","city2Level","houses","happiness","arenaRating","arenaWins","arenaLosses","bossLevel","bossHp","bossDefeated","bossDamage","lootRare","lootGood","lootNormal","research","techFood","techIron","techArmy","techEconomy","campaignStage","campaignStars","commanderLevel","guildLevel","guildMembers","legionLevel","legionXp","seasonPoints","seasonRank","invSword","invArmor","invBow","invPotion"];
@@ -557,4 +632,8 @@ function saveGame(){save();log("💾 Đã lưu Bản 2.x.")}
 function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.x?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);
 render();
+setTimeout(function(){
+ const tt=normalizeState(s);
+ if(!tt.tutorial.done)showTutorial();
+},500);
 </script></body></html>

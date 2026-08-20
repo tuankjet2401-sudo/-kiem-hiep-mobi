@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Đại Việt Chiến Ký — Bản 3.1 Web</title>
+<title>Đại Việt Chiến Ký — Bản 3.2 Web</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#17150f;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -43,13 +43,28 @@ opacity:.8}
 footer{position:sticky;bottom:0;background:#2b1d13;padding:9px calc(10px + env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 footer button{font-size:12px;padding:11px 4px}
 @media(max-width:480px){.res div{font-size:12px}.map{height:440px}.place{width:98px}.npc{width:78px}}
+
+.map{touch-action:manipulation}
+.place{transition:transform .15s,filter .15s}
+.place:active,.npc:active{transform:translate(-50%,-50%) scale(.96);filter:brightness(1.2)}
+.npc{z-index:5}
+.npc .avatar{animation:npcIdle 2.4s ease-in-out infinite}
+.npc-luc .avatar{animation-delay:0s}.npc-tham .avatar{animation-delay:.4s}.npc-tieu .avatar{animation-delay:.8s}
+@keyframes npcIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.route{position:absolute;z-index:1;border-top:3px dashed #d4b66a99;transform-origin:left center}
+.r1{left:32%;top:40%;width:17%;transform:rotate(-18deg)}
+.r2{left:51%;top:40%;width:17%;transform:rotate(18deg)}
+.r3{left:50%;top:47%;width:1px;height:18%;border-left:3px dashed #d4b66a99}
+.modalNpc{display:flex;gap:12px;align-items:center}
+.bigAvatar{font-size:58px;width:90px;height:90px;display:flex;align-items:center;justify-content:center;background:#30261b;border:2px solid #b99a58;border-radius:18px}
+.actionNote{font-size:12px;color:#d9ceb9;margin-top:8px}
 </style>
 </head>
 <body>
 <div id="app">
 <header>
 <h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 3.1 • Web Safari • Thành trì 2.5D</div>
+<div class="sub">Bản 3.2 • Web Safari • Thành trì 2.5D</div>
 <div class="res">
 <div>🌾 <span id="food">1000</span></div><div>💰 <span id="gold">1000</span></div>
 <div>🪵 <span id="wood">600</span></div><div>⛏️ <span id="iron">400</span></div>
@@ -60,20 +75,21 @@ footer button{font-size:12px;padding:11px 4px}
 <section class="panel">
 <div class="title">🏯 Thành trì Đại Việt</div>
 <div class="map">
-<div class="wall"></div>
-<div class="place" data-name="Chính Điện" data-cost="100" style="left:50%;top:30%"><span class="icon">🏯</span><b>Chính Điện</b></div>
-<div class="place" data-name="Doanh Trại" data-cost="80" style="left:24%;top:48%"><span class="icon">⚔️</span><b>Doanh Trại</b></div>
-<div class="place" data-name="Lò Rèn" data-cost="76" style="left:76%;top:48%"><span class="icon">🔨</span><b>Lò Rèn</b></div>
-<div class="place" data-name="Nông Điền" data-cost="60" style="left:30%;top:76%"><span class="icon">🌾</span><b>Nông Điền</b></div>
-<div class="place" data-name="Mỏ Sắt" data-cost="70" style="left:70%;top:76%"><span class="icon">⛏️</span><b>Mỏ Sắt</b></div>
-<div class="npc" data-npc="Lục Minh Triết" style="left:43%;top:51%"><div class="avatar">👑</div><b>Lục Minh Triết</b></div>
-<div class="npc" data-npc="Thẩm Hàn Phong" style="left:57%;top:53%"><div class="avatar">⚔️</div><b>Thẩm Hàn Phong</b></div>
-<div class="npc" data-npc="Tiêu Mặc Bạch" style="left:50%;top:70%"><div class="avatar">🪶</div><b>Tiêu Mặc Bạch</b></div>
+<div class="wall"></div><div class="route r1"></div><div class="route r2"></div><div class="route r3"></div>
+<div class="place" data-name="Chính Điện" data-cost="100" style="left:50%;top:25%"><span class="icon">🏯</span><b>Chính Điện</b></div>
+<div class="place" data-name="Doanh Trại" data-cost="80" style="left:20%;top:47%"><span class="icon">⚔️</span><b>Doanh Trại</b></div>
+<div class="place" data-name="Lò Rèn" data-cost="76" style="left:80%;top:47%"><span class="icon">🔨</span><b>Lò Rèn</b></div>
+<div class="place" data-name="Nông Điền" data-cost="60" style="left:22%;top:78%"><span class="icon">🌾</span><b>Nông Điền</b></div>
+<div class="place" data-name="Mỏ Sắt" data-cost="70" style="left:78%;top:78%"><span class="icon">⛏️</span><b>Mỏ Sắt</b></div>
+
+<div class="npc npc-luc" data-npc="Lục Minh Triết" style="left:39%;top:42%"><div class="avatar">👑</div><b>Lục Minh Triết</b></div>
+<div class="npc npc-tham" data-npc="Thẩm Hàn Phong" style="left:61%;top:42%"><div class="avatar">⚔️</div><b>Thẩm Hàn Phong</b></div>
+<div class="npc npc-tieu" data-npc="Tiêu Mặc Bạch" style="left:50%;top:62%"><div class="avatar">🪶</div><b>Tiêu Mặc Bạch</b></div>
 </div>
 </section>
 <section class="panel"><div class="title">📜 Tương tác</div><div id="message">Chạm vào công trình hoặc NPC để bắt đầu.</div></section>
 <section class="panel">
-<div class="title">🎮 Bản 3.1</div>
+<div class="title">🎮 Bản 3.2</div>
 <div class="grid">
 <button onclick="openNpc('Lục Minh Triết')">👑 Quân sư triều đình</button>
 <button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
@@ -102,8 +118,18 @@ const npcText={
 function update(){for(const k of Object.keys(state))document.getElementById(k).textContent=state[k]}
 function msg(t){document.getElementById("message").textContent=t}
 function openNpc(n){
- const d=npcText[n];document.getElementById("mtitle").textContent="🧑 "+n;
- document.getElementById("mcontent").innerHTML=`<div class="advisor"><b>${d[0]}</b><div class="quote">“${d[1]}”</div><button style="margin-top:10px;width:100%" onclick="npcAction('${n}')">${d[2]}</button></div>`;
+ const d=npcText[n];
+ document.getElementById("mtitle").textContent="🧑 "+n;
+ document.getElementById("mcontent").innerHTML=`
+ <div class="modalNpc">
+   <div class="bigAvatar">${n==="Lục Minh Triết"?"👑":n==="Thẩm Hàn Phong"?"⚔️":"🪶"}</div>
+   <div><b style="color:#ffe08b">${d[0]}</b><div class="actionNote">NPC tương tác • Bản 3.2</div></div>
+ </div>
+ <div class="quote" style="margin-top:12px">“${d[1]}”</div>
+ <div class="grid" style="margin-top:10px">
+   <button onclick="npcAction('${n}')">${d[2]}</button>
+   <button onclick="npcTalk('${n}')">💬 Đối thoại</button>
+ </div>`;
  document.getElementById("modal").classList.add("show")
 }
 function npcAction(n){
@@ -112,7 +138,20 @@ function npcAction(n){
  if(n==="Tiêu Mặc Bạch"){state.iron+=50;msg("🧠 Tiêu Mặc Bạch phân tích trận địa: +50 ⛏️.")}
  update();closeModal()
 }
+function npcTalk(n){
+ const lines={
+ "Lục Minh Triết":"“Chúa công, hãy củng cố lương thảo trước khi mở rộng chiến tuyến.”",
+ "Thẩm Hàn Phong":"“Giang hồ đang quan sát. Một nhiệm vụ đúng lúc có thể thu phục cả một cao thủ.”",
+ "Tiêu Mặc Bạch":"“Đừng chỉ nhìn binh lực. Địa hình, thời cơ và ý đồ của địch mới quyết định thắng bại.”"
+ };
+ document.getElementById("message").textContent=lines[n];
+ closeModal();
+}
 function closeModal(){document.getElementById("modal").classList.remove("show")}
+function upgradeBuilding(name,cost){
+ if(state.gold<cost){msg(`❌ Không đủ vàng để nâng cấp ${name}. Cần ${cost} 💰.`);closeModal();return}
+ state.gold-=cost;msg(`🏗️ ${name} đã được nâng cấp! -${cost} 💰.`);update();closeModal()
+}
 function collect(){state.food+=120;state.wood+=60;msg("🌾 Thu hoạch thành công: +120 🌾, +60 🪵.");update()}
 document.querySelectorAll(".npc").forEach(el=>el.addEventListener("pointerup",()=>openNpc(el.dataset.npc)));
 document.querySelectorAll(".place").forEach(el=>el.addEventListener("pointerup",()=>{

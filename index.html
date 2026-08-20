@@ -239,8 +239,8 @@ main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#687e4
 <div class="card">
 <h3 id="bossName">🐉 Cự Long Biên Ải</h3>
 <p>Boss càng mạnh sau mỗi lần bị đánh bại. Gây đủ sát thương để nhận chiến lợi phẩm.</p>
-<button onclick="attackBoss()">⚔️ Đánh Boss</button>
-<button onclick="bossSkill()" style="margin-top:6px">⚡ Đại chiêu</button>
+<button type="button" onclick="attackBoss()">⚔️ Đánh Boss</button>
+<button type="button" onclick="bossSkill()" style="margin-top:6px">⚡ Đại chiêu</button>
 </div>
 </div>
 
@@ -359,10 +359,37 @@ Cấp <b id="commanderLevel2">1</b> • Uy tín <b id="commanderPrestige">0</b><
 <script>
 const KEY="daiviet_chienky_11";
 let s=JSON.parse(localStorage.getItem(KEY)||"null");
+function normalizeState(x){
+ x=x||{};
+ x.city2=x.city2||{level:1,houses:10,happiness:70};
+ x.tech=x.tech||{food:0,iron:0,army:0,economy:0};
+ x.campaign=x.campaign||{stage:1,stars:0,cleared:[]};
+ x.commander=x.commander||{level:1,xp:0,name:"Đại tướng"};
+ x.guild=x.guild||{level:1,xp:0,members:1};
+ x.boss=x.boss||{hp:100,level:1,defeated:0,damage:0};
+ x.loot=x.loot||{rare:0,good:0,normal:0};
+ x.arena=x.arena||{rating:1000,wins:0,losses:0};
+ x.legion=x.legion||{level:1,xp:0};
+ x.quests=x.quests||{done:0,claimed:0};
+ x.quests.harvest=x.quests.harvest||0;
+ x.quests.research=x.quests.research||0;
+ x.ach=x.ach||{};
+ x.gems=x.gems||5; x.gold=x.gold||0; x.food=x.food||0; x.wood=x.wood||0; x.iron=x.iron||0;
+ x.infantry=x.infantry||0; x.archers=x.archers||0; x.cavalry=x.cavalry||0; x.elephants=x.elephants||0;
+ x.heroLevel=x.heroLevel||1; x.heroXp=x.heroXp||0; x.heroTier=x.heroTier||1;
+ x.heroSkill=x.heroSkill||"none"; x.level=x.level||1; x.xp=x.xp||0; x.fame=x.fame||0;
+ x.cityLevel=x.cityLevel||1; x.cityXp=x.cityXp||0; x.population=x.population||100;
+ x.farm=x.farm||0; x.forge=x.forge||0; x.market=x.market||0; x.port=x.port||0; x.barracks=x.barracks||0;
+ x.territory=x.territory||1; x.influence=x.influence||0; x.diplomacy=x.diplomacy||"Trung lập"; x.war=x.war||0;
+ x.sword=!!x.sword; x.shield=!!x.shield; x.bow=!!x.bow; x.seal=!!x.seal; x.potion=x.potion||0;
+ x.logs=x.logs||[];
+ return x;
+}
 if(!s){
  const old=JSON.parse(localStorage.getItem("daiviet_chienky_10")||localStorage.getItem("daiviet_chienky_09")||null);
  s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},logs:["• Đã chuyển tiến trình lên Bản 1.6."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},logs:["• Đại Việt Chiến Ký Bản 1.6 bắt đầu."]};
 }
+s=normalizeState(s);
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
 function log(v){s.logs.push("• "+v);if(s.logs.length>50)s.logs.shift();save();render()}
 function cap(v){return Math.min(1000+s.cityLevel*300,Math.max(0,Math.floor(v)))}
@@ -607,33 +634,57 @@ function upgradeLegion(){
 
 function bossMaxHp(){return 100}
 function attackBoss(){
+ s=normalizeState(s);
  if(army()<5){log("🐉 Cần ít nhất 5 quân.");return}
  let dmg=Math.max(5,power()/20+Math.random()*8);
  if(s.heroSkill==="warcry")dmg*=1.2;
- s.boss.damage+=dmg;s.boss.hp=Math.max(0,s.boss.hp-dmg);
+ s.boss.damage+=dmg;
+ s.boss.hp=Math.max(0,s.boss.hp-dmg);
  s.guild.xp+=Math.floor(dmg/2);
- if(s.boss.hp<=0)defeatBoss();
- else{gainXp(20);log("🐉 Gây "+Math.round(dmg)+" sát thương lên Boss.");}
- s.heroSkill="none";render();save()
+ if(s.boss.hp<=0){
+   defeatBoss();
+ }else{
+   gainXp(20);
+   log("🐉 Gây "+Math.round(dmg)+" sát thương lên Boss. HP còn "+Math.round(s.boss.hp)+"%.");
+ }
+ s.heroSkill="none";render();save();
 }
 function bossSkill(){
+ s=normalizeState(s);
  if(army()<8){log("⚡ Cần ít nhất 8 quân để dùng đại chiêu.");return}
  let dmg=Math.max(15,power()/11+Math.random()*12);
- s.boss.damage+=dmg;s.boss.hp=Math.max(0,s.boss.hp-dmg);s.guild.xp+=Math.floor(dmg);
- if(s.boss.hp<=0)defeatBoss();else log("⚡ Đại chiêu gây "+Math.round(dmg)+" sát thương!");
- render();save()
+ s.boss.damage+=dmg;
+ s.boss.hp=Math.max(0,s.boss.hp-dmg);
+ s.guild.xp+=Math.floor(dmg);
+ if(s.boss.hp<=0){
+   defeatBoss();
+ }else{
+   gainXp(35);
+   log("⚡ Đại chiêu gây "+Math.round(dmg)+" sát thương! HP Boss còn "+Math.round(s.boss.hp)+"%.");
+ }
+ render();save();
 }
 function defeatBoss(){
+ s=normalizeState(s);
  const r=Math.random();
  if(r<.18)s.loot.rare++;
  else if(r<.55)s.loot.good++;
  else s.loot.normal++;
- s.boss.defeated++;s.boss.level++;s.boss.hp=bossMaxHp();s.boss.damage=0;
- s.gold=cap(s.gold+220+s.boss.level*20);s.gems+=2;s.fame+=30;gainXp(150);gainCity(80);
+ s.boss.defeated++;
+ s.boss.level++;
+ s.boss.hp=100;
+ s.boss.damage=0;
+ s.gold=cap(s.gold+220+s.boss.level*20);
+ s.gems+=2;
+ s.fame+=30;
+ gainXp(150);
+ gainCity(80);
  s.guild.xp+=80;
- log("🎉 Hạ Boss! Nhận chiến lợi phẩm +2💎 và vàng.");
+ log("🎉 Hạ Boss! Boss lên cấp "+s.boss.level+" • nhận chiến lợi phẩm +2💎.");
+ render();save();
 }
 function upgradeGuild16(){
+
  if(s.gems<3){log("Cần 3💎.");return}
  s.gems-=3;s.guild.level++;s.guild.members+=5;s.guild.xp=0;s.fame+=20;gainXp(50);
  log("🏳️ Bang hội lên cấp "+s.guild.level+"! Thành viên +5.");

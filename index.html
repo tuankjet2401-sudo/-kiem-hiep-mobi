@@ -6,7 +6,7 @@
 <meta name="game-version" content="4.12.5-M3">
 <meta name="game-protocol" content="4.12.5-M3">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.5-M4 · Skill FX AOE</title>
+<title>Kiếm Thế Mobi – Bản 4.12.5-M5-M4 · Skill FX AOE</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -48,7 +48,15 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 .bankSlot{min-height:54px;background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;font-size:11px}
 .npcShopBadge{color:#ffd978;font-weight:800}
 @media(max-width:700px){.serviceGrid{grid-template-columns:1fr}.bankGrid{grid-template-columns:repeat(4,1fr)}}.modal h1{margin:0 0 12px;font-size:27px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:10px;font-size:26px;padding:5px 12px}
-.card,.class{background:#20282f;border:1px solid #3b454e;border-radius:15px;padding:11px;margin:8px 0}.action{background:#d2a44e;color:#fff;border:0;border-radius:11px;padding:9px 12px;font-weight:800}.classes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.class{min-height:125px}.class.sel{border:2px solid #f3d46b}.icon{font-size:29px}.ct{color:#ffd978;font-size:12px}.desc{color:#d0d6db;font-size:12px;margin-top:5px;line-height:1.3}.item{background:#20282f;border-radius:14px;padding:10px;margin:7px 0;display:flex;justify-content:space-between;gap:8px}.rare{color:#c47cff}.good{color:#77e36a}.actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.enh{background:#6f4fd8;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:800}.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.slot{background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;min-height:58px;font-size:11px}
+.card,.class{background:#20282f;border:1px solid #3b454e;border-radius:15px;padding:11px;margin:8px 0}.action{background:#d2a44e;color:#fff;border:0;border-radius:11px;padding:9px 12px;font-weight:800}.classes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.m5Panel{margin:10px 0;padding:10px;background:#182126;border:1px solid #46515a;border-radius:14px}
+.m5Panel h3{margin:0 0 8px;font-size:16px;color:#ffd978}
+.m5Choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.m5Choice{background:#20282f;color:#fff;border:1px solid #46515a;border-radius:10px;padding:8px;text-align:left;font-weight:700}
+.m5Choice.sel{border:2px solid #f3d46b;background:#2a3033}
+.m5Meta{color:#b9c3ca;font-size:11px;display:block;margin-top:3px}
+.m5Badge{display:inline-block;background:#6f4fd8;color:#fff;border-radius:8px;padding:3px 6px;font-size:10px;margin-left:5px}
+.class{min-height:125px}.class.sel{border:2px solid #f3d46b}.icon{font-size:29px}.ct{color:#ffd978;font-size:12px}.desc{color:#d0d6db;font-size:12px;margin-top:5px;line-height:1.3}.item{background:#20282f;border-radius:14px;padding:10px;margin:7px 0;display:flex;justify-content:space-between;gap:8px}.rare{color:#c47cff}.good{color:#77e36a}.actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.enh{background:#6f4fd8;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:800}.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.slot{background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;min-height:58px;font-size:11px}
 @media(max-width:700px){#stats{max-width:63vw}.name{font-size:21px}.sub{font-size:14px}#town{max-width:30vw;font-size:13px}.classes{grid-template-columns:1fr}.menu button,.community{font-size:14px}}
 </style>
 </head>
@@ -80,7 +88,15 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div id="questTracker"></div>
 <div id="status">🔴 Offline · Chế độ local</div>
 
-<div id="classModal" class="modal"><button class="close" onclick="closeM('classModal')">×</button><h1>🥋 Chọn Môn Phái Nổi Bật</h1><div class="card">Đang chọn: <b id="selName">Võ Đang</b><br><small id="selDesc"></small></div><div id="classes" class="classes"></div><button class="action" onclick="confirmClass()">⚔️ Chọn môn phái này</button></div>
+<div id="classModal" class="modal">
+<button class="close" onclick="closeM('classModal')">×</button>
+<h1>🥋 Môn Phái · Mốc 5</h1>
+<div class="card">Đang chọn: <b id="selName">Võ Đang</b><br><small id="selDesc"></small><br><span class="m5Badge">14/14 môn phái</span></div>
+<div id="classes" class="classes"></div>
+<div class="m5Panel"><h3>👘 Trang phục</h3><div id="costumes" class="m5Choices"></div></div>
+<div class="m5Panel"><h3>⚔️ Vũ khí</h3><div id="weapons" class="m5Choices"></div></div>
+<button class="action" onclick="confirmClass()">⚔️ Chọn môn phái & lưu ngoại hình</button>
+</div>
 <div id="actModal" class="modal">
 <button class="close" onclick="closeM('actModal')">×</button>
 <h1>🏆 NPC Hoạt Động</h1><div class="card"><b>Chọn hoạt động</b><small>Chạm Tham gia để đăng ký.</small></div>
@@ -156,7 +172,7 @@ for(let i=0;i<14;i++){
 const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao Bào","áo","Thường",0,5,"🥋"],["Giáp Tinh Anh","áo","Tốt",0,13,"🛡️"],["Đao Tinh Anh","vũ khí","Hiếm",18,0,"⚔️"],["Đao Sơn Tặc","vũ khí","Thường",9,0,"🗡️"],["Bình Hồi Khí","tiêu hao","Thường",0,0,"🧪"]];
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
 let cdA=0,cdS=0,cdF=0,stun=0,slow=0;
-/* Mốc 4 — Skill FX/AOE trên nền Combat Animation + Spine-style Rig (canvas runtime)
+/* Mốc 5 — 14 Môn Phái + Trang Phục + Vũ Khí trên nền Combat Animation + Spine-style Rig (canvas runtime)
    Bone hierarchy: root -> torso/head/hair + legL/legR + weapon.
    Dùng chính các layer PNG hiện có, không cần thêm thư viện ngoài. */
 const rig={attack:0,skill:0,fire:0};
@@ -634,11 +650,56 @@ function drawNpc(n){
 function toast(t){let q=document.getElementById("msg");q.textContent=t;q.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>q.style.display="none",1100)}
 function closeM(id){document.getElementById(id).style.display="none"}
 function openM(id){document.getElementById(id).style.display="block"}
-function hud(){let z=cls[pc];document.getElementById("cl").textContent=pc;document.getElementById("el").textContent=icons[z[6]]+" "+z[6];document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("hp").textContent=Math.round(P.hp)+"/220";document.getElementById("mp").textContent=Math.round(P.mp)+"/60";document.getElementById("xp").textContent=exp+"/600";document.getElementById("gold").textContent=gold;document.getElementById("hpbar").style.width=P.hp/220*100+"%";document.getElementById("mpbar").style.width=P.mp/60*100+"%";document.getElementById("xpbar").style.width=exp/600*100+"%";document.getElementById("atk").textContent=P.atk+equip.weapon.a+z[4]}
-const featuredClasses=["Thiếu Lâm","Thiên Vương","Võ Đang","Nga Mi","Đường Môn","Ngũ Độc","Côn Lôn Đao","Côn Lôn Kiếm","Cái Bang Chưởng","Cái Bang Bổng"];
+function hud(){let z=cls[pc];document.getElementById("cl").textContent=pc;document.getElementById("el").textContent=icons[z[6]]+" "+z[6];document.getElementById("coord").textContent=Math.round(P.x)+","+Math.round(P.y);document.getElementById("hp").textContent=Math.round(P.hp)+"/220";document.getElementById("mp").textContent=Math.round(P.mp)+"/60";document.getElementById("xp").textContent=exp+"/600";document.getElementById("gold").textContent=gold;document.getElementById("hpbar").style.width=P.hp/220*100+"%";document.getElementById("mpbar").style.width=P.mp/60*100+"%";document.getElementById("xpbar").style.width=exp/600*100+"%";document.getElementById("atk").textContent=P.atk+equip.weapon.a+z[4]+(weaponData[selectedWeapon]?.bonus||0)}
+const featuredClasses=[
+  "Thiếu Lâm","Thiên Vương","Võ Đang","Nga Mi","Đường Môn","Ngũ Độc",
+  "Côn Lôn Đao","Côn Lôn Kiếm","Cái Bang Chưởng","Cái Bang Bổng",
+  "Thiên Nhẫn Kích/Mác","Thiên Nhẫn Hỏa Tiễn","Thúy Yên Đao","Thúy Yên Song Đao"
+];
+
+/* ================= MỐC 5 · 14 MÔN PHÁI + TRANG PHỤC + VŨ KHÍ ================= */
+const costumeData={
+  "Cổ Trang":{icon:"👘",desc:"Cổ trang giang hồ",color:"#d8bc72"},
+  "Thiếu Niên":{icon:"🧥",desc:"Thiếu hiệp nhẹ nhàng",color:"#8ddcff"},
+  "Kim Giáp":{icon:"🛡️",desc:"Giáp chiến sáng",color:"#f3d46b"},
+  "Huyền Dạ":{icon:"🌙",desc:"Áo choàng đêm",color:"#9d86ff"}
+};
+const weaponData={
+  "Kiếm":{icon:"🗡️",desc:"Kiếm khí",bonus:5},
+  "Đao":{icon:"⚔️",desc:"Đao pháp",bonus:7},
+  "Côn":{icon:"🪵",desc:"Côn pháp",bonus:6},
+  "Chưởng":{icon:"🐉",desc:"Chưởng pháp",bonus:8},
+  "Ám Khí":{icon:"🏹",desc:"Tầm xa",bonus:9},
+  "Mác":{icon:"🔱",desc:"Kích/Mác",bonus:8},
+  "Song Đao":{icon:"⚔️",desc:"Liên kích",bonus:10}
+};
+let selectedCostume="Cổ Trang";
+let selectedWeapon="Kiếm";
+
+function classWeaponDefaults(name){
+  if(name.includes("Đao")||name.includes("Bổng")) return name.includes("Bổng")?"Côn":"Đao";
+  if(name.includes("Chưởng")) return "Chưởng";
+  if(name.includes("Đường Môn")||name.includes("Ngũ Độc")) return "Ám Khí";
+  if(name.includes("Thiên Nhẫn Kích")) return "Mác";
+  if(name.includes("Thiên Nhẫn Hỏa")) return "Ám Khí";
+  if(name.includes("Song Đao")) return "Song Đao";
+  return "Kiếm";
+}
+function renderM5Options(){
+  const cg=document.getElementById("costumes"),wg=document.getElementById("weapons");
+  if(cg) cg.innerHTML=Object.entries(costumeData).map(([n,v])=>
+    `<button class="m5Choice ${n===selectedCostume?"sel":""}" onclick="selectCostume('${n}')">${v.icon} ${n}<span class="m5Meta">${v.desc}</span></button>`).join("");
+  if(wg) wg.innerHTML=Object.entries(weaponData).map(([n,v])=>
+    `<button class="m5Choice ${n===selectedWeapon?"sel":""}" onclick="selectWeapon('${n}')">${v.icon} ${n}<span class="m5Meta">+${v.bonus} · ${v.desc}</span></button>`).join("");
+}
+function selectCostume(n){selectedCostume=n;renderM5Options();toast("👘 "+n)}
+function selectWeapon(n){selectedWeapon=n;renderM5Options();toast("⚔️ "+n)}
+
 
 function openClassModal(){
-  pending=pc; classes(); sel();
+  pending=pc;
+  selectedWeapon=classWeaponDefaults(pending);
+  classes(); sel(); renderM5Options();
   closeM("actModal"); closeM("comModal"); openM("classModal");
 }
 function openActivity(){
@@ -673,13 +734,20 @@ function classes(){
     if(!q) continue;
     let e=document.createElement("div");
     e.className="class"+(n==pending?" sel":"");
-    e.innerHTML=`<div class=icon>${q[0]}</div><b>${n}</b><div class=ct>${q[1]}</div><div class=desc>${q[2]}<br>${q[3]}</div>`;
+    const unlocked = featuredClasses.indexOf(n)<10 ? "Mốc 1–4" : "Mốc 5";
+    e.innerHTML=`<div class=icon>${q[0]}</div><b>${n}</b><span class="m5Badge">${unlocked}</span><div class=ct>${q[1]}</div><div class=desc>${q[2]}<br>${q[3]}</div>`;
     e.onclick=()=>{pending=n;classes();sel()};
     g.appendChild(e);
   }
 }
 function sel(){let z=cls[pending];document.getElementById("selName").textContent=pending;document.getElementById("selDesc").textContent=z[2]+" · "+z[3]}
-function confirmClass(){pc=pending;toast(cls[pc][0]+" Đã chọn "+pc);closeM("classModal");hud()}
+function confirmClass(){
+  pc=pending;
+  const bonus=weaponData[selectedWeapon]?.bonus||0;
+  P.atk=15;
+  toast(cls[pc][0]+" Đã chọn "+pc+" · "+selectedCostume+" · "+selectedWeapon+" +"+bonus);
+  closeM("classModal"); hud();
+}
 function itemPower(i){return(i?.en||0)*3}
 function bagUI(){document.getElementById("cnt").textContent=bag.length;document.getElementById("equip").innerHTML=["weapon","armor"].map(k=>{let i=equip[k];return`<div class=item>${i.i} <b>${i.n} +${i.en}</b><div class=actions><button class=enh onclick="enhEq('${k}')">⚒️ +${i.en+1}</button><button class=action onclick="uneq('${k}')">Tháo</button></div></div>`}).join("");document.getElementById("items").innerHTML=bag.map((i,k)=>`<div class=item><div>${i.i} <b class=${i.r=="Hiếm"?"rare":i.r=="Tốt"?"good":""}>${i.n} +${i.en}</b><small>${i.r} · ${i.t} · ⚔️ ${i.a+itemPower(i)} · 🛡️ ${i.df+itemPower(i)}</small></div><div class=actions>${i.t=="tiêu hao"?`<button class=action onclick="use(${k})">Dùng</button>`:`<button class=enh onclick="enh(${k})">⚒️ +${i.en+1}</button><button class=action onclick="eq(${k})">Trang bị</button>`}<button class=action onclick="sell(${k})">Bán</button></div></div>`).join("");let s="";for(let i=0;i<24;i++)s+=`<div class=slot>${bag[i]?bag[i].i+" "+bag[i].n+" +"+bag[i].en:"—"}</div>`;document.getElementById("slots").innerHTML=s}
 function cost(i){return 50*(i.en+1)}
@@ -810,6 +878,23 @@ function drawPlayer(a,b){
     x.strokeStyle="#e6e8ef";x.lineWidth=3;x.beginPath();x.moveTo(a+27,b+17);x.lineTo(a+43,b-8);x.stroke();
   }
 
+  /* Mốc 5 · overlay trang phục */
+  const cv=costumeData[selectedCostume]||costumeData["Cổ Trang"];
+  x.save();
+  x.globalAlpha=.32;
+  x.fillStyle=cv.color;
+  x.beginPath();
+  x.roundRect(a-43,b-2,86,72,18);
+  x.fill();
+  x.globalAlpha=1;
+
+  /* Mốc 5 · vũ khí theo lựa chọn */
+  const wv=weaponData[selectedWeapon]||weaponData["Kiếm"];
+  x.font="24px sans-serif";
+  x.fillText(wv.icon,a+46,b+5);
+  x.font="10px sans-serif";
+  x.fillStyle="#fff";
+  x.fillText(selectedCostume,a,b+82);
 
   /* Combat Animation overlay: slash trail / skill wind-up / fire thrust */
   if(combat.type){

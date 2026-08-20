@@ -3,105 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Đại Việt Chiến Ký - Bản 0.8</title>
+<title>Đại Việt Chiến Ký - Bản 0.9</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#182516;color:#fff}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#151d13;color:#fff}
 button{border:0;border-radius:13px;padding:11px 8px;background:#75451f;color:#fff;font-weight:800;box-shadow:0 3px 0 #45270f;font-size:13px}
-button:active{transform:translateY(2px);box-shadow:0 1px 0 #45270f}button:disabled{opacity:.45}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #45270f}
+button:disabled{opacity:.4}
 #app{height:100dvh;display:flex;flex-direction:column}
 header{background:#352313;border-bottom:2px solid #aa793e;padding:8px 9px calc(7px + env(safe-area-inset-top))}
-h1{text-align:center;margin:0;color:#ffd86b;font-size:19px}.sub{text-align:center;color:#d9c69e;font-size:10px;margin:2px 0 7px}
-.resources{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.res{background:#4b321c;border:1px solid #806038;border-radius:9px;text-align:center;padding:5px 2px;font-size:11px}.res b{display:block;color:#ffe08a;font-size:13px}
-main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#6c8549,#425f35 48%,#263c29)}
-.panel{background:rgba(31,27,18,.95);border:1px solid #a77c42;border-radius:15px;padding:9px;margin-bottom:8px}.title{font-weight:900;color:#ffd66b;margin-bottom:7px;font-size:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.card,.stat{background:#3b2b1b;border-radius:10px;padding:8px}.card h3{font-size:13px;margin:0 0 4px;color:#ffe08a}.card p{font-size:11px;margin:3px 0 7px;color:#d8cfbd;line-height:1.35}.card button{width:100%;font-size:11px;padding:9px}.stat{font-size:12px}
-.info{font-size:12px;color:#d9d0bd;line-height:1.45}
-#map{height:335px;position:relative;overflow:hidden;border-radius:13px;border:2px solid #b58b4e;background:#536f42}
-.river{position:absolute;background:#4f91a5;width:24px;height:130%;left:47%;top:-15%;transform:rotate(12deg);opacity:.75}.road{position:absolute;background:#9c8554;height:14px;width:125%;left:-12%;top:54%;transform:rotate(-8deg);opacity:.8}.road2{position:absolute;background:#9c8554;height:9px;width:95%;left:2%;top:29%;transform:rotate(35deg);opacity:.65}
-.node{position:absolute;width:58px;height:58px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:9px;font-weight:800;border:2px solid #d7b36d;box-shadow:0 3px 7px #172012;z-index:4}.node strong{font-size:20px}.castle{background:#6d4122}.village{background:#58673a}.enemy{background:#6d2722}.mine{background:#4a4a45}.neutral{background:#725c32}.ally{background:#305d68}
-.selected{outline:3px solid #ffe07a;transform:scale(1.05)}
-#armyToken{position:absolute;width:42px;height:42px;border-radius:50%;background:#1c5b35;border:3px solid #e7cf75;display:flex;align-items:center;justify-content:center;font-size:23px;z-index:8;transition:left .35s,top .35s}
-#enemyToken{position:absolute;width:40px;height:40px;border-radius:50%;background:#7d2b25;border:3px solid #e8a06b;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:7}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}.bar{height:7px;background:#211910;border-radius:8px;overflow:hidden;margin:5px 0}.bar i{display:block;height:100%;background:#b83d31}
-.log{max-height:90px;overflow:auto;font-size:11px;line-height:1.5;color:#d6cdbb}.good{color:#8fe38c}.bad{color:#ff9184}.gold{color:#ffd34d}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#27190e;border-top:1px solid #8e693a;padding:7px max(7px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.bottom button{font-size:11px;padding:10px 3px}
+h1{text-align:center;margin:0;color:#ffd86b;font-size:19px}
+.sub{text-align:center;color:#d9c69e;font-size:10px;margin:2px 0 7px}
+.resources{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.res{background:#4b321c;border:1px solid #806038;border-radius:9px;text-align:center;padding:5px 2px;font-size:11px}.res b{display:block;color:#ffe08a;font-size:13px}
+main{flex:1;overflow:auto;padding:8px 8px 88px;background:linear-gradient(#657c46,#3e5931 50%,#233625)}
+.panel{background:rgba(29,25,17,.96);border:1px solid #a77c42;border-radius:15px;padding:9px;margin-bottom:8px}
+.title{font-weight:900;color:#ffd66b;margin-bottom:7px;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat,.card{background:#3b2b1b;border-radius:10px;padding:8px}
+.card h3{font-size:13px;margin:0 0 4px;color:#ffe08a}.card p{font-size:11px;margin:3px 0 7px;color:#d8cfbd;line-height:1.35}.card button{width:100%;font-size:11px;padding:9px}
+.stat{font-size:12px}.info{font-size:12px;color:#d9d0bd;line-height:1.45}
+#battle{display:none}
+#battle.active{display:block}
+#world.hidden{display:none}
+.arena{height:350px;position:relative;overflow:hidden;border-radius:14px;border:2px solid #b58b4e;background:linear-gradient(#65734d 0 48%,#735f3d 49% 100%)}
+.arena:after{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed rgba(255,235,170,.35)}
+.sun{position:absolute;width:58px;height:58px;border-radius:50%;right:15px;top:15px;background:#e4bd62;opacity:.75}
+.unit{position:absolute;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:3px solid #e8d18a;z-index:4;transition:left .35s,top .35s}
+.playerUnit{background:#1d5b38}.enemyUnit{background:#7b2a25}
+.hp{position:absolute;width:65px;height:7px;background:#20160f;border-radius:5px;left:-8px;top:-10px;overflow:hidden}.hp i{display:block;height:100%;background:#b73c31}
+.vs{text-align:center;font-size:12px;color:#dfd0ae;margin-top:6px}
+.big{font-size:21px;font-weight:900;text-align:center;color:#ffd86b}
+.battleActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.message{min-height:40px;background:#3b2b1b;border-radius:10px;padding:8px;text-align:center;font-size:12px;color:#e1d5bb}
+.log{max-height:90px;overflow:auto;font-size:11px;line-height:1.5;color:#d6cdbb}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#27190e;border-top:1px solid #8e693a;padding:7px max(7px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.bottom button{font-size:11px;padding:10px 3px}
+.good{color:#8fe38c}.bad{color:#ff9184}
 </style>
 </head>
 <body>
 <div id="app">
 <header>
 <h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 0.8 • Quân chủng • Đội hình • Tướng • Chiến thuật</div>
+<div class="sub">Bản 0.9 • Màn hình trận chiến • HP • Kỹ năng • Kết quả</div>
 <div class="resources"><div class="res">🌾<b id="food">0</b></div><div class="res">🪵<b id="wood">0</b></div><div class="res">⛏️<b id="iron">0</b></div><div class="res">💰<b id="gold">0</b></div></div>
 </header>
+
 <main>
+<div id="world">
 <section class="panel">
-<div class="title">🗺️ Bản đồ chiến trường</div>
-<div id="map">
-<div class="river"></div><div class="road"></div><div class="road2"></div>
-<div class="node castle" data-type="capital" style="left:7%;top:59%" onclick="selectNode('capital')"><strong>🏯</strong>Thành Đông</div>
-<div class="node village" data-type="village" style="left:39%;top:9%" onclick="selectNode('village')"><strong>🏘️</strong>Làng Việt</div>
-<div class="node mine" data-type="mine" style="left:65%;top:60%" onclick="selectNode('mine')"><strong>⛏️</strong>Mỏ sắt</div>
-<div class="node enemy" data-type="enemy" style="left:72%;top:11%" onclick="selectNode('enemy')"><strong>👹</strong>Đồn địch</div>
-<div class="node neutral" data-type="fort" style="left:34%;top:63%" onclick="selectNode('fort')"><strong>🏰</strong>Pháo đài</div>
-<div class="node ally" data-type="ally" style="left:10%;top:10%" onclick="selectNode('ally')"><strong>🤝</strong>Minh hữu</div>
-<div class="node enemy" data-type="enemy2" style="left:73%;top:63%" onclick="selectNode('enemy2')"><strong>🔥</strong>Đồn Bắc</div>
-<div id="armyToken">⚔️</div><div id="enemyToken">👹</div>
-</div>
-<div class="info" id="selection" style="text-align:center;margin-top:5px"></div>
-<div class="actions"><button onclick="moveArmy()">⚔️ Di chuyển</button><button onclick="attack()">🔥 Tấn công</button></div>
+<div class="title">🗺️ Bản đồ</div>
+<div class="card"><h3>⚔️ Sẵn sàng chiến đấu</h3><p>Chọn một đồn địch để mở màn hình trận chiến riêng.</p><div class="grid"><button onclick="openBattle('enemy')">🔥 Đồn địch • 190 lực</button><button onclick="openBattle('enemy2')">🔥 Đồn Bắc • 220 lực</button></div></div>
 </section>
-
 <section class="panel">
-<div class="title">🛡️ Quân chủng</div>
+<div class="title">👑 Quân đội</div>
 <div class="grid">
-<div class="card"><h3>🛡️ Bộ binh</h3><p><b id="infantry">0</b> quân • Cận chiến ổn định.</p><button onclick="recruitInfantry()">Tuyển 10 • 100🌾 40💰</button></div>
-<div class="card"><h3>🏹 Cung binh</h3><p><b id="archers">0</b> quân • +sức mạnh khi tấn công.</p><button onclick="recruitArchers()">Tuyển 5 • 80🌾 60💰</button></div>
-<div class="card"><h3>🐘 Chiến tượng</h3><p><b id="elephants">0</b> • Rất mạnh nhưng đắt.</p><button onclick="recruitElephant()">Tuyển 1 • 250🌾 120💰 80⛏️</button></div>
-<div class="card"><h3>🐎 Kỵ binh</h3><p><b id="cavalry">0</b> • Cơ động, tăng sức mạnh.</p><button onclick="recruitCavalry()">Tuyển 5 • 120🌾 100💰</button></div>
+<div class="stat">🛡️ Bộ binh: <b id="infantry">0</b></div><div class="stat">🏹 Cung binh: <b id="archers">0</b></div>
+<div class="stat">🐎 Kỵ binh: <b id="cavalry">0</b></div><div class="stat">🐘 Chiến tượng: <b id="elephants">0</b></div>
+<div class="stat">⚔️ Sức mạnh: <b id="power">0</b></div><div class="stat">🏆 Thắng: <b id="wins">0</b></div>
 </div>
 </section>
-
 <section class="panel">
-<div class="title">⚔️ Đội hình chiến thuật</div>
+<div class="title">⚔️ Quân chủng</div>
 <div class="grid">
-<div class="card"><h3>🛡️ Phòng thủ</h3><p>Giảm tổn thất khi bị phản công.</p><button onclick="setFormation('defense')">Chọn đội hình</button></div>
-<div class="card"><h3>⚔️ Cân bằng</h3><p>Không cộng/trừ sức mạnh.</p><button onclick="setFormation('balanced')">Chọn đội hình</button></div>
-<div class="card"><h3>🔥 Xung phong</h3><p>+25% sức mạnh tấn công, dễ mất quân.</p><button onclick="setFormation('charge')">Chọn đội hình</button></div>
-<div class="card"><h3>🏹 Xa kích</h3><p>+20% sức mạnh cung binh.</p><button onclick="setFormation('ranged')">Chọn đội hình</button></div>
+<div class="card"><h3>🛡️ Bộ binh</h3><p>10 quân • 100🌾 40💰</p><button onclick="recruitInfantry()">Tuyển</button></div>
+<div class="card"><h3>🏹 Cung binh</h3><p>5 quân • 80🌾 60💰</p><button onclick="recruitArchers()">Tuyển</button></div>
+<div class="card"><h3>🐎 Kỵ binh</h3><p>5 quân • 120🌾 100💰</p><button onclick="recruitCavalry()">Tuyển</button></div>
+<div class="card"><h3>🐘 Chiến tượng</h3><p>1 quân • 250🌾 120💰 80⛏️</p><button onclick="recruitElephant()">Tuyển</button></div>
 </div>
-<div class="info" style="margin-top:7px">Đội hình hiện tại: <b id="formation">Cân bằng</b></div>
 </section>
+<section class="panel"><div class="title">📜 Nhật ký</div><div class="log" id="log"></div></section>
+</div>
 
+<div id="battle">
 <section class="panel">
-<div class="title">👑 Tướng lĩnh</div>
+<div class="title">⚔️ CHIẾN TRƯỜNG</div>
+<div class="arena">
+<div class="sun"></div>
+<div class="unit playerUnit" id="playerUnit" style="left:18%;top:67%"><div class="hp"><i id="playerHp"></i></div>⚔️</div>
+<div class="unit enemyUnit" id="enemyUnit" style="right:18%;top:20%"><div class="hp"><i id="enemyHp"></i></div>👹</div>
+</div>
+<div class="vs">Đại Việt <b>VS</b> Quân địch</div>
+<div class="big"><span id="battleRound">Vòng 1</span></div>
 <div class="grid">
-<div class="stat">👑 Cấp tướng: <b id="hero">1</b></div><div class="stat">⭐ Kinh nghiệm: <b id="xp">0</b></div>
-<div class="stat">⚔️ Sức mạnh: <b id="power">0</b></div><div class="stat">🏆 Chiến thắng: <b id="wins">0</b></div>
+<div class="stat">💪 Lực ta: <b id="battlePower">0</b></div><div class="stat">👹 Lực địch: <b id="battleEnemy">0</b></div>
+<div class="stat">❤️ HP ta: <b id="playerHpText">100</b>%</div><div class="stat">❤️ HP địch: <b id="enemyHpText">100</b>%</div>
 </div>
-<div class="actions"><button onclick="trainHero()">👑 Huấn luyện • 120💰</button><button onclick="heroSkill()">⚡ Hào khí Đại Việt</button></div>
+<div class="message" id="battleMessage">Chọn hành động để bắt đầu.</div>
+<div class="battleActions">
+<button onclick="battleAttack()">⚔️ Tấn công</button>
+<button onclick="battleSkill()">⚡ Kỹ năng tướng</button>
+<button onclick="battleDefend()">🛡️ Phòng thủ</button>
+<button onclick="retreat()">🏳️ Rút quân</button>
+</div>
 </section>
-
-<section class="panel">
-<div class="title">📜 Nhật ký</div><div class="log" id="log"></div>
-</section>
+</div>
 </main>
-<nav class="bottom"><button onclick="collect()">🌾 Thu hoạch</button><button onclick="collectTax()">💰 Thu thuế</button><button onclick="saveGame()">💾 Lưu</button><button onclick="resetGame()">🔄 Chơi lại</button></nav>
+
+<nav class="bottom">
+<button onclick="collect()">🌾 Thu hoạch</button><button onclick="collectTax()">💰 Thu thuế</button><button onclick="saveGame()">💾 Lưu</button><button onclick="resetGame()">🔄 Chơi lại</button>
+</nav>
 </div>
 
 <script>
-const KEY="daiviet_chienky_08";
+const KEY="daiviet_chienky_09";
 let s=JSON.parse(localStorage.getItem(KEY)||"null");
 if(!s){
- const old=JSON.parse(localStorage.getItem("daiviet_chienky_07")||localStorage.getItem("daiviet_chienky_06")||localStorage.getItem("daiviet_chienky_05")||null);
- s=old?{...old,infantry:old.infantry||old.army||20,archers:old.archers||0,cavalry:old.cavalry||0,elephants:old.elephants||0,formation:"balanced",skillBoost:0,logs:["• Đã chuyển tiến trình lên Bản 0.8."]}:{food:500,wood:500,iron:250,gold:300,army:20,infantry:20,archers:0,cavalry:0,elephants:0,xp:0,wins:0,heroLevel:1,formation:"balanced",skillBoost:0,position:"capital",selected:"capital",enemyPower:190,enemy2Power:220,logs:["• Đại Việt Chiến Ký Bản 0.8 bắt đầu."]};
+ const old=JSON.parse(localStorage.getItem("daiviet_chienky_08")||localStorage.getItem("daiviet_chienky_07")||localStorage.getItem("daiviet_chienky_06")||null);
+ s=old?{...old,battle:null,logs:["• Đã chuyển tiến trình lên Bản 0.9."]}:{food:500,wood:500,iron:250,gold:300,infantry:20,archers:0,cavalry:0,elephants:0,army:20,xp:0,wins:0,heroLevel:1,formation:"balanced",territory:1,cityLevel:1,storage:1000,position:"capital",logs:["• Đại Việt Chiến Ký Bản 0.9 bắt đầu."]};
 }
-const nodes={capital:{name:"Thành Đông",x:7,y:59},village:{name:"Làng Việt",x:39,y:9},mine:{name:"Mỏ sắt",x:65,y:60},enemy:{name:"Đồn địch",x:72,y:11},fort:{name:"Pháo đài",x:34,y:63},ally:{name:"Minh hữu",x:10,y:10},enemy2:{name:"Đồn Bắc",x:73,y:63}};
+let battle=null;
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
 function log(v){s.logs.push("• "+v);if(s.logs.length>40)s.logs.shift();save();render()}
-function maxStorage(){return (s.storage||1000)+(s.cityLevel||1)*250}
-function cap(v){return Math.min(maxStorage(),Math.floor(v))}
+function armyCount(){return s.infantry+s.archers+s.cavalry+s.elephants}
 function power(){
  let p=s.infantry*5+s.archers*8+s.cavalry*9+s.elephants*35+(s.barracks||0)*18;
  p*=1+s.heroLevel*.2;
@@ -110,67 +125,100 @@ function power(){
  if(s.formation==="defense")p*=.92;
  if(s.alliance)p*=1+(s.allianceLevel||1)*.05;
  p*=1+(s.territory-1)*.03;
- return Math.floor(p*(s.skillBoost?1.35:1));
+ return Math.floor(p)
 }
+function maxStorage(){return (s.storage||1000)+(s.cityLevel||1)*250}
+function cap(v){return Math.min(maxStorage(),Math.floor(v))}
 function render(){
- ["food","wood","iron","gold","infantry","archers","cavalry","elephants","wins","xp"].forEach(k=>{const e=document.getElementById(k);if(e)e.textContent=Math.floor(s[k]||0)});
- document.getElementById("army").textContent=Math.floor(s.infantry+s.archers+s.cavalry+s.elephants);
- document.getElementById("hero").textContent=s.heroLevel;document.getElementById("power").textContent=power();
- const names={defense:"Phòng thủ",balanced:"Cân bằng",charge:"Xung phong",ranged:"Xa kích"};document.getElementById("formation").textContent=names[s.formation]||"Cân bằng";
- document.querySelectorAll(".node").forEach(e=>e.classList.toggle("selected",e.dataset.type===s.selected));
- const p=nodes[s.position],a=document.getElementById("armyToken");a.style.left="calc("+p.x+"% + 8px)";a.style.top="calc("+p.y+"% + 8px)";
- const ep=nodes.enemy2,et=document.getElementById("enemyToken");et.style.left="calc("+ep.x+"% + 8px)";et.style.top="calc("+ep.y+"% + 8px)";
- document.getElementById("selection").textContent="📍 "+nodes[s.selected].name+" • Quân đang ở: "+nodes[s.position].name;
+ ["food","wood","iron","gold","infantry","archers","cavalry","elephants","wins"].forEach(k=>{const e=document.getElementById(k);if(e)e.textContent=Math.floor(s[k]||0)});
+ document.getElementById("power").textContent=power();
  document.getElementById("log").innerHTML=s.logs.slice(-10).reverse().map(v=>"<div>"+v+"</div>").join("");
+ if(battle)renderBattle();
 }
-function saveGame(){save();log("Đã lưu Bản 0.8.")}
-function selectNode(t){s.selected=t;render()}
-function armyCount(){return s.infantry+s.archers+s.cavalry+s.elephants}
+function saveGame(){save();log("Đã lưu Bản 0.9.")}
 function recruitInfantry(){if(s.food<100||s.gold<40){log("Không đủ tài nguyên.");return}s.food-=100;s.gold-=40;s.infantry+=10;log("🛡️ Tuyển 10 bộ binh.");render();save()}
 function recruitArchers(){if(s.food<80||s.gold<60){log("Không đủ tài nguyên.");return}s.food-=80;s.gold-=60;s.archers+=5;log("🏹 Tuyển 5 cung binh.");render();save()}
 function recruitCavalry(){if(s.food<120||s.gold<100){log("Không đủ tài nguyên.");return}s.food-=120;s.gold-=100;s.cavalry+=5;log("🐎 Tuyển 5 kỵ binh.");render();save()}
-function recruitElephant(){if(s.food<250||s.gold<120||s.iron<80){log("Không đủ tài nguyên chiến tượng.");return}s.food-=250;s.gold-=120;s.iron-=80;s.elephants++;log("🐘 Tuyển 1 chiến tượng.");render();save()}
-function setFormation(f){s.formation=f;log("⚔️ Đổi đội hình.");render();save()}
-function trainHero(){if(s.gold<120){log("Không đủ vàng.");return}s.gold-=120;s.heroLevel++;s.xp+=25;log("👑 Tướng lên cấp "+s.heroLevel+".");render();save()}
-function heroSkill(){if(s.skillBoost){log("⚡ Kỹ năng đang hoạt động.");return}s.skillBoost=1;log("⚡ Hào khí Đại Việt kích hoạt: +35% sức mạnh trận kế tiếp.");render();save()}
-function moveArmy(){
- if(s.selected===s.position){log("Quân đã ở địa điểm này.");return}
- s.position=s.selected;
- if(s.position==="village"){s.food=cap(s.food+50);s.gold=cap(s.gold+20);log("🏘️ Đến Làng: +50🌾 +20💰.")}
- else if(s.position==="mine"){s.iron=cap(s.iron+30);log("⛏️ Đến Mỏ: +30⛏️.")}
- else if(s.position==="enemy"||s.position==="enemy2"){log("👹 Đã áp sát vùng địch.")}
- else if(s.position==="fort"){log("🏰 Đã tới Pháo đài.")}
- else log("🏯 Quân trở về Thành Đông.");
- render();save()
+function recruitElephant(){if(s.food<250||s.gold<120||s.iron<80){log("Không đủ tài nguyên.");return}s.food-=250;s.gold-=120;s.iron-=80;s.elephants++;log("🐘 Tuyển 1 chiến tượng.");render();save()}
+function openBattle(type){
+ if(armyCount()<5){log("Cần ít nhất 5 quân để ra trận.");return}
+ const enemy=type==="enemy"?(s.enemyPower||190):(s.enemy2Power||220);
+ battle={type,enemyMax:enemy,enemyHp:100,playerHp:100,round:1,defending:false,skill:false,finished:false};
+ document.getElementById("world").classList.add("hidden");document.getElementById("battle").classList.add("active");
+ renderBattle();log("⚔️ Bắt đầu trận chiến tại "+(type==="enemy"?"Đồn địch":"Đồn Bắc")+".");
 }
-function attack(){
- if(!["enemy","enemy2"].includes(s.position)){s.selected="enemy";log("Hãy di chuyển quân tới vùng địch.");render();return}
- if(armyCount()<5){log("Không đủ quân.");return}
- const enemy=s.position==="enemy"?s.enemyPower:s.enemy2Power,my=power();
- if(my+Math.random()*35-17>=enemy){
-  let loss=Math.max(1,Math.floor(armyCount()*(s.formation==="charge"?.08:.05)+Math.random()*armyCount()*.06));
-  loss=Math.min(armyCount()-1,loss);
-  removeLoss(loss);s.wins++;s.xp+=80;s.gold=cap(s.gold+140);s.iron=cap(s.iron+50);
-  log("🎉 THẮNG trận! Mất "+loss+" quân, nhận +140💰 +50⛏️.");
-  if(s.position==="enemy")s.enemyPower+=25;else s.enemy2Power+=30;
+function renderBattle(){
+ if(!battle)return;
+ document.getElementById("battlePower").textContent=power();document.getElementById("battleEnemy").textContent=battle.enemyMax;
+ document.getElementById("playerHp").style.width=Math.max(0,battle.playerHp)+"%";document.getElementById("enemyHp").style.width=Math.max(0,battle.enemyHp)+"%";
+ document.getElementById("playerHpText").textContent=Math.max(0,Math.round(battle.playerHp));document.getElementById("enemyHpText").textContent=Math.max(0,Math.round(battle.enemyHp));
+ document.getElementById("battleRound").textContent="Vòng "+battle.round;
+}
+function battleAttack(){
+ if(!battle||battle.finished)return;
+ const my=power(),enemy=battle.enemyMax;
+ let dmg=10+(my/Math.max(enemy,1))*12+Math.random()*7;
+ if(s.formation==="charge")dmg*=1.18;if(s.formation==="ranged"&&s.archers>0)dmg*=1.12;
+ battle.enemyHp=Math.max(0,battle.enemyHp-dmg);
+ const counter=6+(enemy/Math.max(my,1))*8+Math.random()*5;
+ battle.playerHp=Math.max(0,battle.playerHp-(battle.defending?counter*.45:counter));
+ battle.defending=false;
+ document.getElementById("battleMessage").textContent="⚔️ Đòn đánh gây "+Math.round(dmg)+"% sát thương.";
+ checkBattle();
+}
+function battleSkill(){
+ if(!battle||battle.finished)return;
+ if(battle.skill){document.getElementById("battleMessage").textContent="⚡ Kỹ năng đã dùng trong trận.";return}
+ battle.skill=true;
+ const dmg=25+power()/Math.max(battle.enemyMax,1)*15;
+ battle.enemyHp=Math.max(0,battle.enemyHp-dmg);
+ battle.playerHp=Math.max(0,battle.playerHp-(5+Math.random()*4));
+ document.getElementById("battleMessage").textContent="⚡ Hào Khí Đại Việt! Gây "+Math.round(dmg)+"% sát thương.";
+ checkBattle();
+}
+function battleDefend(){
+ if(!battle||battle.finished)return;
+ battle.defending=true;
+ battle.playerHp=Math.min(100,battle.playerHp+8);
+ document.getElementById("battleMessage").textContent="🛡️ Đội hình phòng thủ: hồi 8% HP và giảm phản kích.";
+ enemyCounter();
+}
+function enemyCounter(){
+ const enemy=battle.enemyMax,my=power(),d=4+(enemy/Math.max(my,1))*7;
+ battle.playerHp=Math.max(0,battle.playerHp-d);
+ checkBattle();
+}
+function checkBattle(){
+ if(battle.enemyHp<=0){finishBattle(true);return}
+ if(battle.playerHp<=0){finishBattle(false);return}
+ battle.round++;renderBattle();
+}
+function finishBattle(win){
+ battle.finished=true;
+ if(win){
+  const loss=Math.max(1,Math.floor(armyCount()*(.04+Math.random()*.08)));
+  removeLoss(loss);s.wins++;s.xp+=100;s.gold=cap(s.gold+160);s.iron=cap(s.iron+60);
+  if(battle.type==="enemy")s.enemyPower=(s.enemyPower||190)+25;else s.enemy2Power=(s.enemy2Power||220)+30;
+  document.getElementById("battleMessage").innerHTML="<span class='good'>🎉 CHIẾN THẮNG! Mất "+loss+" quân. +160💰 +60⛏️.</span>";
+  log("🏆 Chiến thắng trận đánh. Mất "+loss+" quân.");
  }else{
-  let loss=Math.max(3,Math.floor(armyCount()*(s.formation==="defense"?.10:.16)));
-  loss=Math.min(armyCount()-1,loss);removeLoss(loss);s.xp+=25;log("⚠️ Bại trận! Mất "+loss+" quân.");
+  const loss=Math.max(2,Math.floor(armyCount()*(.12+Math.random()*.12)));removeLoss(Math.min(armyCount()-1,loss));
+  s.xp+=25;document.getElementById("battleMessage").innerHTML="<span class='bad'>⚠️ THẤT BẠI! Quân đội phải rút lui.</span>";log("⚠️ Thất bại trong trận chiến.");
  }
- s.skillBoost=0;s.position="capital";s.selected="capital";render();save()
+ render();
+ setTimeout(closeBattle,900);
 }
 function removeLoss(n){
- let arr=[["infantry",5],["archers",8],["cavalry",9],["elephants",35]];
- while(n>0){
-  let available=arr.filter(x=>s[x[0]]>0);
-  if(!available.length)break;
-  available.sort((a,b)=>s[b[0]]-s[a[0]]);
-  const k=available[0][0];s[k]--;n--;
+ while(n>0&&armyCount()>1){
+  const keys=["infantry","archers","cavalry","elephants"].sort((a,b)=>(s[b]||0)-(s[a]||0));
+  const k=keys.find(x=>(s[x]||0)>0);if(!k)break;s[k]--;n--
  }
 }
-function collect(){const f=50+(s.farm||0)*20,w=30+(s.farm||0)*8,i=10+(s.ironMine||0)*7+(s.fort?20:0),g=10+(s.cityLevel||1)*2+(s.port?20:0);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()}
-function collectTax(){const g=30+(s.territory||1)*25+(s.port?30:0)+(s.alliance?10:0);s.gold=cap(s.gold+g);log("💰 Thu thuế: +"+g+"💰.");render();save()}
-function resetGame(){if(confirm("Xóa tiến trình Bản 0.8?")){localStorage.removeItem(KEY);location.reload()}}
+function retreat(){if(!battle)return;log("🏳️ Quân đội rút khỏi chiến trường.");closeBattle()}
+function closeBattle(){battle=null;document.getElementById("battle").classList.remove("active");document.getElementById("world").classList.remove("hidden");render();save()}
+function collect(){const f=50+(s.farm||0)*20,w=30+(s.farm||0)*8,i=10+(s.ironMine||0)*7+(s.fort?20:0),g=10+(s.cityLevel||1)*2+(s.port?20:0);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.")}
+function collectTax(){const g=30+(s.territory||1)*25+(s.port?30:0)+(s.alliance?10:0);s.gold=cap(s.gold+g);log("💰 Thu thuế +"+g+"💰.")}
+function resetGame(){if(confirm("Xóa tiến trình Bản 0.9?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+(s.farm||0)*2);s.wood=cap(s.wood+(s.farm||0));s.iron=cap(s.iron+Math.floor((s.barracks||0)/2));s.gold=cap(s.gold+Math.floor((s.cityLevel||1)/2));render();save()},10000);
 render();
 </script>

@@ -59,6 +59,15 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 .m5Badge{display:inline-block;background:#6f4fd8;color:#fff;border-radius:8px;padding:3px 6px;font-size:10px;margin-left:5px}
 .class{min-height:125px}.class.sel{border:2px solid #f3d46b}.icon{font-size:29px}.ct{color:#ffd978;font-size:12px}.desc{color:#d0d6db;font-size:12px;margin-top:5px;line-height:1.3}.item{background:#20282f;border-radius:14px;padding:10px;margin:7px 0;display:flex;justify-content:space-between;gap:8px}.rare{color:#c47cff}.good{color:#77e36a}.actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.enh{background:#6f4fd8;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:800}.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.slot{background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;min-height:58px;font-size:11px}
 @media(max-width:700px){#stats{max-width:63vw}.name{font-size:21px}.sub{font-size:14px}#town{max-width:30vw;font-size:13px}.classes{grid-template-columns:1fr}.menu button,.community{font-size:14px}}
+
+/* MỐC 5 VÕ LÂM 1 - FIX UI iPhone */
+#vlBanner{top:285px!important;max-width:86vw;text-align:center;font-size:13px;z-index:8;pointer-events:none}
+@media(max-width:700px){
+  #vlBanner{display:none!important}
+  .menu{right:88px;top:145px;gap:9px}
+  .menu button,.community{min-height:44px;padding:6px 10px;font-size:13px}
+  .community{right:88px;top:303px}
+}
 </style>
 </head>
 <body>
@@ -1175,12 +1184,12 @@ function tele(where){let q=where=="city"?city:town;P.x=q.x;P.y=q.y;cam.x=P.x;cam
 function guild(){let q=Number(document.getElementById("gs").textContent.replace(",",""))+50;document.getElementById("gs").textContent=q.toLocaleString("en-US");toast("🏯 Đã đăng ký chiến bang")}
 let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];function renderChat(){document.getElementById("chat").innerHTML=chat.map(v=>"<div>"+v+"</div>").join("")}function sendChat(){let i=document.getElementById("input"),v=i.value.trim();if(v){chat.push("Thiếu Hiệp: "+v);i.value="";renderChat();toast("🌎 Đã gửi")}}
 
-document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};document.getElementById("classBtn").onclick=()=>openM("classModal");document.getElementById("actBtn").onclick=()=>openM("actModal");document.getElementById("comBtn").onclick=()=>{renderChat();openM("comModal")};document.getElementById("teleBtn").onclick=()=>openM("teleModal");
+document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};document.getElementById("classBtn").onclick=()=>openClassModal();document.getElementById("actBtn").onclick=()=>openActivity();document.getElementById("comBtn").onclick=()=>{renderChat();openM("comModal")};document.getElementById("teleBtn").onclick=()=>openM("teleModal");
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
 try{const save=JSON.parse(localStorage.getItem("ktm_moc5")||"null");if(save&&cls[save.pc])pc=save.pc;if(save&&costumeData[save.costume])selectedCostume=save.costume;if(save&&weaponData[save.weapon])selectedWeapon=save.weapon}catch(e){}
-classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · 14 Môn Phái · Trang Phục · Vũ Khí · NPC";
+classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · 14 Môn Phái · NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

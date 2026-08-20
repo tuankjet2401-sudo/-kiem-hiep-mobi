@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Đại Việt Chiến Ký - Bản 2.x • 2.5D</title>
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Đại Việt Chiến Ký - Bản 2.x</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:#172013;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -102,28 +102,24 @@ button:disabled{opacity:.45}
 @keyframes dropWeapon{100%{transform:translate(35px,35px) rotate(80deg);opacity:.2}}@keyframes fadeFx{100%{opacity:0;transform:scale(1.6)}}
 .combatControls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}
 
-.city25{position:relative;min-height:520px;overflow:hidden;border-radius:18px;background:linear-gradient(#86a76b 0 24%,#688b56 24% 55%,#496b43 55% 100%);perspective:700px;border:1px solid #b98b4a;box-shadow:inset 0 0 40px rgba(0,0,0,.18)}
-.city25 .mountains{position:absolute;left:-10%;right:-10%;top:8%;height:27%;background:linear-gradient(135deg,transparent 35%,#4c6844 36% 55%,transparent 56%),linear-gradient(45deg,transparent 35%,#5d754b 36% 55%,transparent 56%);opacity:.8}
-.wall25{position:absolute;left:5%;right:5%;bottom:17%;height:55%;border:10px solid #8b633d;border-bottom-width:15px;background:rgba(125,88,47,.12);transform:rotateX(7deg);box-shadow:inset 0 0 0 3px #c39a5b,0 15px 20px rgba(0,0,0,.22)}
-.wall25:before,.wall25:after{content:"";position:absolute;top:-24px;width:65px;height:95px;background:#9a7045;border:5px solid #6c492b;box-shadow:inset 0 0 0 3px #c39a5b}
-.wall25:before{left:-28px}.wall25:after{right:-28px}
-.moat25{position:absolute;left:-5%;right:-5%;bottom:5%;height:15%;background:repeating-linear-gradient(8deg,#4c8185 0 11px,#6ba0a0 11px 20px);border-top:4px solid #a6c6a5;transform:skewX(-4deg)}
-.build25{position:absolute;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(#76502e,#422817);border:3px solid #c39756;border-radius:12px;box-shadow:0 13px 12px rgba(0,0,0,.35),inset 0 0 0 2px #9b6b38;color:#ffe18b;cursor:pointer;transform:skewY(-2deg);transition:.18s}
-.build25:active{transform:translateY(3px) skewY(-2deg) scale(.98)}
-.build25 .bi{font-size:34px;filter:drop-shadow(0 4px 2px #1b1008)}.build25 b{font-size:11px}.build25 small{font-size:8px;color:#ead9b9}
-.b25-hall{width:150px;height:145px;left:50%;top:22%;transform:translateX(-50%);z-index:8}.b25-hall:active{transform:translateX(-50%) translateY(3px) scale(.98)}
-.b25-camp{width:105px;height:90px;left:12%;top:42%}.b25-forge{width:105px;height:90px;right:12%;top:43%}
-.b25-farm{width:100px;height:78px;left:22%;top:62%}.b25-mine{width:100px;height:78px;right:22%;top:63%}.b25-market{width:105px;height:80px;left:50%;top:65%;transform:translateX(-50%)}.b25-market:active{transform:translateX(-50%) translateY(3px) scale(.98)}
-.smoke{position:absolute;z-index:9;font-size:22px;animation:smoke25 2.4s infinite;pointer-events:none}.sm1{right:18%;top:36%}.sm2{right:20%;top:39%;font-size:16px}
-.flag25{position:absolute;z-index:10;font-size:25px;animation:flag25 1.8s infinite;pointer-events:none}.fl1{left:45%;top:15%}.fl2{right:6%;bottom:53%}
-.guard{position:absolute;z-index:9;font-size:20px;animation:patrol25 7s linear infinite;pointer-events:none}.g1{left:7%;bottom:30%}.g2{left:22%;bottom:25%;animation-delay:-3s}.g3{right:8%;bottom:29%;animation-delay:-5s}
-@keyframes smoke25{0%{opacity:.2;transform:translate(0,8px) scale(.7)}50%{opacity:.8}100%{opacity:0;transform:translate(8px,-35px) scale(1.3)}}@keyframes flag25{50%{transform:rotate(5deg) translateX(4px)}}@keyframes patrol25{0%{transform:translateX(0)}50%{transform:translateX(100px)}100%{transform:translateX(0)}}
-@media(min-width:700px){.city25{max-width:720px;margin:0 auto}}
+.isoScene{position:relative;min-height:650px;overflow:hidden;background:linear-gradient(#8db27a 0 28%,#6f8f58 28% 100%);perspective:900px}
+.isoTerrain{position:absolute;left:8%;right:8%;top:18%;bottom:12%;transform:rotateX(52deg) rotateZ(0deg);background:linear-gradient(135deg,#708f56,#526f45);border:5px solid #8f7041;border-radius:24px;box-shadow:0 25px 35px rgba(0,0,0,.35);z-index:1}
+.isoRoad{position:absolute;left:34%;right:34%;top:42%;height:42%;background:linear-gradient(90deg,#8b6840,#b28a56,#8b6840);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%);z-index:2;opacity:.9}
+.isoMoat{position:absolute;left:5%;right:5%;top:27%;height:42%;border:13px solid #4d7778;border-radius:28px;background:rgba(85,143,145,.65);z-index:2;box-shadow:inset 0 0 0 3px #9dc3b4}
+.isoWall{position:absolute;left:12%;right:12%;top:30%;height:38%;border:16px solid #80603b;border-radius:18px;background:rgba(150,112,62,.14);z-index:3;box-shadow:inset 0 0 0 4px #c1985c}
+.isoGate{position:absolute;left:43%;top:57%;width:14%;height:14%;background:#4d2c18;border:7px solid #8d6136;border-radius:8px 8px 0 0;z-index:6;box-shadow:0 6px 12px #24150c}
+.isoBuilding{position:absolute;z-index:7;text-align:center;filter:drop-shadow(0 7px 5px rgba(0,0,0,.35))}
+.isoBuilding .roof{font-size:58px;line-height:.9}.isoBuilding b{display:block;background:rgba(39,25,14,.88);border:1px solid #b68a4c;border-radius:9px;padding:3px 6px;color:#ffe08b;font-size:10px}
+.bHall{left:39%;top:31%}.bBarracks{left:18%;top:40%}.bForge{right:17%;top:41%}.bFarm{left:26%;top:63%}.bMine{right:27%;top:64%}.bMarket{left:43%;top:72%}
+.isoNpc{position:absolute;z-index:12;font-size:29px;filter:drop-shadow(0 4px 3px rgba(0,0,0,.35));animation:npcFloat 2.4s ease-in-out infinite}
+.n1{left:48%;top:51%}.n2{left:28%;top:52%}.n3{right:26%;top:54%}.n4{left:38%;top:70%}.n5{right:39%;top:70%}
+@keyframes npcFloat{50%{transform:translateY(-4px)}}
+.isoLabel{position:absolute;left:50%;top:13%;transform:translateX(-50%);z-index:20;background:rgba(36,24,13,.9);padding:7px 13px;border-radius:18px;border:1px solid #c39a5d;color:#ffe08b;font-weight:900;font-size:12px}
 </style>
 </head><body>
 <div id="game">
 <header class="top">
- <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • 2.5D THÀNH TRÌ</span></div>
+ <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • 2.5D ISOMETRIC</span></div>
  <div class="resources">
   <div class="res">🌾<b id="food">0</b></div><div class="res">💰<b id="gold">0</b></div>
   <div class="res">🪵<b id="wood">0</b></div><div class="res">⛏️<b id="iron">0</b></div>
@@ -131,53 +127,22 @@ button:disabled{opacity:.45}
  </div>
 </header>
 
-
 <main class="scene">
- <div class="city25" id="city25">
-  <div class="mountains"></div>
-  <div class="wall25"></div>
-  <div class="moat25"></div>
-  <div class="flag25 fl1">🚩</div><div class="flag25 fl2">🚩</div>
-  <div class="smoke sm1">☁️</div><div class="smoke sm2">💨</div>
-  <div class="guard g1">🛡️</div><div class="guard g2">🛡️</div><div class="guard g3">🏹</div>
-
-  <button type="button" class="build25 b25-hall" onclick="openSheet('hall')"><span class="bi">🏯</span><b>PHỦ THÀNH CHỦ</b><small>Cấp <span id="cityLevel25">1</span> • Chính Điện</small></button>
-  <button type="button" class="build25 b25-camp" onclick="openSheet('military')"><span class="bi">⚔️</span><b>DOANH TRẠI</b><small>Huấn luyện</small></button>
-  <button type="button" class="build25 b25-forge" onclick="openSheet('forge')"><span class="bi">🔨</span><b>LÒ RÈN</b><small>Khói • lửa • chế tạo</small></button>
-  <button type="button" class="build25 b25-farm" onclick="openSheet('farm')"><span class="bi">🌾</span><b>NÔNG ĐIỆN</b><small>Thu hoạch</small></button>
-  <button type="button" class="build25 b25-mine" onclick="openSheet('mine')"><span class="bi">⛏️</span><b>MỎ SẮT</b><small>Khai thác</small></button>
-  <button type="button" class="build25 b25-market" onclick="openSheet('market')"><span class="bi">🛒</span><b>CHỢ</b><small>Giao thương</small></button>
+ <div class="isoScene">
+  <div class="isoLabel">🏯 ĐẠI VIỆT • THÀNH TRÌ 2.5D</div>
+  <div class="isoTerrain"></div><div class="isoRoad"></div><div class="isoMoat"></div><div class="isoWall"></div><div class="isoGate"></div>
+  <div class="isoBuilding bHall" onclick="openSheet('hall')"><div class="roof">🏯</div><b>CHÍNH ĐIỆN</b></div>
+  <div class="isoBuilding bBarracks" onclick="openSheet('military')"><div class="roof">⚔️</div><b>DOANH TRẠI</b></div>
+  <div class="isoBuilding bForge" onclick="openSheet('forge')"><div class="roof">🔨</div><b>LÒ RÈN</b></div>
+  <div class="isoBuilding bFarm" onclick="openSheet('farm')"><div class="roof">🌾</div><b>NÔNG ĐIỆN</b></div>
+  <div class="isoBuilding bMine" onclick="openSheet('mine')"><div class="roof">⛏️</div><b>MỎ SẮT</b></div>
+  <div class="isoBuilding bMarket" onclick="openSheet('market')"><div class="roof">🛒</div><b>CHỢ</b></div>
+  <div class="isoNpc n1">👑</div><div class="isoNpc n2">👨‍🌾</div><div class="isoNpc n3">🔨</div><div class="isoNpc n4">🛡️</div><div class="isoNpc n5">🛒</div>
  </div>
-
- <div class="sky"></div><div class="city-wall"></div><div class="moat"></div><div class="bridge"></div>
- <div class="flag f1">🚩</div><div class="flag f2">🚩</div>
-<div class="npc npc-advisor" onclick="openNpc('advisor')"><span>👑</span><b>Cố vấn</b></div>
-<div class="npc npc-smith" onclick="openNpc('smith')"><span>🔨</span><b>Thợ rèn</b></div>
-<div class="npc npc-merchant" onclick="openNpc('merchant')"><span>🛒</span><b>Thương nhân</b></div>
-<div class="npc npc-captain" onclick="openNpc('captain')"><span>⚔️</span><b>Đại úy</b></div>
-<div class="npc npc-farmer" onclick="openNpc('farmer')"><span>👨‍🌾</span><b>Nông dân</b></div>
-<div class="npc npc-miner" onclick="openNpc('miner')"><span>👷</span><b>Thợ mỏ</b></div>
-<div class="npc npc-scout" onclick="openNpc('scout')"><span>🏹</span><b>Trinh sát</b></div>
-
-
- <div class="notice">🎨 <b>Thành trì 2.5D</b> • Chạm công trình để tương tác</div><div class="notice">👑 <b>Phủ Thành Chủ</b> • Cấp <b id="cityLevel">1</b> • Sức mạnh <b id="power">0</b> • Dân <b id="population">0</b></div>
-
- <section class="build">
-  <button type="button" class="bld" onclick="openSheet('military')"><span class="ico">⚔️</span><b>Doanh Trại</b><small>Lính • huấn luyện</small></button>
-  <button type="button" class="bld mainhall" onclick="openSheet('hall')"><span class="ico">🏯</span><b>CHÍNH ĐIỆN</b><small>Nâng thành • Chiếu thư • Tổng quan</small></button>
-  <button type="button" class="bld" onclick="openSheet('forge')"><span class="ico">🔨</span><b>Lò Rèn</b><small>Chế tạo • trang bị</small></button>
-
-  <button type="button" class="bld" onclick="openSheet('farm')"><span class="ico">🌾</span><b>Nông Điện</b><small>Thu hoạch lương</small></button>
-  <button type="button" class="bld" onclick="openSheet('mine')"><span class="ico">⛏️</span><b>Mỏ Sắt</b><small>Khai thác sắt</small></button>
-  <button type="button" class="bld" onclick="openSheet('market')"><span class="ico">🛒</span><b>Chợ</b><small>Mua • bán • giao thương</small></button>
- </section>
-
- <div class="notice">🛡️ <b>Tường thành</b> • Phòng thủ <b id="defense">0</b> • 🌊 Hào thành • 🚪 Cổng thành</div>
-
- <div class="notice"><b>📜 Chiếu thư:</b> Thành đang phát triển. Hãy thu hoạch tài nguyên, huấn luyện quân và mở rộng lãnh thổ.</div><div class="notice">👥 <b>Dân chúng:</b> NPC đang làm việc trong thành • 🛡️ Trạng thái: <span class="event-badge">Bình thường</span></div>
-
+ <div class="notice">🏯 <b>Thành trì 2.5D</b> • 🛡️ Phòng thủ <b id="defense">0</b> • ⚔️ Sức mạnh <b id="power">0</b> • 👥 Dân <b id="population">0</b></div>
+ <div class="notice"><b>📜 Chiếu thư:</b> Thành trì đang phát triển. Chạm công trình hoặc NPC để quản lý.</div>
  <div class="notice"><b>📖 Nhật ký:</b><div id="log" class="log"></div></div>
-</main>
+</main>>
 
 <nav class="actions">
  <button type="button" onclick="openSheet('inventory')">🎒 Kho</button>
@@ -246,7 +211,7 @@ function normalizeState(x){
 }
 if(!s){
  const old=JSON.parse(localStorage.getItem("daiviet_chienky_10")||localStorage.getItem("daiviet_chienky_09")||null);
- s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 2.x • 2.5D."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 2.x • 2.5D bắt đầu."]};
+ s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 2.x."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 2.x bắt đầu."]};
 }
 s=normalizeState(s);s.mount=s.mount||{level:1,xp:0};
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
@@ -369,6 +334,12 @@ function skipTutorial(){
 }
 
 
+
+function isoAction(type){
+ const map={hall:"hall",barracks:"military",forge:"forge",farm:"farm",mine:"mine",market:"market"};
+ if(map[type])openSheet(map[type]);
+}
+
 function playAnim(state){
  const el=document.getElementById("animStage");if(!el)return;
  el.className="animStage "+state;
@@ -392,7 +363,6 @@ function render(){
  set("territory",s.territory||1);set("influence",s.influence||0);
  set("gems",s.gems||0);set("food",Math.floor(s.food));set("wood",Math.floor(s.wood));set("iron",Math.floor(s.iron));set("gold",Math.floor(s.gold));
  set("population",s.population||0);set("cityLevel",s.cityLevel||1);
- set("cityLevel25",s.cityLevel||1);
  set("bossHp",Math.max(0,Math.round(s.boss.hp)));set("bossLevel",s.boss.level);set("bossDefeated",s.boss.defeated);set("bossDamage",Math.floor(s.boss.damage));
  set("lootRare",s.loot.rare);set("lootGood",s.loot.good);set("lootNormal",s.loot.normal);
  set("marketOrders",s.market2.orders);set("marketSales",s.market2.sales);
@@ -728,8 +698,8 @@ function sellLoot(){
  log("💰 Bán chiến lợi phẩm nhận +"+total+"💰.");render();save()
 }
 
-function saveGame(){save();log("💾 Đã lưu Bản 2.x • 2.5D.")}
-function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.x • 2.5D?")){localStorage.removeItem(KEY);location.reload()}}
+function saveGame(){save();log("💾 Đã lưu Bản 2.x.")}
+function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.x?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);
 render();
 setTimeout(function(){

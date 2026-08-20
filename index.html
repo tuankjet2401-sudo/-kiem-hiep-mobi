@@ -58,7 +58,22 @@ footer button{font-size:12px;padding:11px 4px}
 .modalNpc{display:flex;gap:12px;align-items:center}
 .bigAvatar{font-size:58px;width:90px;height:90px;display:flex;align-items:center;justify-content:center;background:#30261b;border:2px solid #b99a58;border-radius:18px}
 .actionNote{font-size:12px;color:#d9ceb9;margin-top:8px}
+
+.splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle,#70542f,#21170f 65%,#100b08);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px}
+.splashLogo{font-size:96px;filter:drop-shadow(0 8px 15px #000);animation:splashPulse 2s infinite}
+.splash h1{color:#ffe08b;letter-spacing:2px;margin:8px 0}.splash p{color:#d7c8ab;margin:0 0 18px}
+@keyframes splashPulse{50%{transform:scale(1.05)}}
+#app.pwaReady{padding-bottom:env(safe-area-inset-bottom)}
+@media (display-mode: standalone){header{padding-top:calc(10px + env(safe-area-inset-top))}}
 </style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b1d13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Đại Việt Chiến Ký">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 </head>
 <body>
 <div id="app">
@@ -94,7 +109,7 @@ footer button{font-size:12px;padding:11px 4px}
 <button onclick="openNpc('Lục Minh Triết')">👑 Quân sư triều đình</button>
 <button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
 <button onclick="openNpc('Tiêu Mặc Bạch')">🪶 Mưu sĩ</button>
-<button onclick="collect()">🌾 Thu hoạch</button>
+<button onclick="collect()">🌾 Thu hoạch</button><button onclick="saveGame()">💾 Lưu game</button><button onclick="loadGame()">📂 Tải game</button>
 </div>
 </section>
 </main>
@@ -102,13 +117,46 @@ footer button{font-size:12px;padding:11px 4px}
 <button onclick="openNpc('Lục Minh Triết')">📜 Quân sư</button>
 <button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
 <button onclick="openNpc('Tiêu Mặc Bạch')">🪶 Mưu sĩ</button>
-<button onclick="location.reload()">🔄 Chơi lại</button>
+<button onclick="toggleFullscreen()">⛶ Toàn màn hình</button>
 </footer>
 </div>
 
+
+<div id="splash" class="splash">
+  <div class="splashLogo">🏯</div>
+  <h1>ĐẠI VIỆT CHIẾN KÝ</h1>
+  <p>Bản 3.3 PWA</p>
+  <button onclick="startGame()">⚔️ Vào game</button>
+</div>
 <div id="modal"><div class="sheet"><button class="close" onclick="closeModal()">✕</button><h2 id="mtitle"></h2><div id="mcontent"></div></div></div>
 
 <script>
+const SAVE_KEY="dai_viet_chien_ky_3_3_save";
+function saveGame(){
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));msg("💾 Đã lưu game trên iPhone.");}
+ catch(e){msg("⚠️ Không thể lưu trên thiết bị này.");}
+}
+function loadGame(){
+ try{
+  const raw=localStorage.getItem(SAVE_KEY);
+  if(!raw){msg("📂 Chưa có dữ liệu lưu.");return}
+  const saved=JSON.parse(raw);
+  Object.assign(state,saved);update();msg("📂 Đã tải lại thành phố.");
+ }catch(e){msg("⚠️ Dữ liệu lưu không hợp lệ.");}
+}
+function toggleFullscreen(){
+ const el=document.documentElement;
+ if(document.fullscreenElement){document.exitFullscreen?.();}
+ else{el.requestFullscreen?.().catch(()=>{});}
+}
+function startGame(){
+ document.getElementById("splash").style.display="none";
+ loadGame();
+}
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+
 const state={food:1000,gold:1000,wood:600,iron:400,gems:100};
 const npcText={
 "Lục Minh Triết":["Quân sư triều đình","Chúa công, hãy giữ kho lương vững, nâng Chính Điện và chuẩn bị đại quân.","📜 Hiến kế"],

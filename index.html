@@ -3,143 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Đại Việt Chiến Ký - Bản 0.1</title>
+<title>Đại Việt Chiến Ký - Bản 0.2</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#172015;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
-button{border:0;border-radius:14px;padding:13px 12px;font-weight:700;font-size:15px;color:#fff;background:#7b4b25;box-shadow:0 3px 0 #4d2d16}
-button:active{transform:translateY(2px);box-shadow:0 1px 0 #4d2d16}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#182516;color:#fff}
+button{border:0;border-radius:13px;padding:11px 10px;background:#75451f;color:#fff;font-weight:800;box-shadow:0 3px 0 #45270f;font-size:14px}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #45270f}
 #app{height:100dvh;display:flex;flex-direction:column}
-header{padding:10px max(10px,env(safe-area-inset-left)) 8px;background:#382513;border-bottom:2px solid #a8793f}
-h1{margin:0;font-size:20px;text-align:center;color:#ffd76a}
-.sub{text-align:center;font-size:11px;color:#d9c49b;margin-top:2px}
-.resources{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
-.res{background:#51371e;border:1px solid #8e693a;border-radius:10px;padding:7px 3px;text-align:center;font-size:12px}
-.res b{display:block;color:#ffe28b;font-size:14px;margin-top:2px}
-main{flex:1;overflow:auto;padding:10px 10px 90px;background:linear-gradient(#667e43,#3d5c32 45%,#263d27)}
-.panel{background:rgba(35,29,18,.9);border:1px solid #aa8246;border-radius:16px;padding:12px;margin-bottom:10px}
-.title{font-size:17px;font-weight:800;color:#ffd76a;margin-bottom:8px}
-.castle{height:190px;border-radius:15px;position:relative;overflow:hidden;background:
-linear-gradient(160deg,transparent 0 35%,rgba(255,255,255,.06) 36% 37%,transparent 38%),
-repeating-linear-gradient(90deg,#66824b 0 34px,#5e7845 34px 38px);
-border:2px solid #b58a4c}
-.wall{position:absolute;left:9%;right:9%;bottom:17%;height:55%;background:#9b7b50;border:6px solid #60472c;border-bottom-width:9px}
-.tower{position:absolute;bottom:17%;width:24%;height:75%;background:#ad8d5b;border:6px solid #60472c}
-.t1{left:5%}.t2{right:5%}
-.gate{position:absolute;bottom:17%;left:40%;width:20%;height:38%;background:#3c2b1c;border:6px solid #60472c;border-radius:60% 60% 0 0}
-.flag{position:absolute;top:10%;left:50%;height:55px;border-left:3px solid #4a321c}
-.flag:after{content:"ĐẠI VIỆT";position:absolute;left:2px;top:0;background:#9e2922;padding:7px 9px;font-size:10px;font-weight:800}
-.builds{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.card{background:#4a341f;border:1px solid #8e693a;border-radius:13px;padding:10px}
-.card h3{font-size:14px;margin:0 0 5px;color:#ffe08a}
-.card p{font-size:12px;margin:3px 0 9px;color:#d8cfb8;min-height:30px}
-.card button{width:100%;font-size:13px;padding:10px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.stat{background:#3d2d1c;border-radius:10px;padding:8px;font-size:13px}
-.log{max-height:105px;overflow:auto;font-size:12px;color:#d9d0bd;line-height:1.5}
-.bottom{position:fixed;left:0;right:0;bottom:0;padding:8px max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom));background:#281b10;border-top:1px solid #8e693a;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.bottom button{padding:11px 5px;font-size:12px}
-.gold{color:#ffd34d}.good{color:#8fe18a}.bad{color:#ff8d7d}
+header{background:#352313;border-bottom:2px solid #aa793e;padding:8px 9px calc(7px + env(safe-area-inset-top))}
+h1{text-align:center;margin:0;color:#ffd86b;font-size:19px}
+.sub{text-align:center;color:#d9c69e;font-size:10px;margin:2px 0 7px}
+.resources{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.res{background:#4b321c;border:1px solid #806038;border-radius:9px;text-align:center;padding:5px 2px;font-size:11px}
+.res b{display:block;color:#ffe08a;font-size:13px}
+main{flex:1;overflow:auto;padding:8px 8px 82px;background:linear-gradient(#6c8549,#425f35 48%,#263c29)}
+.panel{background:rgba(31,27,18,.94);border:1px solid #a77c42;border-radius:15px;padding:9px;margin-bottom:8px}
+.title{font-weight:900;color:#ffd66b;margin-bottom:7px;font-size:16px}
+#map{height:310px;position:relative;overflow:hidden;border-radius:13px;border:2px solid #b58b4e;background:
+linear-gradient(25deg,transparent 0 28%,rgba(255,255,255,.06) 29% 31%,transparent 32%),
+linear-gradient(150deg,transparent 0 45%,rgba(255,255,255,.05) 46% 48%,transparent 49%),
+#537341}
+.terrain{position:absolute;border-radius:50%;opacity:.8}
+.river{position:absolute;background:#4f91a5;width:24px;height:130%;left:48%;top:-15%;transform:rotate(12deg);opacity:.75}
+.road{position:absolute;background:#9c8554;height:16px;width:115%;left:-8%;top:54%;transform:rotate(-7deg);opacity:.8}
+.node{position:absolute;width:65px;height:65px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:800;border:2px solid #d7b36d;box-shadow:0 3px 7px #172012;user-select:none}
+.node strong{font-size:23px;line-height:22px}
+.castleNode{background:#6d4122}.village{background:#58673a}.enemy{background:#6d2722}.mine{background:#4a4a45}
+.selected{outline:3px solid #ffe07a;transform:scale(1.05)}
+#armyToken{position:absolute;width:42px;height:42px;border-radius:50%;background:#1c5b35;border:3px solid #e7cf75;display:none;align-items:center;justify-content:center;font-size:23px;z-index:8;transition:left .35s ease,top .35s ease}
+.mapHint{font-size:11px;color:#d4c9b1;margin-top:6px;text-align:center}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.info{font-size:12px;color:#d9d0bd;line-height:1.45}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stat{background:#3b2b1b;border-radius:9px;padding:7px;font-size:12px}
+.log{max-height:105px;overflow:auto;font-size:11px;line-height:1.5;color:#d6cdbb}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#27190e;border-top:1px solid #8e693a;padding:7px max(7px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.bottom button{font-size:11px;padding:10px 3px}
+.good{color:#8fe38c}.bad{color:#ff9184}.gold{color:#ffd34d}
 </style>
 </head>
 <body>
 <div id="app">
 <header>
 <h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 0.1 • Xây thành • Khai thác • Tuyển quân</div>
+<div class="sub">Bản 0.2 • Bản đồ chiến thuật • Di chuyển • Giao chiến</div>
 <div class="resources">
-<div class="res">🌾 Lương thực<b id="food">500</b></div>
-<div class="res">🪵 Gỗ<b id="wood">500</b></div>
-<div class="res">⛏️ Sắt<b id="iron">250</b></div>
-<div class="res">💰 Vàng<b id="gold">300</b></div>
+<div class="res">🌾<b id="food">0</b></div>
+<div class="res">🪵<b id="wood">0</b></div>
+<div class="res">⛏️<b id="iron">0</b></div>
+<div class="res">💰<b id="gold">0</b></div>
 </div>
 </header>
-
 <main>
 <section class="panel">
-<div class="title">🏯 Thành Đại Việt</div>
-<div class="castle">
-<div class="wall"></div><div class="tower t1"></div><div class="tower t2"></div><div class="gate"></div><div class="flag"></div>
+<div class="title">🗺️ Bản đồ Đại Việt</div>
+<div id="map">
+<div class="river"></div><div class="road"></div>
+<div class="terrain" style="width:90px;height:55px;background:#748d4e;left:4%;top:7%"></div>
+<div class="terrain" style="width:105px;height:60px;background:#688248;right:2%;bottom:5%"></div>
+<div class="node castleNode" data-x="13" data-y="55" onclick="selectNode('capital')"><strong>🏯</strong>Thành chính</div>
+<div class="node village" data-x="48" data-y="15" onclick="selectNode('village')"><strong>🏘️</strong>Làng Đông</div>
+<div class="node mine" data-x="70" data-y="58" onclick="selectNode('mine')"><strong>⛏️</strong>Mỏ sắt</div>
+<div class="node enemy" data-x="73" data-y="16" onclick="selectNode('enemy')"><strong>👹</strong>Trại địch</div>
+<div id="armyToken">⚔️</div>
+</div>
+<div class="mapHint" id="selection">Chọn một địa điểm trên bản đồ.</div>
+<div class="actions">
+<button onclick="moveArmy()">⚔️ Di chuyển quân</button>
+<button onclick="attackEnemy()">🔥 Tấn công trại địch</button>
 </div>
 </section>
 
 <section class="panel">
-<div class="title">📊 Quân lực</div>
-<div class="stats">
-<div class="stat">⚔️ Quân đội: <b id="army">20</b></div>
-<div class="stat">⭐ Kinh nghiệm: <b id="xp">0</b></div>
-<div class="stat">🏛️ Cấp thành: <b id="level">1</b></div>
-<div class="stat">👑 Danh vọng: <b id="fame">0</b></div>
+<div class="title">⚔️ Quân đội</div>
+<div class="statgrid">
+<div class="stat">Quân số: <b id="army">0</b></div>
+<div class="stat">Sức mạnh: <b id="power">0</b></div>
+<div class="stat">Kinh nghiệm: <b id="xp">0</b></div>
+<div class="stat">Chiến thắng: <b id="wins">0</b></div>
+</div>
+<div class="info" style="margin-top:7px">Quân có thể di chuyển giữa các địa điểm. Tấn công sẽ tiêu hao quân và có cơ hội nhận vàng, sắt và kinh nghiệm.</div>
+</section>
+
+<section class="panel">
+<div class="title">🏗️ Xây dựng nhanh</div>
+<div class="actions">
+<button onclick="buildFarm()">🌾 Nâng nông trại • 80 🪵</button>
+<button onclick="buildBarracks()">🏯 Nâng doanh trại • 120 🪵</button>
 </div>
 </section>
 
 <section class="panel">
-<div class="title">🏗️ Xây dựng</div>
-<div class="builds">
-<div class="card"><h3>🌾 Nông trại</h3><p>+20 lương thực / 10 giây</p><button onclick="build('farm')">Xây • 80 🪵</button></div>
-<div class="card"><h3>🪵 Trại gỗ</h3><p>+15 gỗ / 10 giây</p><button onclick="build('wood')">Xây • 80 🪵</button></div>
-<div class="card"><h3>⛏️ Lò rèn</h3><p>+8 sắt / 10 giây</p><button onclick="build('iron')">Xây • 100 🪵</button></div>
-<div class="card"><h3>🏯 Doanh trại</h3><p>Tăng sức mạnh tuyển quân</p><button onclick="build('barracks')">Xây • 120 🪵</button></div>
-</div>
-</section>
-
-<section class="panel">
-<div class="title">⚔️ Tuyển quân</div>
-<div class="builds">
-<div class="card"><h3>🛡️ Bộ binh Đại Việt</h3><p>+10 quân • 100 🌾 + 40 🪙</p><button onclick="recruit()">Tuyển quân</button></div>
-<div class="card"><h3>🏹 Cung binh</h3><p>+5 quân • 80 🌾 + 60 🪙</p><button onclick="archers()">Tuyển cung binh</button></div>
-</div>
-</section>
-
-<section class="panel">
-<div class="title">📜 Nhật ký</div><div class="log" id="log">• Khởi đầu hành trình xây dựng Đại Việt...</div>
+<div class="title">📜 Nhật ký chiến trận</div>
+<div class="log" id="log"></div>
 </section>
 </main>
 
 <nav class="bottom">
+<button onclick="recruit()">🛡️ Tuyển 10</button>
 <button onclick="collect()">🌾 Thu hoạch</button>
-<button onclick="saveGame()">💾 Lưu game</button>
+<button onclick="saveGame()">💾 Lưu</button>
 <button onclick="resetGame()">🔄 Chơi lại</button>
 </nav>
 </div>
 
 <script>
-const KEY="daiviet_chienky_01";
-let s=JSON.parse(localStorage.getItem(KEY)||"null")||{
-food:500,wood:500,iron:250,gold:300,army:20,xp:0,level:1,fame:0,
-farm:0,woodMine:0,ironMine:0,barracks:0,logs:["• Khởi đầu hành trình xây dựng Đại Việt..."]
-};
-function n(v){return Math.floor(v)}
-function render(){
-for(const k of ["food","wood","iron","gold","army","xp","level","fame"])document.getElementById(k).textContent=n(s[k]);
-document.getElementById("log").innerHTML=s.logs.slice(-8).reverse().map(x=>"<div>"+x+"</div>").join("");
+const KEY="daiviet_chienky_02";
+const oldKey="daiviet_chienky_01";
+let s=JSON.parse(localStorage.getItem(KEY)||"null");
+if(!s){
+ const old=JSON.parse(localStorage.getItem(oldKey)||"null");
+ s=old?{
+   food:old.food||500,wood:old.wood||500,iron:old.iron||250,gold:old.gold||300,
+   army:old.army||20,xp:old.xp||0,wins:0,power:(old.army||20)*5,
+   farm:old.farm||0,barracks:old.barracks||0,
+   position:"capital",selected:"capital",logs:["• Chuyển tiến trình từ Bản 0.1 sang Bản 0.2."]
+ }:{
+   food:500,wood:500,iron:250,gold:300,army:20,xp:0,wins:0,power:100,
+   farm:0,barracks:0,position:"capital",selected:"capital",
+   logs:["• Đại Việt Chiến Ký Bản 0.2 bắt đầu."]
+ };
 }
-function log(x){s.logs.push("• "+x);if(s.logs.length>20)s.logs.shift();render();save(false)}
-function save(falseToast=true){localStorage.setItem(KEY,JSON.stringify(s))}
-function saveGame(){save();log("Đã lưu tiến trình trên iPhone.");}
-function cost(wood){if(s.wood<wood){log("Không đủ gỗ.");return false}s.wood-=wood;return true}
-function build(type){
-if(type==="farm"&&cost(80)){s.farm++;log("Đã xây Nông trại cấp "+s.farm+".")}
-else if(type==="wood"&&cost(80)){s.woodMine++;log("Đã xây Trại gỗ cấp "+s.woodMine+".")}
-else if(type==="iron"&&cost(100)){s.ironMine++;log("Đã xây Lò rèn cấp "+s.ironMine+".")}
-else if(type==="barracks"&&cost(120)){s.barracks++;log("Đã xây Doanh trại cấp "+s.barracks+".")}
-checkLevel();
+const nodes={
+ capital:{name:"Thành chính",x:13,y:55},
+ village:{name:"Làng Đông",x:48,y:15},
+ mine:{name:"Mỏ sắt",x:70,y:58},
+ enemy:{name:"Trại địch",x:73,y:16}
+};
+function render(){
+ ["food","wood","iron","gold","army","xp","wins"].forEach(k=>document.getElementById(k).textContent=Math.floor(s[k]));
+ s.power=s.army*5+s.barracks*15;
+ document.getElementById("power").textContent=Math.floor(s.power);
+ document.getElementById("log").innerHTML=s.logs.slice(-10).reverse().map(x=>"<div>"+x+"</div>").join("");
+ document.querySelectorAll(".node").forEach(el=>{
+   const type=el.getAttribute("onclick").match(/'([^']+)'/)[1];
+   el.style.left=nodes[type].x+"%";el.style.top=nodes[type].y+"%";
+   el.classList.toggle("selected",s.selected===type);
+ });
+ const t=document.getElementById("armyToken");
+ const p=nodes[s.position];t.style.left="calc("+p.x+"% + 11px)";t.style.top="calc("+p.y+"% + 11px)";t.style.display="flex";
+ document.getElementById("selection").textContent="📍 "+nodes[s.selected].name+" • Quân đang ở: "+nodes[s.position].name;
+}
+function log(x){s.logs.push("• "+x);if(s.logs.length>25)s.logs.shift();save();render()}
+function save(){localStorage.setItem(KEY,JSON.stringify(s))}
+function saveGame(){save();log("Đã lưu Bản 0.2 trên iPhone.")}
+function selectNode(type){s.selected=type;render()}
+function moveArmy(){
+ if(s.selected===s.position){log("Quân đội đã ở địa điểm này.");return}
+ const target=s.selected;
+ s.position=target;
+ if(target==="village"){s.food+=40;s.gold+=15;log("Quân tiến vào Làng Đông: +40 🌾 +15 💰.")}
+ else if(target==="mine"){s.iron+=25;log("Chiếm giữ Mỏ sắt: +25 ⛏️.")}
+ else if(target==="enemy"){log("Quân đã áp sát Trại địch. Hãy bấm Tấn công.")}
+ else log("Quân trở về Thành chính.");
+ render();save();
+}
+function attackEnemy(){
+ if(s.position!=="enemy"){s.selected="enemy";log("Hãy di chuyển quân tới Trại địch trước.");render();return}
+ if(s.army<5){log("Không đủ quân để giao chiến.");return}
+ const enemyPower=70+Math.floor(Math.random()*61);
+ const loss=Math.max(2,Math.floor(s.army*(0.08+Math.random()*0.14)));
+ if(s.power>=enemyPower){
+   s.army=Math.max(1,s.army-loss);s.wins++;s.xp+=50;
+   s.gold+=80+Math.floor(Math.random()*71);s.iron+=30;
+   log("🎉 Chiến thắng! Địch "+enemyPower+" lực. Mất "+loss+" quân, nhận vàng và sắt.");
+ }else{
+   const loss2=Math.max(4,Math.floor(s.army*(0.18+Math.random()*0.18)));
+   s.army=Math.max(1,s.army-loss2);s.xp+=15;
+   log("⚠️ Bại trận! Địch mạnh "+enemyPower+" lực. Mất "+loss2+" quân.");
+ }
+ s.position="capital";s.selected="capital";render();save();
 }
 function recruit(){
-if(s.food<100||s.gold<40){log("Không đủ lương thực hoặc vàng.");return}
-s.food-=100;s.gold-=40;s.army+=10;s.xp+=10;log("Tuyển thêm 10 Bộ binh.");checkLevel();
+ const costFood=100,costGold=40;
+ if(s.food<costFood||s.gold<costGold){log("Không đủ 🌾 hoặc 💰 để tuyển quân.");return}
+ s.food-=costFood;s.gold-=costGold;s.army+=10;s.xp+=10;log("Tuyển thêm 10 Bộ binh.");render();save()
 }
-function archers(){
-if(s.food<80||s.gold<60){log("Không đủ lương thực hoặc vàng.");return}
-s.food-=80;s.gold-=60;s.army+=5;s.xp+=15;log("Tuyển thêm 5 Cung binh.");checkLevel();
+function collect(){
+ s.food+=50+s.farm*20;s.wood+=30;s.iron+=10;s.gold+=10;
+ log("Thu hoạch: +"+(50+s.farm*20)+" 🌾 +30 🪵 +10 ⛏️ +10 💰");render();save()
 }
-function collect(){s.food+=50;s.wood+=30;s.iron+=10;s.gold+=10;log("Thu hoạch tài nguyên: +50 🌾 +30 🪵 +10 ⛏️ +10 💰");}
-function checkLevel(){
-let need=s.level*100;
-if(s.xp>=need){s.xp-=need;s.level++;s.fame+=20;log("🎉 Thành đã lên cấp "+s.level+"!");}
+function buildFarm(){
+ if(s.wood<80){log("Không đủ gỗ.");return}
+ s.wood-=80;s.farm++;log("Nông trại lên cấp "+s.farm+".");render();save()
 }
-function resetGame(){if(confirm("Xóa toàn bộ tiến trình?")){localStorage.removeItem(KEY);location.reload()}}
-setInterval(()=>{s.food+=s.farm*20;s.wood+=s.woodMine*15;s.iron+=s.ironMine*8;render();save(false)},10000);
+function buildBarracks(){
+ if(s.wood<120){log("Không đủ gỗ.");return}
+ s.wood-=120;s.barracks++;log("Doanh trại lên cấp "+s.barracks+". Sức mạnh quân tăng.");render();save()
+}
+function resetGame(){if(confirm("Xóa tiến trình Bản 0.2?")){localStorage.removeItem(KEY);location.reload()}}
+setInterval(()=>{s.food+=s.farm*2;s.wood+=s.farm;s.iron+=Math.floor(s.barracks/2);render();save()},10000);
 render();
 </script>
 </body>

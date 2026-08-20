@@ -170,6 +170,71 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
     height:68px !important;
   }
 }
+
+
+/* ===== MỐC 5 · BỐ CỤC GỌN / iPHONE ===== */
+#stats{
+  width:260px !important;
+  max-width:54vw !important;
+  padding:7px 9px !important;
+  border-radius:14px !important;
+}
+#stats .name{font-size:17px !important;line-height:1.05 !important}
+#stats .sub{font-size:11px !important}
+#stats .bar{height:4px !important;margin:3px 0 !important}
+#stats{font-size:11px !important}
+#town{
+  width:145px !important;
+  max-width:30vw !important;
+  padding:7px 8px !important;
+  border-radius:14px !important;
+  font-size:11px !important;
+  line-height:1.25 !important;
+}
+#bagBtn{top:112px !important;right:9px !important;width:54px !important;height:54px !important}
+.travel{width:54px !important;height:54px !important;right:9px !important}
+.mount{top:176px !important}.tele{top:240px !important}.cape{top:304px !important}
+.skills{
+  right:8px !important;
+  bottom:max(92px,calc(env(safe-area-inset-bottom) + 86px)) !important;
+  gap:6px !important;
+}
+.skills .btn,.btn{width:54px !important;height:54px !important;font-size:23px !important}
+#joy{
+  width:92px !important;height:92px !important;left:10px !important;
+  bottom:max(104px,calc(env(safe-area-inset-bottom) + 96px)) !important;
+}
+#stick{width:40px !important;height:40px !important;border-width:4px !important}
+.quickSocial{
+  right:8px !important;
+  bottom:max(35px,calc(env(safe-area-inset-bottom) + 30px)) !important;
+  gap:5px !important;
+}
+.quickSocial button{min-height:38px !important;font-size:11px !important;padding:5px 8px !important}
+#status{
+  left:8px !important;right:8px !important;bottom:max(6px,env(safe-area-inset-bottom)) !important;
+  font-size:10px !important;padding:6px 9px !important;text-align:center !important;
+}
+#vlZoneTitle{
+  top:max(70px,calc(env(safe-area-inset-top) + 64px)) !important;
+  font-size:12px !important;padding:4px 8px !important;
+}
+#vlArea{top:max(98px,calc(env(safe-area-inset-top) + 92px)) !important;font-size:9px !important}
+#vlMini{
+  right:8px !important;
+  top:max(360px,calc(env(safe-area-inset-top) + 350px)) !important;
+  width:82px !important;height:60px !important;
+  border-width:2px !important;border-radius:9px !important;
+}
+#npcHint{
+  top:55% !important;font-size:11px !important;padding:6px 9px !important;
+}
+.questTracker{
+  top:110px !important;left:8px !important;width:180px !important;
+  font-size:10px !important;padding:6px 8px !important;
+}
+.menu,#classBtn,#actBtn,#comBtn{display:none !important}
+
 </style>
 </head>
 <body>
@@ -198,8 +263,6 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div id="quickChat" class="quickChat"><b>🌎 Kênh thế giới</b><small id="quickChatText">Chào mừng Thiếu Hiệp đến Tân Thủ Thôn!</small></div>
 <div id="quickParty" class="quickParty"><b>🤝 Tổ đội</b><small id="partyText">Chưa có tổ đội · Chạm để tìm đồng đội.</small></div>
 <div class="quickSocial"><button id="worldQuick">🌎 Kênh thế giới</button><button id="partyQuick">🤝 Tổ đội</button></div>
-<div class="menu"><button id="classBtn">🥋 Môn phái</button><button id="actBtn">🏆 Hoạt động</button></div>
-<button id="comBtn" class="community">👥 Cộng đồng</button>
 <div id="msg"></div>
 <div id="npcHint">💬 Chạm NPC để nhận nhiệm vụ</div>
 <div id="questTracker"></div>
@@ -934,10 +997,73 @@ function fire(){
   if(m&&Math.hypot(P.x-m.x,P.y-m.y)<300){startCombat("fire",m,55+z[4],.8,.32);toast(z[3])}else toast("🔥 Quái quá xa");
 }
 
-const joy={x:0,y:0,on:false},je=document.getElementById("joy"),st=document.getElementById("stick");
-function joySet(t){let r=je.getBoundingClientRect(),dx=t.clientX-r.left-r.width/2,dy=t.clientY-r.top-r.height/2,l=r.width*.36,d=Math.hypot(dx,dy);if(d>l){dx*=l/d;dy*=l/d}joy.x=dx/l;joy.y=dy/l;st.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`}
-function joyEnd(){joy.x=joy.y=0;joy.on=false;st.style.transform="translate(-50%,-50%)"}
-je.addEventListener("touchstart",e=>{joy.on=true;joySet(e.touches[0])},{passive:true});je.addEventListener("touchmove",e=>joy.on&&joySet(e.touches[0]),{passive:true});je.addEventListener("touchend",joyEnd,{passive:true});
+/* ===== JOYSTICK FIX V2 · GLOBAL TOUCH / SAFARI ===== */
+const joy={x:0,y:0,on:false,id:null},je=document.getElementById("joy"),st=document.getElementById("stick");
+let joyStartX=0,joyStartY=0;
+function joyReset(){
+  joy.x=0; joy.y=0; joy.on=false; joy.id=null;
+  st.style.transform="translate(-50%,-50%)";
+}
+function joyUpdate(clientX,clientY){
+  const r=je.getBoundingClientRect();
+  let dx=clientX-r.left-r.width/2, dy=clientY-r.top-r.height/2;
+  const lim=r.width*.36, len=Math.hypot(dx,dy);
+  if(len>lim){dx=dx*lim/len;dy=dy*lim/len}
+  joy.x=Math.max(-1,Math.min(1,dx/lim));
+  joy.y=Math.max(-1,Math.min(1,dy/lim));
+  st.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
+}
+function isJoyArea(x,y){
+  const r=je.getBoundingClientRect();
+  /* Cho phép chạm vào cả vòng joystick và vùng ngay quanh nó. */
+  return x>=r.left-35 && x<=r.right+35 && y>=r.top-35 && y<=r.bottom+35;
+}
+document.addEventListener("touchstart",e=>{
+  if(joy.on)return;
+  for(const t of e.changedTouches){
+    if(isJoyArea(t.clientX,t.clientY)){
+      joy.on=true; joy.id=t.identifier;
+      joyStartX=t.clientX; joyStartY=t.clientY;
+      joyUpdate(t.clientX,t.clientY);
+      e.preventDefault();
+      break;
+    }
+  }
+},{passive:false});
+document.addEventListener("touchmove",e=>{
+  if(!joy.on)return;
+  for(const t of e.changedTouches){
+    if(t.identifier===joy.id){
+      joyUpdate(t.clientX,t.clientY);
+      e.preventDefault();
+      break;
+    }
+  }
+},{passive:false});
+document.addEventListener("touchend",e=>{
+  if(!joy.on)return;
+  for(const t of e.changedTouches){
+    if(t.identifier===joy.id){joyReset();e.preventDefault();break}
+  }
+},{passive:false});
+document.addEventListener("touchcancel",e=>{
+  if(!joy.on)return;
+  for(const t of e.changedTouches){
+    if(t.identifier===joy.id){joyReset();e.preventDefault();break}
+  }
+},{passive:false});
+
+/* Pointer fallback, không dùng pointer capture để tránh Safari mất touch. */
+je.addEventListener("pointerdown",e=>{
+  if(e.pointerType==="touch"||e.pointerType==="pen"){
+    joy.on=true;joy.id=e.pointerId;joyUpdate(e.clientX,e.clientY);e.preventDefault();
+  }
+},{passive:false});
+je.addEventListener("pointermove",e=>{
+  if(joy.on && joy.id===e.pointerId){joyUpdate(e.clientX,e.clientY);e.preventDefault()}
+},{passive:false});
+je.addEventListener("pointerup",e=>{if(joy.id===e.pointerId)joyReset()},{passive:false});
+je.addEventListener("pointercancel",e=>{if(joy.id===e.pointerId)joyReset()},{passive:false});
 function drawTree(a,b){
   x.fillStyle="#6a432b";x.fillRect(a-9,b+24,18,52);
   x.fillStyle="#8a5a35";x.fillRect(a-4,b+25,7,48);
@@ -1227,7 +1353,7 @@ c.addEventListener("touchend",e=>{
   }
 },{passive:false});
 
-function update(dt){let dx=joy.x,dy=joy.y,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
+function update(dt){let dx=Number(joy.x)||0,dy=Number(joy.y)||0,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
 let living=mobs.filter(m=>m.alive);
 let aggroList=living.map(m=>({m,d:Math.hypot(P.x-m.x,P.y-m.y)}))
   .filter(o=>o.d<360)
@@ -1292,12 +1418,17 @@ function tele(where){let q=where=="city"?city:town;P.x=q.x;P.y=q.y;cam.x=P.x;cam
 function guild(){let q=Number(document.getElementById("gs").textContent.replace(",",""))+50;document.getElementById("gs").textContent=q.toLocaleString("en-US");toast("🏯 Đã đăng ký chiến bang")}
 let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];function renderChat(){document.getElementById("chat").innerHTML=chat.map(v=>"<div>"+v+"</div>").join("")}function sendChat(){let i=document.getElementById("input"),v=i.value.trim();if(v){chat.push("Thiếu Hiệp: "+v);i.value="";renderChat();toast("🌎 Đã gửi")}}
 
-document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};document.getElementById("classBtn").onclick=()=>openClassModal();document.getElementById("actBtn").onclick=()=>openActivity();document.getElementById("comBtn").onclick=()=>{renderChat();openM("comModal")};document.getElementById("teleBtn").onclick=()=>openM("teleModal");
+document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};
+const classBtn=document.getElementById("classBtn"),actBtn=document.getElementById("actBtn"),comBtn=document.getElementById("comBtn");
+if(classBtn) classBtn.onclick=()=>openClassModal();
+if(actBtn) actBtn.onclick=()=>openActivity();
+if(comBtn) comBtn.onclick=()=>{renderChat();openM("comModal")};
+document.getElementById("teleBtn").onclick=()=>openM("teleModal");
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
 try{const save=JSON.parse(localStorage.getItem("ktm_moc5")||"null");if(save&&cls[save.pc])pc=save.pc;if(save&&costumeData[save.costume])selectedCostume=save.costume;if(save&&weaponData[save.weapon])selectedWeapon=save.weapon}catch(e){}
-classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · 14 Môn Phái · NPC";
+classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · NPC · Điều khiển FIX";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 
 /* ===== VÕ LÂM 1 MOBI VISUAL PACK · Mốc 5 =====

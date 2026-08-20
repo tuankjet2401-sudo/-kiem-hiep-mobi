@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.12.5">
-<meta name="game-protocol" content="4.12.5">
+<meta name="game-version" content="4.12.5-M2">
+<meta name="game-protocol" content="4.12.5-M2">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.5 · Nghệ Thuật Làng Quê</title>
+<title>Kiếm Thế Mobi – Bản 4.12.5-M2 · Spine Rig & Animation</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -156,6 +156,12 @@ for(let i=0;i<14;i++){
 const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao Bào","áo","Thường",0,5,"🥋"],["Giáp Tinh Anh","áo","Tốt",0,13,"🛡️"],["Đao Tinh Anh","vũ khí","Hiếm",18,0,"⚔️"],["Đao Sơn Tặc","vũ khí","Thường",9,0,"🗡️"],["Bình Hồi Khí","tiêu hao","Thường",0,0,"🧪"]];
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
 let cdA=0,cdS=0,cdF=0,stun=0,slow=0;
+/* Mốc 2 — Spine-style Rig & Animation (canvas runtime)
+   Bone hierarchy: root -> torso/head/hair + legL/legR + weapon.
+   Dùng chính các layer PNG hiện có, không cần thêm thư viện ngoài. */
+const rig={attack:0,skill:0,fire:0};
+function rigTrigger(type,duration){rig[type]=Math.max(rig[type],duration)}
+
 
 /* ================= THIẾU HIỆP - LAYER FIX =================
    Các PNG là ảnh tham chiếu: một số có nhãn ở đáy và
@@ -209,11 +215,75 @@ for(const name of thLayerNames){
   thLayers[name]=img;
 }
 
+function drawRigPart(img,sx,sy,sw,sh,dx,dy,dw,dh,rot=0,ox=0,oy=0){
+  if(!img||!img.complete||!img.naturalWidth)return;
+  x.save();
+  x.translate(dx+ox,dy+oy);
+  x.rotate(rot);
+  x.drawImage(img,sx,sy,sw,sh,-ox,-oy,dw,dh);
+  x.restore();
+}
 function drawTHLayer(a,b){
-  if(!thReady) return false;
-  const scale=0.95;
-  const w=160*scale,h=190*scale;
-  x.drawImage(thComposite,a-w/2,b-h+8,w,h);
+  if(!thLoaded()) return false;
+
+  const t=performance.now()/1000;
+  const moving=Math.abs(joy.x)+Math.abs(joy.y)>0.08;
+  const walk=moving?Math.sin(t*10):0;
+  const idle=Math.sin(t*2.4);
+  const bob=(moving?Math.abs(Math.sin(t*10))*1.8:idle*1.3);
+  const attack=rig.attack>0;
+  const skill=rig.skill>0;
+  const fire=rig.fire>0;
+  const s=0.95;
+
+  /* Bone transforms — root */
+  const rootX=a, rootY=b-bob;
+  let torsoRot=0, headRot=idle*0.018;
+  let legL=walk*0.10, legR=-walk*0.10;
+  let weaponRot=walk*0.025;
+
+  /* Attack / skill pose */
+  if(attack){
+    const p=1-rig.attack/.45;
+    const swing=Math.sin(Math.min(1,p)*Math.PI);
+    torsoRot=-0.04*swing;
+    weaponRot=-0.75*swing;
+  }
+  if(skill){
+    const p=1-rig.skill/.8;
+    const swing=Math.sin(Math.min(1,p)*Math.PI);
+    torsoRot=0.05*swing;
+    headRot=-0.035*swing;
+    weaponRot=0.95*swing;
+  }
+  if(fire){
+    const p=1-rig.fire/.8;
+    weaponRot=-0.35*Math.sin(Math.min(1,p)*Math.PI);
+  }
+
+  /* Tỷ lệ giữ đúng bản v5, nhưng các phần giờ chuyển động theo bone. */
+  const legLW=85*s, legLH=78*s;
+  const legRW=90*s, legRH=78*s;
+  const bodyW=115*s, bodyH=94*s;
+  const headW=80*s, headH=90*s;
+  const hairW=105*s, hairH=90*s;
+  const weaponW=135*s, weaponH=52*s;
+
+  // Legs: dưới thân, pivot gần hông.
+  drawRigPart(thLayers.TH_LEG_L,0,0,85,78,rootX-80*s,rootY+108*s,legLW,legLH,legL,legLW*.72,4);
+  drawRigPart(thLayers.TH_LEG_R,0,0,90,78,rootX-44*s,rootY+108*s,legRW,legRH,legR,legRW*.28,4);
+
+  // Torso: bone chính.
+  drawRigPart(thLayers.TH_BODY,0,0,115,94,rootX-58*s,rootY+38*s,bodyW,bodyH,torsoRot,bodyW/2,12*s);
+
+  // Head + hair: bám theo torso/head bone.
+  const headX=rootX+Math.sin(headRot)*3;
+  drawRigPart(thLayers.TH_HEAD,0,0,80,90,headX-40*s,rootY,headW,headH,headRot,headW/2,headH*.82);
+  drawRigPart(thLayers.TH_HAIR,0,0,105,90,headX-53*s,rootY, hairW,hairH,headRot, hairW*.50,hairH*.82);
+
+  // Weapon: tay kiếm xoay theo bone vũ khí.
+  drawRigPart(thLayers.TH_WEAPON,0,0,135,52,rootX+23*s,rootY+51*s,weaponW,weaponH,weaponRot,18*s,18*s);
+
   return true;
 }
 
@@ -564,9 +634,9 @@ function use(k){
 function sell(k){bag.splice(k,1);gold+=20;bagUI();hud();toast("🪙 +20 vàng")}
 function nearest(){let b=null,bd=1e9;for(let m of mobs)if(m.alive){let d=Math.hypot(P.x-m.x,P.y-m.y);if(d<bd){bd=d;b=m}}return b}
 function hit(m,n){m.hp=Math.max(0,m.hp-Math.round(n));m.hit=.2;updateQuestProgress("training",1);if(m.hp<=0){m.alive=false;exp=Math.min(600,exp+20);updateQuestProgress("bandit",1);updateQuestProgress("hunt",1);updateQuestProgress("elite",1);drops.push({x:m.x,y:m.y,g:10+Math.floor(Math.random()*30),i:its[Math.floor(Math.random()*5)]});updateQuestProgress("herb",1);toast("🎁 Sơn Tặc rơi đồ")}}
-function attack(){if(cdA>0)return;cdA=.45;let m=nearest();if(!m)return;let r=pc=="Thiên Nhẫn Hỏa Tiễn"?500:["Đường Môn","Ngũ Độc"].includes(pc)?350:160;if(Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,P.atk+equip.weapon.a+cls[pc][4])}
-function skill(){if(cdS>0)return;cdS=2;updateQuestProgress("sword",1);let z=cls[pc],r=260,n=40+z[4]+equip.weapon.a;if(pc=="Cái Bang Chưởng"){r=440;n+=30;toast("🐉 Giáng Long Thập Bát Chưởng!");mobs.forEach(m=>m.alive&&Math.hypot(P.x-m.x,P.y-m.y)<r&&hit(m,n));return}if(pc=="Thiên Nhẫn Hỏa Tiễn"){r=550;n+=25;toast("🔥 Hỏa Tiễn!")}else toast(z[3]);let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,n)}
-function fire(){if(cdF>0)return;cdF=3;let m=nearest(),z=cls[pc];if(m&&Math.hypot(P.x-m.x,P.y-m.y)<300)hit(m,55+z[4]);toast(z[3])}
+function attack(){if(cdA>0)return;cdA=.45;rigTrigger("attack",.45);let m=nearest();if(!m)return;let r=pc=="Thiên Nhẫn Hỏa Tiễn"?500:["Đường Môn","Ngũ Độc"].includes(pc)?350:160;if(Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,P.atk+equip.weapon.a+cls[pc][4])}
+function skill(){if(cdS>0)return;cdS=2;rigTrigger("skill",.8);updateQuestProgress("sword",1);let z=cls[pc],r=260,n=40+z[4]+equip.weapon.a;if(pc=="Cái Bang Chưởng"){r=440;n+=30;toast("🐉 Giáng Long Thập Bát Chưởng!");mobs.forEach(m=>m.alive&&Math.hypot(P.x-m.x,P.y-m.y)<r&&hit(m,n));return}if(pc=="Thiên Nhẫn Hỏa Tiễn"){r=550;n+=25;toast("🔥 Hỏa Tiễn!")}else toast(z[3]);let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,n)}
+function fire(){if(cdF>0)return;cdF=3;rigTrigger("fire",.8);let m=nearest(),z=cls[pc];if(m&&Math.hypot(P.x-m.x,P.y-m.y)<300)hit(m,55+z[4]);toast(z[3])}
 
 const joy={x:0,y:0,on:false},je=document.getElementById("joy"),st=document.getElementById("stick");
 function joySet(t){let r=je.getBoundingClientRect(),dx=t.clientX-r.left-r.width/2,dy=t.clientY-r.top-r.height/2,l=r.width*.36,d=Math.hypot(dx,dy);if(d>l){dx*=l/d;dy*=l/d}joy.x=dx/l;joy.y=dy/l;st.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`}
@@ -806,7 +876,9 @@ for(let i=0;i<living.length;i++){
     }
   }
 }
-checkNpcHint();renderQuestTracker();cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
+checkNpcHint();renderQuestTracker();cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);
+rig.attack=Math.max(0,rig.attack-dt);rig.skill=Math.max(0,rig.skill-dt);rig.fire=Math.max(0,rig.fire-dt);
+stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
 let vw=W/Z,vh=H/Z;cam.x+=(Math.max(vw/2,Math.min(world.w-vw/2,P.x))-cam.x)*Math.min(1,dt*5);cam.y+=(Math.max(vh/2,Math.min(world.h-vh/2,P.y))-cam.y)*Math.min(1,dt*5);
 for(let i=drops.length-1;i>=0;i--)if(Math.hypot(P.x-drops[i].x,P.y-drops[i].y)<75){
   const d0=drops[i];
@@ -823,7 +895,7 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · NPC";
+classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 2 · Rig & Animation · NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

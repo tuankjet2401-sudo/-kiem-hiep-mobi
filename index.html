@@ -1,213 +1,1853 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="vi">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Đại Việt Chiến Ký — Bản 3.2 Web</title>
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="Đại Việt Chiến Ký">
+
+<meta name="theme-color" content="#17120d">
+
+<title>Đại Việt Chiến Ký - Bản 3.0</title>
+
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:#17150f;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body{min-height:100vh;overflow-x:hidden}
-button{font:inherit;border:0;color:#fff;background:#7d4c28;border-radius:14px;padding:12px 14px;font-weight:800}
-#app{max-width:900px;margin:auto;min-height:100vh;background:#526f43}
-header{background:#302116;padding:calc(14px + env(safe-area-inset-top)) 14px 12px;text-align:center;border-bottom:4px solid #a9894b}
-h1{margin:0;color:#ffe08b;font-size:25px}
-.sub{color:#d7c8ab;margin:4px 0 10px}
-.res{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.res div{background:#49331f;border:1px solid #886a3d;border-radius:12px;padding:8px 3px;font-weight:800;color:#ffe08b}
-main{padding:12px}
-.panel{background:#1f1d16;border:2px solid #a9894b;border-radius:18px;padding:12px;margin-bottom:12px;box-shadow:0 5px 12px #0005}
-.title{color:#ffe08b;font-size:21px;font-weight:900;margin-bottom:8px}
-.map{position:relative;height:470px;overflow:hidden;border:4px solid #ad925a;border-radius:20px;background:#5c7749}
-.map:before{content:"";position:absolute;inset:0;background:
-linear-gradient(105deg,transparent 42%,#6e9ba0 42%,#6e9ba0 47%,transparent 47%),
-linear-gradient(170deg,transparent 46%,#9a8a5c 46%,#9a8a5c 52%,transparent 52%);
-opacity:.8}
-.wall{position:absolute;inset:55px 55px;border:20px solid #755535;border-radius:24px;box-shadow:inset 0 0 0 4px #bd955a}
-.place,.npc{position:absolute;z-index:2;transform:translate(-50%,-50%);touch-action:manipulation}
-.place{width:112px;min-height:82px;border:3px solid #c5a65e;background:#3e3022;border-radius:18px;text-align:center;padding:8px;box-shadow:0 5px 9px #0007}
-.place .icon{font-size:30px}.place b{display:block;font-size:13px}
-.npc{width:90px;text-align:center;cursor:pointer}
-.npc .avatar{font-size:42px;filter:drop-shadow(0 4px 2px #0008)}
-.npc b{display:block;background:#211b15d9;border:1px solid #a9894b;border-radius:8px;padding:3px;font-size:11px}
-#message{background:#2b241b;border-radius:12px;padding:10px;line-height:1.4;color:#eee0c7}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;justify-content:center;z-index:20}
-#modal.show{display:flex}
-.sheet{width:min(900px,100%);max-height:78vh;overflow:auto;background:#201d16;border:2px solid #b99a58;border-radius:22px 22px 0 0;padding:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
-.sheet h2{color:#ffe08b;margin:0 0 8px}
-.close{float:right;background:#57351f}
-.advisor{background:linear-gradient(135deg,#1e3040,#283c4d);border:1px solid #c5a05a;border-radius:14px;padding:12px}
-.quote{background:#111a22aa;padding:10px;border-radius:10px;margin-top:8px}
-footer{position:sticky;bottom:0;background:#2b1d13;padding:9px calc(10px + env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-footer button{font-size:12px;padding:11px 4px}
-@media(max-width:480px){.res div{font-size:12px}.map{height:440px}.place{width:98px}.npc{width:78px}}
 
-.map{touch-action:manipulation}
-.place{transition:transform .15s,filter .15s}
-.place:active,.npc:active{transform:translate(-50%,-50%) scale(.96);filter:brightness(1.2)}
-.npc{z-index:5}
-.npc .avatar{animation:npcIdle 2.4s ease-in-out infinite}
-.npc-luc .avatar{animation-delay:0s}.npc-tham .avatar{animation-delay:.4s}.npc-tieu .avatar{animation-delay:.8s}
-@keyframes npcIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.route{position:absolute;z-index:1;border-top:3px dashed #d4b66a99;transform-origin:left center}
-.r1{left:32%;top:40%;width:17%;transform:rotate(-18deg)}
-.r2{left:51%;top:40%;width:17%;transform:rotate(18deg)}
-.r3{left:50%;top:47%;width:1px;height:18%;border-left:3px dashed #d4b66a99}
-.modalNpc{display:flex;gap:12px;align-items:center}
-.bigAvatar{font-size:58px;width:90px;height:90px;display:flex;align-items:center;justify-content:center;background:#30261b;border:2px solid #b99a58;border-radius:18px}
-.actionNote{font-size:12px;color:#d9ceb9;margin-top:8px}
+*{
 
-.splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle,#70542f,#21170f 65%,#100b08);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px}
-.splashLogo{font-size:96px;filter:drop-shadow(0 8px 15px #000);animation:splashPulse 2s infinite}
-.splash h1{color:#ffe08b;letter-spacing:2px;margin:8px 0}.splash p{color:#d7c8ab;margin:0 0 18px}
-@keyframes splashPulse{50%{transform:scale(1.05)}}
-#app.pwaReady{padding-bottom:env(safe-area-inset-bottom)}
-@media (display-mode: standalone){header{padding-top:calc(10px + env(safe-area-inset-top))}}
+  box-sizing:border-box;
+
+  -webkit-tap-highlight-color:transparent;
+
+  user-select:none;
+
+}
+
+html,body{
+
+  margin:0;
+
+  width:100%;
+
+  height:100%;
+
+  overflow:hidden;
+
+  background:#17120d;
+
+  font-family:Arial,sans-serif;
+
+  touch-action:none;
+
+}
+
+#game{
+
+  position:fixed;
+
+  inset:0;
+
+  width:100%;
+
+  height:100%;
+
+  display:block;
+
+  background:#6e9c4d;
+
+}
+
+#hud{
+
+  position:fixed;
+
+  top:env(safe-area-inset-top,8px);
+
+  left:8px;
+
+  right:8px;
+
+  z-index:5;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  pointer-events:none;
+
+}
+
+.panel{
+
+  background:rgba(35,20,10,.84);
+
+  border:2px solid #c59643;
+
+  border-radius:12px;
+
+  color:#ffe9b0;
+
+  padding:7px 10px;
+
+  box-shadow:0 3px 12px #0008;
+
+}
+
+#stats{
+
+  min-width:165px;
+
+  font-size:13px;
+
+}
+
+.bar{
+
+  width:125px;
+
+  height:10px;
+
+  margin-top:3px;
+
+  border-radius:8px;
+
+  background:#331818;
+
+  overflow:hidden;
+
+  border:1px solid #000;
+
+}
+
+#hpBar{height:100%;background:#d43d32;width:100%}
+
+#mpBar{height:100%;background:#3785d8;width:100%}
+
+#buttons{
+
+  display:flex;
+
+  gap:6px;
+
+  pointer-events:auto;
+
+}
+
+.uiBtn{
+
+  border:1px solid #d7aa56;
+
+  background:#39200fdd;
+
+  color:#ffe5a3;
+
+  border-radius:10px;
+
+  min-width:42px;
+
+  height:42px;
+
+  font-size:19px;
+
+  font-weight:bold;
+
+}
+
+.uiBtn:active,.skill:active,.attack:active{
+
+  transform:scale(.93);
+
+}
+
+#joystick{
+
+  position:fixed;
+
+  z-index:6;
+
+  left:18px;
+
+  bottom:calc(18px + env(safe-area-inset-bottom));
+
+  width:125px;
+
+  height:125px;
+
+  border-radius:50%;
+
+  background:#21170fcc;
+
+  border:2px solid #c79548aa;
+
+}
+
+#stick{
+
+  position:absolute;
+
+  width:54px;
+
+  height:54px;
+
+  left:33px;
+
+  top:33px;
+
+  border-radius:50%;
+
+  background:#c79548aa;
+
+  border:2px solid #ffe4a0;
+
+}
+
+#combat{
+
+  position:fixed;
+
+  z-index:6;
+
+  right:15px;
+
+  bottom:calc(18px + env(safe-area-inset-bottom));
+
+  display:flex;
+
+  align-items:end;
+
+  gap:8px;
+
+}
+
+.attack{
+
+  width:68px;
+
+  height:68px;
+
+  border-radius:50%;
+
+  border:2px solid #f4c969;
+
+  background:#8e271ddd;
+
+  color:#fff0bd;
+
+  font-size:27px;
+
+}
+
+.skill{
+
+  width:52px;
+
+  height:52px;
+
+  border-radius:50%;
+
+  border:2px solid #d6a650;
+
+  background:#27234add;
+
+  color:white;
+
+  font-size:20px;
+
+}
+
+.skill small{
+
+  display:block;
+
+  font-size:9px;
+
+}
+
+#message{
+
+  position:fixed;
+
+  z-index:8;
+
+  left:50%;
+
+  top:82px;
+
+  transform:translateX(-50%);
+
+  color:#fff1b0;
+
+  background:#24170ed9;
+
+  border:1px solid #c79548;
+
+  padding:7px 14px;
+
+  border-radius:20px;
+
+  font-size:13px;
+
+  opacity:0;
+
+  transition:.2s;
+
+  pointer-events:none;
+
+}
+
+.modal{
+
+  display:none;
+
+  position:fixed;
+
+  z-index:20;
+
+  inset:0;
+
+  background:#0009;
+
+  align-items:center;
+
+  justify-content:center;
+
+}
+
+.modal.show{display:flex}
+
+.window{
+
+  width:min(92vw,430px);
+
+  max-height:80vh;
+
+  overflow:auto;
+
+  background:#26180e;
+
+  color:#ffe9b0;
+
+  border:2px solid #c59643;
+
+  border-radius:16px;
+
+  padding:15px;
+
+  box-shadow:0 8px 30px #000;
+
+}
+
+.window h2{
+
+  text-align:center;
+
+  margin:0 0 12px;
+
+  color:#ffd46d;
+
+}
+
+.close{
+
+  float:right;
+
+  border:0;
+
+  background:#6b271d;
+
+  color:white;
+
+  border-radius:7px;
+
+  padding:5px 9px;
+
+}
+
+.inventory{
+
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:7px;
+
+}
+
+.slot{
+
+  aspect-ratio:1;
+
+  background:#160e09;
+
+  border:1px solid #77552c;
+
+  border-radius:8px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  flex-direction:column;
+
+  font-size:24px;
+
+}
+
+.slot span{
+
+  font-size:9px;
+
+  margin-top:3px;
+
+  color:#ddd;
+
+}
+
+.common{color:#ddd}
+
+.good{color:#67e16c}
+
+.rare{color:#c875ff}
+
+#toast{
+
+  position:fixed;
+
+  z-index:30;
+
+  left:50%;
+
+  top:45%;
+
+  transform:translate(-50%,-50%);
+
+  background:#27160ddd;
+
+  border:2px solid #e0b456;
+
+  border-radius:13px;
+
+  padding:14px 20px;
+
+  color:#ffe9ad;
+
+  text-align:center;
+
+  display:none;
+
+}
+
 </style>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2b1d13">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Đại Việt Chiến Ký">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 </head>
+
 <body>
-<div id="app">
-<header>
-<h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
-<div class="sub">Bản 3.2 • Web Safari • Thành trì 2.5D</div>
-<div class="res">
-<div>🌾 <span id="food">1000</span></div><div>💰 <span id="gold">1000</span></div>
-<div>🪵 <span id="wood">600</span></div><div>⛏️ <span id="iron">400</span></div>
-<div>💎 <span id="gems">100</span></div>
-</div>
-</header>
-<main>
-<section class="panel">
-<div class="title">🏯 Thành trì Đại Việt</div>
-<div class="map">
-<div class="wall"></div><div class="route r1"></div><div class="route r2"></div><div class="route r3"></div>
-<div class="place" data-name="Chính Điện" data-cost="100" style="left:50%;top:25%"><span class="icon">🏯</span><b>Chính Điện</b></div>
-<div class="place" data-name="Doanh Trại" data-cost="80" style="left:20%;top:47%"><span class="icon">⚔️</span><b>Doanh Trại</b></div>
-<div class="place" data-name="Lò Rèn" data-cost="76" style="left:80%;top:47%"><span class="icon">🔨</span><b>Lò Rèn</b></div>
-<div class="place" data-name="Nông Điền" data-cost="60" style="left:22%;top:78%"><span class="icon">🌾</span><b>Nông Điền</b></div>
-<div class="place" data-name="Mỏ Sắt" data-cost="70" style="left:78%;top:78%"><span class="icon">⛏️</span><b>Mỏ Sắt</b></div>
 
-<div class="npc npc-luc" data-npc="Lục Minh Triết" style="left:39%;top:42%"><div class="avatar">👑</div><b>Lục Minh Triết</b></div>
-<div class="npc npc-tham" data-npc="Thẩm Hàn Phong" style="left:61%;top:42%"><div class="avatar">⚔️</div><b>Thẩm Hàn Phong</b></div>
-<div class="npc npc-tieu" data-npc="Tiêu Mặc Bạch" style="left:50%;top:62%"><div class="avatar">🪶</div><b>Tiêu Mặc Bạch</b></div>
-</div>
-</section>
-<section class="panel"><div class="title">📜 Tương tác</div><div id="message">Chạm vào công trình hoặc NPC để bắt đầu.</div></section>
-<section class="panel">
-<div class="title">🎮 Bản 3.2</div>
-<div class="grid">
-<button onclick="openNpc('Lục Minh Triết')">👑 Quân sư triều đình</button>
-<button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
-<button onclick="openNpc('Tiêu Mặc Bạch')">🪶 Mưu sĩ</button>
-<button onclick="collect()">🌾 Thu hoạch</button><button onclick="saveGame()">💾 Lưu game</button><button onclick="loadGame()">📂 Tải game</button>
-</div>
-</section>
-</main>
-<footer>
-<button onclick="openNpc('Lục Minh Triết')">📜 Quân sư</button>
-<button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
-<button onclick="openNpc('Tiêu Mặc Bạch')">🪶 Mưu sĩ</button>
-<button onclick="toggleFullscreen()">⛶ Toàn màn hình</button>
-</footer>
+<canvas id="game"></canvas>
+
+<div id="hud">
+
+  <div id="stats" class="panel">
+
+    <b>⚔️ Đại Việt Chiến Ký</b><br>
+
+    Lv.<span id="level">1</span>
+
+    · HP <span id="hpText">100/100</span>
+
+    <div class="bar"><div id="hpBar"></div></div>
+
+    MP <span id="mpText">60/60</span>
+
+    <div class="bar"><div id="mpBar"></div></div>
+
+    💰 <span id="gold">100</span>
+
+  </div>
+
+  <div id="buttons">
+
+    <button class="uiBtn" onclick="openInventory()">🎒</button>
+
+    <button class="uiBtn" onclick="openCharacter()">🧑</button>
+
+    <button class="uiBtn" onclick="saveGame()">💾</button>
+
+  </div>
+
 </div>
 
+<div id="message"></div>
 
-<div id="splash" class="splash">
-  <div class="splashLogo">🏯</div>
-  <h1>ĐẠI VIỆT CHIẾN KÝ</h1>
-  <p>Bản 3.3 PWA</p>
-  <button onclick="startGame()">⚔️ Vào game</button>
+<div id="joystick">
+
+  <div id="stick"></div>
+
 </div>
-<div id="modal"><div class="sheet"><button class="close" onclick="closeModal()">✕</button><h2 id="mtitle"></h2><div id="mcontent"></div></div></div>
+
+<div id="combat">
+
+  <button class="skill" onclick="useSkill(1)">🔥<small>Hỏa</small></button>
+
+  <button class="skill" onclick="useSkill(2)">⚡<small>Lôi</small></button>
+
+  <button class="attack" onclick="attack()">⚔️</button>
+
+</div>
+
+<div id="inventoryModal" class="modal">
+
+  <div class="window">
+
+    <button class="close" onclick="closeModals()">✕</button>
+
+    <h2>🎒 Túi đồ</h2>
+
+    <div class="inventory" id="inventory"></div>
+
+  </div>
+
+</div>
+
+<div id="characterModal" class="modal">
+
+  <div class="window">
+
+    <button class="close" onclick="closeModals()">✕</button>
+
+    <h2>🧑 Nhân vật</h2>
+
+    <p>⚔️ Sức đánh: <b id="attackStat">15</b></p>
+
+    <p>🛡️ Phòng thủ: <b id="defStat">5</b></p>
+
+    <p>❤️ Sinh lực: <b id="maxHpStat">100</b></p>
+
+    <p>🔵 Nội lực: <b id="maxMpStat">60</b></p>
+
+    <p>⭐ Kinh nghiệm: <b id="expStat">0</b></p>
+
+    <p>🏯 Khu vực: <b>Thành Đại Việt</b></p>
+
+  </div>
+
+</div>
+
+<div id="toast"></div>
 
 <script>
-const SAVE_KEY="dai_viet_chien_ky_3_3_save";
-function saveGame(){
- try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));msg("💾 Đã lưu game trên iPhone.");}
- catch(e){msg("⚠️ Không thể lưu trên thiết bị này.");}
-}
-function loadGame(){
- try{
-  const raw=localStorage.getItem(SAVE_KEY);
-  if(!raw){msg("📂 Chưa có dữ liệu lưu.");return}
-  const saved=JSON.parse(raw);
-  Object.assign(state,saved);update();msg("📂 Đã tải lại thành phố.");
- }catch(e){msg("⚠️ Dữ liệu lưu không hợp lệ.");}
-}
-function toggleFullscreen(){
- const el=document.documentElement;
- if(document.fullscreenElement){document.exitFullscreen?.();}
- else{el.requestFullscreen?.().catch(()=>{});}
-}
-function startGame(){
- document.getElementById("splash").style.display="none";
- loadGame();
-}
-if("serviceWorker" in navigator){
- window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+
+/* =========================================================
+
+   ĐẠI VIỆT CHIẾN KÝ - BẢN 3.0 WEB
+
+   Một file HTML - chạy trực tiếp trên Safari
+
+   ========================================================= */
+
+const canvas = document.getElementById("game");
+
+const ctx = canvas.getContext("2d");
+
+let W=innerWidth,H=innerHeight,DPR=Math.min(devicePixelRatio||1,2);
+
+function resize(){
+
+  W=innerWidth;
+
+  H=innerHeight;
+
+  canvas.width=W*DPR;
+
+  canvas.height=H*DPR;
+
+  canvas.style.width=W+"px";
+
+  canvas.style.height=H+"px";
+
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
 }
 
-const state={food:1000,gold:1000,wood:600,iron:400,gems:100};
-const npcText={
-"Lục Minh Triết":["Quân sư triều đình","Chúa công, hãy giữ kho lương vững, nâng Chính Điện và chuẩn bị đại quân.","📜 Hiến kế"],
-"Thẩm Hàn Phong":["Minh Chủ Võ Lâm","Triều đình có đại quân, giang hồ có cao thủ. Ta sẽ giúp ngài thu phục những người tài.","⚔️ Tuyển cao thủ"],
-"Tiêu Mặc Bạch":["Mưu sĩ quân đội","Một trận thắng bắt đầu từ việc đọc đúng thế trận. Ta có thể phân tích điểm yếu của địch.","🧠 Phân tích trận địa"]
+addEventListener("resize",resize);
+
+resize();
+
+/* ---------- GAME DATA ---------- */
+
+const WORLD={
+
+  w:2600,
+
+  h:1800
+
 };
-function update(){for(const k of Object.keys(state))document.getElementById(k).textContent=state[k]}
-function msg(t){document.getElementById("message").textContent=t}
-function openNpc(n){
- const d=npcText[n];
- document.getElementById("mtitle").textContent="🧑 "+n;
- document.getElementById("mcontent").innerHTML=`
- <div class="modalNpc">
-   <div class="bigAvatar">${n==="Lục Minh Triết"?"👑":n==="Thẩm Hàn Phong"?"⚔️":"🪶"}</div>
-   <div><b style="color:#ffe08b">${d[0]}</b><div class="actionNote">NPC tương tác • Bản 3.2</div></div>
- </div>
- <div class="quote" style="margin-top:12px">“${d[1]}”</div>
- <div class="grid" style="margin-top:10px">
-   <button onclick="npcAction('${n}')">${d[2]}</button>
-   <button onclick="npcTalk('${n}')">💬 Đối thoại</button>
- </div>`;
- document.getElementById("modal").classList.add("show")
+
+const player={
+
+  x:1300,
+
+  y:900,
+
+  r:22,
+
+  speed:3.4,
+
+  level:1,
+
+  hp:100,
+
+  maxHp:100,
+
+  mp:60,
+
+  maxMp:60,
+
+  attack:15,
+
+  defense:5,
+
+  exp:0,
+
+  gold:100,
+
+  dirX:0,
+
+  dirY:1
+
+};
+
+let camera={x:0,y:0};
+
+let inventory=[
+
+  {icon:"🗡️",name:"Kiếm Tân Binh",rarity:"good"},
+
+  {icon:"🥋",name:"Áo Vải",rarity:"common"},
+
+  {icon:"🧪",name:"Bình Hồi Khí",rarity:"good"}
+
+];
+
+while(inventory.length<24) inventory.push(null);
+
+let enemies=[];
+
+let npcs=[];
+
+const names=[
+
+  "Sói Hoang","Đạo Tặc","Sơn Tặc",
+
+  "Hắc Y Nhân","Lang Vương","Thổ Phỉ"
+
+];
+
+function spawnEnemy(x,y,i){
+
+  enemies.push({
+
+    x,y,
+
+    r:19,
+
+    hp:45+i*8,
+
+    maxHp:45+i*8,
+
+    speed:0.65+Math.random()*.25,
+
+    damage:4+i,
+
+    name:names[i%names.length],
+
+    alive:true,
+
+    hit:0,
+
+    attackTimer:0
+
+  });
+
 }
-function npcAction(n){
- if(n==="Lục Minh Triết"){state.food+=100;state.gold+=50;msg("📜 Lục Minh Triết ban kế hoạch: +100 🌾 và +50 💰.")}
- if(n==="Thẩm Hàn Phong"){state.gems+=10;msg("⚔️ Thẩm Hàn Phong giới thiệu một cao thủ: +10 💎.")}
- if(n==="Tiêu Mặc Bạch"){state.iron+=50;msg("🧠 Tiêu Mặc Bạch phân tích trận địa: +50 ⛏️.")}
- update();closeModal()
+
+for(let i=0;i<15;i++){
+
+  spawnEnemy(
+
+    450+Math.random()*1700,
+
+    300+Math.random()*1200,
+
+    i
+
+  );
+
 }
-function npcTalk(n){
- const lines={
- "Lục Minh Triết":"“Chúa công, hãy củng cố lương thảo trước khi mở rộng chiến tuyến.”",
- "Thẩm Hàn Phong":"“Giang hồ đang quan sát. Một nhiệm vụ đúng lúc có thể thu phục cả một cao thủ.”",
- "Tiêu Mặc Bạch":"“Đừng chỉ nhìn binh lực. Địa hình, thời cơ và ý đồ của địch mới quyết định thắng bại.”"
- };
- document.getElementById("message").textContent=lines[n];
- closeModal();
+
+npcs=[
+
+ {x:1120,y:760,name:"Lão Trương",icon:"🧓"},
+
+ {x:1500,y:760,name:"Chưởng Quầy",icon:"👨"},
+
+ {x:1320,y:1050,name:"Thầy Thuốc",icon:"🧙"},
+
+ {x:1750,y:980,name:"Võ Sư",icon:"🥋"}
+
+];
+
+/* ---------- INPUT ---------- */
+
+const keys={};
+
+addEventListener("keydown",e=>{
+
+  keys[e.key.toLowerCase()]=true;
+
+});
+
+addEventListener("keyup",e=>{
+
+  keys[e.key.toLowerCase()]=false;
+
+});
+
+let joy={
+
+  active:false,
+
+  id:null,
+
+  x:0,
+
+  y:0
+
+};
+
+const joystick=document.getElementById("joystick");
+
+const stick=document.getElementById("stick");
+
+joystick.addEventListener("touchstart",e=>{
+
+  e.preventDefault();
+
+  const t=e.changedTouches[0];
+
+  joy.active=true;
+
+  joy.id=t.identifier;
+
+  moveJoy(t);
+
+},{passive:false});
+
+joystick.addEventListener("touchmove",e=>{
+
+  e.preventDefault();
+
+  for(const t of e.changedTouches){
+
+    if(t.identifier===joy.id) moveJoy(t);
+
+  }
+
+},{passive:false});
+
+joystick.addEventListener("touchend",e=>{
+
+  for(const t of e.changedTouches){
+
+    if(t.identifier===joy.id){
+
+      joy.active=false;
+
+      joy.x=0;
+
+      joy.y=0;
+
+      stick.style.left="33px";
+
+      stick.style.top="33px";
+
+    }
+
+  }
+
+});
+
+function moveJoy(t){
+
+  const r=joystick.getBoundingClientRect();
+
+  let dx=t.clientX-(r.left+r.width/2);
+
+  let dy=t.clientY-(r.top+r.height/2);
+
+  const max=42;
+
+  const d=Math.hypot(dx,dy)||1;
+
+  if(d>max){
+
+    dx=dx/d*max;
+
+    dy=dy/d*max;
+
+  }
+
+  joy.x=dx/max;
+
+  joy.y=dy/max;
+
+  stick.style.left=(33+dx)+"px";
+
+  stick.style.top=(33+dy)+"px";
+
 }
-function closeModal(){document.getElementById("modal").classList.remove("show")}
-function upgradeBuilding(name,cost){
- if(state.gold<cost){msg(`❌ Không đủ vàng để nâng cấp ${name}. Cần ${cost} 💰.`);closeModal();return}
- state.gold-=cost;msg(`🏗️ ${name} đã được nâng cấp! -${cost} 💰.`);update();closeModal()
+
+/* ---------- HELPERS ---------- */
+
+function clamp(v,a,b){
+
+  return Math.max(a,Math.min(b,v));
+
 }
-function collect(){state.food+=120;state.wood+=60;msg("🌾 Thu hoạch thành công: +120 🌾, +60 🪵.");update()}
-document.querySelectorAll(".npc").forEach(el=>el.addEventListener("pointerup",()=>openNpc(el.dataset.npc)));
-document.querySelectorAll(".place").forEach(el=>el.addEventListener("pointerup",()=>{
- const name=el.dataset.name,cost=Number(el.dataset.cost);
- if(state.gold<cost){msg(`❌ Không đủ vàng để nâng cấp ${name}. Cần ${cost} 💰.`);return}
- state.gold-=cost;msg(`🏗️ ${name} đã được nâng cấp! -${cost} 💰.`);update()
-}));
-update();
+
+function distance(a,b){
+
+  return Math.hypot(a.x-b.x,a.y-b.y);
+
+}
+
+function say(text){
+
+  const el=document.getElementById("message");
+
+  el.textContent=text;
+
+  el.style.opacity=1;
+
+  clearTimeout(say.timer);
+
+  say.timer=setTimeout(()=>el.style.opacity=0,1600);
+
+}
+
+function toast(text){
+
+  const el=document.getElementById("toast");
+
+  el.innerHTML=text;
+
+  el.style.display="block";
+
+  setTimeout(()=>el.style.display="none",1800);
+
+}
+
+/* ---------- DRAW WORLD ---------- */
+
+function drawWorld(){
+
+  ctx.fillStyle="#78a957";
+
+  ctx.fillRect(0,0,W,H);
+
+  ctx.save();
+
+  ctx.translate(-camera.x,-camera.y);
+
+  // nền
+
+  ctx.fillStyle="#6f9e4f";
+
+  ctx.fillRect(0,0,WORLD.w,WORLD.h);
+
+  // ruộng
+
+  for(let y=80;y<WORLD.h;y+=180){
+
+    for(let x=40;x<WORLD.w;x+=220){
+
+      ctx.fillStyle="#82ad56";
+
+      ctx.fillRect(x,y,180,120);
+
+      ctx.strokeStyle="#668d43";
+
+      ctx.strokeRect(x,y,180,120);
+
+      for(let k=0;k<6;k++){
+
+        ctx.strokeStyle="#a4c96a";
+
+        ctx.beginPath();
+
+        ctx.moveTo(x+20+k*25,y+80);
+
+        ctx.lineTo(x+25+k*25,y+55);
+
+        ctx.stroke();
+
+      }
+
+    }
+
+  }
+
+  // đường
+
+  ctx.fillStyle="#c4a56d";
+
+  ctx.fillRect(0,830,WORLD.w,150);
+
+  ctx.fillRect(1220,0,160,WORLD.h);
+
+  // sông
+
+  ctx.fillStyle="#477fa0";
+
+  ctx.fillRect(40,110,WORLD.w-80,130);
+
+  ctx.fillStyle="#6098b4";
+
+  for(let x=60;x<WORLD.w;x+=100){
+
+    ctx.fillRect(x,150,55,4);
+
+    ctx.fillRect(x+30,185,70,4);
+
+  }
+
+  // thành trì
+
+  drawCastle(1000,600,600,430);
+
+  // nhà dân
+
+  const houses=[
+
+    [400,500],[650,1170],[1900,450],
+
+    [2040,1160],[760,350],[1810,1320]
+
+  ];
+
+  houses.forEach((h,i)=>drawHouse(h[0],h[1],i));
+
+  // cây
+
+  for(let i=0;i<50;i++){
+
+    let x=(i*311)%WORLD.w;
+
+    let y=(i*173)%WORLD.h;
+
+    if(x>950&&x<1650&&y>550&&y<1100) continue;
+
+    drawTree(x,y);
+
+  }
+
+  // NPC
+
+  npcs.forEach(drawNPC);
+
+  // enemies
+
+  enemies.forEach(drawEnemy);
+
+  // player
+
+  drawPlayer();
+
+  ctx.restore();
+
+}
+
+function drawCastle(x,y,w,h){
+
+  ctx.fillStyle="#a8946b";
+
+  ctx.fillRect(x,y,w,h);
+
+  ctx.fillStyle="#765d40";
+
+  ctx.fillRect(x+20,y+20,w-40,h-40);
+
+  // tường
+
+  ctx.fillStyle="#bca77a";
+
+  ctx.fillRect(x,y,w,45);
+
+  ctx.fillRect(x,y+h-45,w,45);
+
+  ctx.fillRect(x,y,45,h);
+
+  ctx.fillRect(x+w-45,y,45,h);
+
+  for(let xx=x;xx<x+w;xx+=45){
+
+    ctx.fillStyle="#d3bd8a";
+
+    ctx.fillRect(xx,y-10,30,25);
+
+    ctx.fillRect(xx,y+h-15,30,25);
+
+  }
+
+  // cổng
+
+  ctx.fillStyle="#3b2114";
+
+  ctx.fillRect(x+w/2-55,y+h-100,110,100);
+
+  ctx.fillStyle="#ead49c";
+
+  ctx.font="bold 26px Arial";
+
+  ctx.textAlign="center";
+
+  ctx.fillText("ĐẠI VIỆT",x+w/2,y+75);
+
+  // cờ
+
+  ctx.strokeStyle="#402b19";
+
+  ctx.lineWidth=5;
+
+  ctx.beginPath();
+
+  ctx.moveTo(x+w/2,y);
+
+  ctx.lineTo(x+w/2,y-125);
+
+  ctx.stroke();
+
+  ctx.fillStyle="#b52c22";
+
+  ctx.beginPath();
+
+  ctx.moveTo(x+w/2,y-120);
+
+  ctx.lineTo(x+w/2+85,y-90);
+
+  ctx.lineTo(x+w/2,y-55);
+
+  ctx.closePath();
+
+  ctx.fill();
+
+}
+
+function drawHouse(x,y,i){
+
+  ctx.fillStyle="#9b6d3d";
+
+  ctx.fillRect(x,y,150,100);
+
+  ctx.fillStyle="#5d351e";
+
+  ctx.beginPath();
+
+  ctx.moveTo(x-15,y);
+
+  ctx.lineTo(x+75,y-65);
+
+  ctx.lineTo(x+165,y);
+
+  ctx.closePath();
+
+  ctx.fill();
+
+  ctx.fillStyle="#3b2417";
+
+  ctx.fillRect(x+58,y+50,35,50);
+
+  ctx.fillStyle="#d8c18a";
+
+  ctx.fillRect(x+15,y+30,30,25);
+
+}
+
+function drawTree(x,y){
+
+  ctx.fillStyle="#684323";
+
+  ctx.fillRect(x-7,y,14,45);
+
+  ctx.fillStyle="#356b35";
+
+  ctx.beginPath();
+
+  ctx.arc(x,y,31,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.fillStyle="#4d853b";
+
+  ctx.beginPath();
+
+  ctx.arc(x-18,y-18,23,0,Math.PI*2);
+
+  ctx.fill();
+
+}
+
+function drawNPC(n){
+
+  ctx.save();
+
+  ctx.translate(n.x,n.y);
+
+  ctx.fillStyle="#0006";
+
+  ctx.beginPath();
+
+  ctx.ellipse(0,22,25,10,0,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.font="30px serif";
+
+  ctx.textAlign="center";
+
+  ctx.fillText(n.icon,0,8);
+
+  ctx.fillStyle="#fff2b4";
+
+  ctx.font="12px Arial";
+
+  ctx.fillText(n.name,0,-22);
+
+  ctx.restore();
+
+}
+
+function drawEnemy(e){
+
+  if(!e.alive)return;
+
+  ctx.save();
+
+  ctx.translate(e.x,e.y);
+
+  ctx.fillStyle="#0006";
+
+  ctx.beginPath();
+
+  ctx.ellipse(0,20,23,9,0,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.font="30px serif";
+
+  ctx.textAlign="center";
+
+  ctx.fillText(e.name.includes("Sói")?"🐺":
+
+              e.name.includes("Lang")?"🐯":"👹",0,8);
+
+  // hp
+
+  ctx.fillStyle="#331";
+
+  ctx.fillRect(-24,-29,48,6);
+
+  ctx.fillStyle="#d83232";
+
+  ctx.fillRect(-24,-29,48*(e.hp/e.maxHp),6);
+
+  ctx.fillStyle="#ffe4a0";
+
+  ctx.font="10px Arial";
+
+  ctx.fillText(e.name,0,-35);
+
+  ctx.restore();
+
+}
+
+function drawPlayer(){
+
+  ctx.save();
+
+  ctx.translate(player.x,player.y);
+
+  ctx.fillStyle="#0007";
+
+  ctx.beginPath();
+
+  ctx.ellipse(0,25,25,10,0,0,Math.PI*2);
+
+  ctx.fill();
+
+  // áo
+
+  ctx.fillStyle="#234e78";
+
+  ctx.beginPath();
+
+  ctx.arc(0,6,17,0,Math.PI*2);
+
+  ctx.fill();
+
+  // đầu
+
+  ctx.fillStyle="#e5ae82";
+
+  ctx.beginPath();
+
+  ctx.arc(0,-14,11,0,Math.PI*2);
+
+  ctx.fill();
+
+  // tóc/nón
+
+  ctx.fillStyle="#211810";
+
+  ctx.beginPath();
+
+  ctx.arc(0,-18,12,Math.PI,Math.PI*2);
+
+  ctx.fill();
+
+  // kiếm
+
+  ctx.strokeStyle="#ddd";
+
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+
+  ctx.moveTo(13,5);
+
+  ctx.lineTo(31,-13);
+
+  ctx.stroke();
+
+  ctx.restore();
+
+}
+
+/* ---------- UPDATE ---------- */
+
+function update(){
+
+  let dx=0,dy=0;
+
+  if(keys["arrowleft"]||keys["a"])dx-=1;
+
+  if(keys["arrowright"]||keys["d"])dx+=1;
+
+  if(keys["arrowup"]||keys["w"])dy-=1;
+
+  if(keys["arrowdown"]||keys["s"])dy+=1;
+
+  if(joy.active){
+
+    dx=joy.x;
+
+    dy=joy.y;
+
+  }
+
+  const len=Math.hypot(dx,dy);
+
+  if(len>0){
+
+    dx/=Math.max(1,len);
+
+    dy/=Math.max(1,len);
+
+    player.x+=dx*player.speed;
+
+    player.y+=dy*player.speed;
+
+    player.dirX=dx;
+
+    player.dirY=dy;
+
+  }
+
+  player.x=clamp(player.x,50,WORLD.w-50);
+
+  player.y=clamp(player.y,270,WORLD.h-50);
+
+  camera.x=clamp(player.x-W/2,0,WORLD.w-W);
+
+  camera.y=clamp(player.y-H/2,0,WORLD.h-H);
+
+  // quái đuổi người chơi
+
+  enemies.forEach(e=>{
+
+    if(!e.alive)return;
+
+    const d=distance(e,player);
+
+    if(d<300 && d>42){
+
+      const dx=(player.x-e.x)/d;
+
+      const dy=(player.y-e.y)/d;
+
+      e.x+=dx*e.speed;
+
+      e.y+=dy*e.speed;
+
+    }
+
+    e.attackTimer-=1;
+
+    if(d<45 && e.attackTimer<=0){
+
+      const damage=Math.max(1,e.damage-player.defense);
+
+      player.hp-=damage;
+
+      e.attackTimer=55;
+
+      say("👹 "+e.name+" đánh bạn -"+damage+" HP");
+
+      if(player.hp<=0){
+
+        player.hp=player.maxHp;
+
+        player.mp=player.maxMp;
+
+        player.x=1300;
+
+        player.y=900;
+
+        toast("💀 Bạn đã bị hạ!<br>Đã hồi sinh tại thành.");
+
+      }
+
+    }
+
+    if(e.hit>0)e.hit--;
+
+  });
+
+  // hồi MP
+
+  if(player.mp<player.maxMp && Math.random()<.012)
+
+    player.mp++;
+
+  updateHUD();
+
+}
+
+function updateHUD(){
+
+  document.getElementById("level").textContent=player.level;
+
+  document.getElementById("hpText").textContent=
+
+    Math.ceil(player.hp)+"/"+player.maxHp;
+
+  document.getElementById("mpText").textContent=
+
+    Math.ceil(player.mp)+"/"+player.maxMp;
+
+  document.getElementById("gold").textContent=player.gold;
+
+  document.getElementById("hpBar").style.width=
+
+    clamp(player.hp/player.maxHp*100,0,100)+"%";
+
+  document.getElementById("mpBar").style.width=
+
+    clamp(player.mp/player.maxMp*100,0,100)+"%";
+
+}
+
+/* ---------- COMBAT ---------- */
+
+function getNearestEnemy(range=100){
+
+  let best=null;
+
+  let bd=range;
+
+  enemies.forEach(e=>{
+
+    if(!e.alive)return;
+
+    const d=distance(e,player);
+
+    if(d<bd){
+
+      bd=d;
+
+      best=e;
+
+    }
+
+  });
+
+  return best;
+
+}
+
+function attack(){
+
+  const e=getNearestEnemy(105);
+
+  if(!e){
+
+    say("⚔️ Không có mục tiêu trong tầm đánh");
+
+    return;
+
+  }
+
+  let damage=player.attack+Math.floor(Math.random()*8);
+
+  e.hp-=damage;
+
+  e.hit=8;
+
+  player.dirX=(e.x-player.x);
+
+  player.dirY=(e.y-player.y);
+
+  say("⚔️ Gây "+damage+" sát thương!");
+
+  if(e.hp<=0){
+
+    killEnemy(e);
+
+  }
+
+}
+
+function useSkill(type){
+
+  const cost=type===1?15:20;
+
+  if(player.mp<cost){
+
+    say("🔵 Không đủ nội lực");
+
+    return;
+
+  }
+
+  const e=getNearestEnemy(type===1?180:230);
+
+  if(!e){
+
+    say("🎯 Không có mục tiêu");
+
+    return;
+
+  }
+
+  player.mp-=cost;
+
+  const damage=
+
+    type===1
+
+      ? player.attack+30+Math.floor(Math.random()*15)
+
+      : player.attack+45+Math.floor(Math.random()*20);
+
+  e.hp-=damage;
+
+  say(type===1
+
+      ?"🔥 Hỏa Long -"+damage
+
+      :"⚡ Lôi Kiếm -"+damage);
+
+  if(e.hp<=0)killEnemy(e);
+
+}
+
+function killEnemy(e){
+
+  e.alive=false;
+
+  const exp=10+Math.floor(Math.random()*15);
+
+  const gold=5+Math.floor(Math.random()*15);
+
+  player.exp+=exp;
+
+  player.gold+=gold;
+
+  say("💀 Hạ "+e.name+"  +"+exp+" EXP  +"+gold+" vàng");
+
+  // rơi đồ
+
+  if(Math.random()<.55){
+
+    let item;
+
+    const roll=Math.random();
+
+    if(roll<.15){
+
+      item={
+
+        icon:"🟣",
+
+        name:"Đồ Hiếm",
+
+        rarity:"rare"
+
+      };
+
+    }else if(roll<.55){
+
+      item={
+
+        icon:"🟢",
+
+        name:"Đồ Tốt",
+
+        rarity:"good"
+
+      };
+
+    }else{
+
+      item={
+
+        icon:"🧪",
+
+        name:"Bình Hồi Khí",
+
+        rarity:"common"
+
+      };
+
+    }
+
+    const empty=inventory.findIndex(x=>x===null);
+
+    if(empty>=0){
+
+      inventory[empty]=item;
+
+      toast("🎁 Nhặt được<br>"+item.icon+" "+item.name);
+
+    }else{
+
+      say("🎒 Túi đã đầy!");
+
+    }
+
+  }
+
+  checkLevel();
+
+  setTimeout(()=>{
+
+    e.x=350+Math.random()*1900;
+
+    e.y=350+Math.random()*1250;
+
+    e.hp=e.maxHp;
+
+    e.alive=true;
+
+  },5000);
+
+}
+
+function checkLevel(){
+
+  const need=player.level*100;
+
+  if(player.exp>=need){
+
+    player.exp-=need;
+
+    player.level++;
+
+    player.maxHp+=25;
+
+    player.maxMp+=12;
+
+    player.attack+=5;
+
+    player.defense+=2;
+
+    player.hp=player.maxHp;
+
+    player.mp=player.maxMp;
+
+    toast(
+
+      "🎉 LÊN CẤP!<br>"+
+
+      "Bạn đạt Lv."+player.level
+
+    );
+
+  }
+
+}
+
+/* ---------- INVENTORY ---------- */
+
+function openInventory(){
+
+  const box=document.getElementById("inventory");
+
+  box.innerHTML="";
+
+  inventory.forEach((item,i)=>{
+
+    const slot=document.createElement("div");
+
+    slot.className="slot";
+
+    if(item){
+
+      slot.classList.add(item.rarity);
+
+      slot.innerHTML=
+
+        item.icon+
+
+        "<span>"+item.name+"</span>";
+
+      slot.onclick=()=>useItem(i);
+
+    }else{
+
+      slot.innerHTML="<span>Trống</span>";
+
+    }
+
+    box.appendChild(slot);
+
+  });
+
+  document.getElementById("inventoryModal")
+
+    .classList.add("show");
+
+}
+
+function useItem(i){
+
+  const item=inventory[i];
+
+  if(!item)return;
+
+  if(item.name==="Bình Hồi Khí"){
+
+    player.mp=player.maxMp;
+
+    inventory[i]=null;
+
+    say("🧪 Đã hồi đầy nội lực");
+
+    openInventory();
+
+    return;
+
+  }
+
+  say("⚔️ Trang bị "+item.name);
+
+  if(item.name.includes("Kiếm")){
+
+    player.attack+=5;
+
+  }
+
+  if(item.name.includes("Áo")){
+
+    player.defense+=3;
+
+  }
+
+  inventory[i]=null;
+
+  openInventory();
+
+}
+
+function openCharacter(){
+
+  document.getElementById("attackStat").textContent=player.attack;
+
+  document.getElementById("defStat").textContent=player.defense;
+
+  document.getElementById("maxHpStat").textContent=player.maxHp;
+
+  document.getElementById("maxMpStat").textContent=player.maxMp;
+
+  document.getElementById("expStat").textContent=player.exp;
+
+  document.getElementById("characterModal")
+
+    .classList.add("show");
+
+}
+
+function closeModals(){
+
+  document.querySelectorAll(".modal")
+
+    .forEach(x=>x.classList.remove("show"));
+
+}
+
+/* ---------- SAVE ---------- */
+
+function saveGame(){
+
+  const data={
+
+    player,
+
+    inventory
+
+  };
+
+  localStorage.setItem(
+
+    "daiviet_chienky_v3",
+
+    JSON.stringify(data)
+
+  );
+
+  toast("💾 Đã lưu game trên iPhone");
+
+}
+
+function loadGame(){
+
+  try{
+
+    const raw=localStorage.getItem("daiviet_chienky_v3");
+
+    if(!raw)return;
+
+    const data=JSON.parse(raw);
+
+    Object.assign(player,data.player);
+
+    inventory=data.inventory||inventory;
+
+    say("💾 Đã tải dữ liệu");
+
+  }catch(e){
+
+    console.log(e);
+
+  }
+
+}
+
+/* ---------- GAME LOOP ---------- */
+
+function loop(){
+
+  update();
+
+  drawWorld();
+
+  requestAnimationFrame(loop);
+
+}
+
+loadGame();
+
+updateHUD();
+
+loop();
+
+/* ---------- AUTO SAVE ---------- */
+
+setInterval(()=>{
+
+  saveSilent();
+
+},15000);
+
+function saveSilent(){
+
+  try{
+
+    localStorage.setItem(
+
+      "daiviet_chienky_v3",
+
+      JSON.stringify({player,inventory})
+
+    );
+
+  }catch(e){}
+
+}
+
+/* ---------- DOUBLE TAP FULLSCREEN ---------- */
+
+let lastTap=0;
+
+canvas.addEventListener("touchend",()=>{
+
+  const now=Date.now();
+
+  if(now-lastTap<300){
+
+    if(document.documentElement.requestFullscreen){
+
+      document.documentElement.requestFullscreen().catch(()=>{});
+
+    }
+
+  }
+
+  lastTap=now;
+
+});
+
+/* ---------- NPC INTERACTION ---------- */
+
+canvas.addEventListener("touchend",e=>{
+
+  if(e.target!==canvas)return;
+
+  npcs.forEach(n=>{
+
+    if(distance(n,player)<70){
+
+      say("💬 "+n.name+": Chào hiệp khách!");
+
+    }
+
+  });
+
+});
+
 </script>
+
 </body>
+
 </html>

@@ -68,6 +68,27 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
   .menu button,.community{min-height:44px;padding:6px 10px;font-size:13px}
   .community{right:88px;top:303px}
 }
+
+/* ===== LANDSCAPE UI V4 ===== */
+@media (orientation:landscape){
+  #stats{width:210px!important;max-width:24vw!important;padding:7px 9px!important;border-radius:14px!important}
+  #stats .name{font-size:15px!important}
+  #stats .sub{font-size:9px!important}
+  #stats .bar{height:5px!important;margin:3px 0!important}
+  #town{width:130px!important;max-width:18vw!important;padding:7px 9px!important;border-radius:14px!important;font-size:10px!important}
+  #bagBtn{top:72px!important;width:48px!important;height:48px!important}
+  .travel{width:48px!important;height:48px!important}
+  .mount{top:128px!important}.tele{top:184px!important}.cape{top:240px!important}
+  #joy{left:16px!important;bottom:28px!important;width:86px!important;height:86px!important}
+  #stick{width:36px!important;height:36px!important}
+  .skills{right:16px!important;bottom:24px!important;gap:5px!important}
+  .skills .btn{width:50px!important;height:50px!important;font-size:21px!important}
+  #vlMini{right:16px!important;top:72px!important;width:105px!important;height:76px!important}
+  #status{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:max-content!important;max-width:60vw!important;bottom:5px!important;font-size:9px!important;padding:5px 8px!important;white-space:nowrap!important}
+  #vlZoneTitle{top:5px!important;font-size:11px!important}
+  #vlArea{top:32px!important;font-size:8px!important}
+  .npcHint{top:50%!important;font-size:10px!important}
+}
 </style>
 
 <style>
@@ -1040,50 +1061,90 @@ function fire(){
   if(m&&Math.hypot(P.x-m.x,P.y-m.y)<300){startCombat("fire",m,55+z[4],.8,.32);toast(z[3])}else toast("🔥 Quái quá xa");
 }
 
-/* ===== JOYSTICK FIX V3 · POINTER ONLY / SAFARI ===== */
-const joy={x:0,y:0,on:false,id:null},je=document.getElementById("joy"),st=document.getElementById("stick");
+/* ===== JOYSTICK FIX V4 · TOUCH + POINTER · SAFARI/iPHONE =====
+   Không dùng pointermove riêng trên #joy vì Safari có thể ngừng phát sự kiện
+   khi ngón tay kéo ra ngoài vòng joystick. V4 bắt touchmove/touchend trên window,
+   đồng thời giữ pointer cho trình duyệt khác.
+*/
+const joy={x:0,y:0,on:false,id:null,pointerId:null},je=document.getElementById("joy"),st=document.getElementById("stick");
 function joyReset(){
-  joy.x=0; joy.y=0; joy.on=false; joy.id=null;
+  joy.x=0; joy.y=0; joy.on=false; joy.id=null; joy.pointerId=null;
   st.style.transform="translate(-50%,-50%)";
 }
 function joyUpdate(clientX,clientY){
   const r=je.getBoundingClientRect();
   const cx=r.left+r.width/2, cy=r.top+r.height/2;
   let dx=clientX-cx, dy=clientY-cy;
-  const lim=Math.max(18,r.width*.38), len=Math.hypot(dx,dy);
+  const lim=Math.max(20,r.width*.40), len=Math.hypot(dx,dy);
   if(len>lim){dx=dx*lim/len;dy=dy*lim/len}
   joy.x=Math.max(-1,Math.min(1,dx/lim));
   joy.y=Math.max(-1,Math.min(1,dy/lim));
   st.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
 }
+function joyStartXY(clientX,clientY){joy.on=true;joyUpdate(clientX,clientY)}
+
+/* Touch API là đường chính cho Safari iPhone */
+je.addEventListener("touchstart",e=>{
+  if(!e.touches.length)return;
+  const t=e.touches[0];
+  joy.id=t.identifier;
+  joyStartXY(t.clientX,t.clientY);
+  e.preventDefault();
+},{passive:false});
+window.addEventListener("touchmove",e=>{
+  if(!joy.on)return;
+  let t=null;
+  for(const q of e.touches){if(q.identifier===joy.id){t=q;break}}
+  if(!t)return;
+  joyUpdate(t.clientX,t.clientY);
+  e.preventDefault();
+},{passive:false});
+window.addEventListener("touchend",e=>{
+  if(!joy.on)return;
+  for(const q of e.changedTouches){
+    if(q.identifier===joy.id){joyReset();break}
+  }
+},{passive:false});
+window.addEventListener("touchcancel",e=>{
+  if(!joy.on)return;
+  for(const q of e.changedTouches){
+    if(q.identifier===joy.id){joyReset();break}
+  }
+},{passive:false});
+
+/* Pointer fallback cho iPad/desktop */
 je.addEventListener("pointerdown",e=>{
-  if(e.pointerType!=="touch" && e.pointerType!=="pen" && e.pointerType!=="mouse")return;
-  joy.on=true; joy.id=e.pointerId; joyUpdate(e.clientX,e.clientY);
-  if(e.pointerType!=="mouse") e.preventDefault();
+  if(e.pointerType==="touch")return;
+  joy.pointerId=e.pointerId;
+  joyStartXY(e.clientX,e.clientY);
+  try{je.setPointerCapture(e.pointerId)}catch(_){ }
+  e.preventDefault();
 },{passive:false});
 je.addEventListener("pointermove",e=>{
-  if(!joy.on || joy.id!==e.pointerId)return;
+  if(e.pointerType==="touch")return;
+  if(!joy.on || joy.pointerId!==e.pointerId)return;
   joyUpdate(e.clientX,e.clientY);
-  if(e.pointerType!=="mouse") e.preventDefault();
+  e.preventDefault();
 },{passive:false});
-je.addEventListener("pointerup",e=>{if(joy.id===e.pointerId)joyReset()},{passive:false});
-je.addEventListener("pointercancel",e=>{if(joy.id===e.pointerId)joyReset()},{passive:false});
-je.addEventListener("pointerleave",e=>{if(joy.id===e.pointerId && e.pointerType!=="mouse")joyReset()},{passive:false});
-je.addEventListener("lostpointercapture",joyReset,{passive:true});
+je.addEventListener("pointerup",e=>{
+  if(e.pointerType!=="touch" && joy.pointerId===e.pointerId)joyReset();
+},{passive:false});
+je.addEventListener("pointercancel",e=>{
+  if(e.pointerType!=="touch" && joy.pointerId===e.pointerId)joyReset();
+},{passive:false});
 
-// Cố gắng khóa ngang sau một thao tác của người dùng. Safari có thể từ chối lock; CSS overlay vẫn hoạt động.
+/* Nhấn trực tiếp lên vòng joystick luôn bắt đầu chạy về hướng đó */
+je.addEventListener("mousedown",e=>{
+  if(e.pointerType)return;
+  joy.pointerId="mouse";joyStartXY(e.clientX,e.clientY);e.preventDefault();
+},{passive:false});
+
+/* Khóa ngang nếu WebView/Safari cho phép */
 async function requestLandscape(){
-  try{
-    if(screen.orientation && screen.orientation.lock){
-      await screen.orientation.lock("landscape");
-    }
-  }catch(e){}
+  try{if(screen.orientation?.lock)await screen.orientation.lock("landscape")}catch(e){}
 }
-function bindLandscapeGesture(){
-  requestLandscape();
-  document.removeEventListener("pointerdown",bindLandscapeGesture);
-}
-document.addEventListener("pointerdown",bindLandscapeGesture,{once:true,passive:true});
+document.addEventListener("pointerdown",requestLandscape,{once:true,passive:true});
+document.addEventListener("touchstart",requestLandscape,{once:true,passive:true});
 
 function drawTree(a,b){
   x.fillStyle="#6a432b";x.fillRect(a-9,b+24,18,52);
@@ -1374,7 +1435,7 @@ c.addEventListener("touchend",e=>{
   }
 },{passive:false});
 
-function update(dt){let dx=Number(joy.x)||0,dy=Number(joy.y)||0,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
+function update(dt){let dx=Number(joy.x)||0,dy=Number(joy.y)||0,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?360:250;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
 let living=mobs.filter(m=>m.alive);
 let aggroList=living.map(m=>({m,d:Math.hypot(P.x-m.x,P.y-m.y)}))
   .filter(o=>o.d<360)
@@ -1449,7 +1510,7 @@ document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getEl
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
 try{const save=JSON.parse(localStorage.getItem("ktm_moc5")||"null");if(save&&cls[save.pc])pc=save.pc;if(save&&costumeData[save.costume])selectedCostume=save.costume;if(save&&weaponData[save.weapon])selectedWeapon=save.weapon}catch(e){}
-classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · Ngang · Joystick FIX V3";
+classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · Ngang · Joystick FIX V4";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 
 /* ===== VÕ LÂM 1 MOBI VISUAL PACK · Mốc 5 =====

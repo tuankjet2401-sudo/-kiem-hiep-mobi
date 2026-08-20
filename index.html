@@ -23,7 +23,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 .menu{position:absolute;z-index:10;right:12px;bottom:max(265px,calc(env(safe-area-inset-bottom) + 255px));display:flex;gap:7px}.menu button,.community{background:#111a20ee;border:3px solid #65727c;color:#fff;border-radius:16px;padding:9px 12px;font-weight:800;font-size:15px}.community{position:absolute;z-index:10;right:12px;bottom:max(200px,calc(env(safe-area-inset-bottom) + 190px))}
 #msg{position:absolute;z-index:20;left:50%;top:43%;transform:translate(-50%,-50%);background:#08100ddd;color:#fff;border-radius:20px;padding:10px 16px;display:none;white-space:nowrap}
 #status{position:absolute;z-index:12;left:16px;bottom:max(10px,env(safe-area-inset-bottom));background:#08100dcc;color:#fff;border-radius:14px;padding:8px 12px}
-.modal{position:absolute;z-index:30;inset:6% 4%;background:#101820f7;border:1px solid #3c4650;border-radius:22px;color:#fff;padding:17px;overflow:auto;display:none}.modal h1{margin:0 0 12px;font-size:27px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:10px;font-size:26px;padding:5px 12px}
+.modal{position:absolute;z-index:30;inset:6% 4%;background:#101820f7;border:1px solid #3c4650;border-radius:22px;color:#fff;padding:17px;overflow:auto;display:none}
+.questTracker{position:absolute;z-index:9;left:12px;top:145px;width:250px;max-width:42vw;background:#071016e8;color:#fff;border:1px solid #4a555e;border-radius:14px;padding:9px 11px;box-shadow:0 6px 18px #0004;display:none;pointer-events:none}
+.questTracker b{color:#ffd978}.questTracker small{display:block;color:#d5dce1;margin-top:3px}
+.npcHint{position:absolute;z-index:15;left:50%;top:52%;transform:translate(-50%,-50%);background:#071016ee;color:#fff;border:1px solid #d2a44e;border-radius:14px;padding:9px 13px;font-weight:800;display:none;white-space:nowrap;box-shadow:0 8px 20px #0005}.modal h1{margin:0 0 12px;font-size:27px}.close{float:right;background:#303942;border:0;color:#fff;border-radius:10px;font-size:26px;padding:5px 12px}
 .card,.class{background:#20282f;border:1px solid #3b454e;border-radius:15px;padding:11px;margin:8px 0}.action{background:#d2a44e;color:#fff;border:0;border-radius:11px;padding:9px 12px;font-weight:800}.classes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.class{min-height:125px}.class.sel{border:2px solid #f3d46b}.icon{font-size:29px}.ct{color:#ffd978;font-size:12px}.desc{color:#d0d6db;font-size:12px;margin-top:5px;line-height:1.3}.item{background:#20282f;border-radius:14px;padding:10px;margin:7px 0;display:flex;justify-content:space-between;gap:8px}.rare{color:#c47cff}.good{color:#77e36a}.actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.enh{background:#6f4fd8;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:800}.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.slot{background:#1c242b;border:1px solid #3b454e;border-radius:9px;padding:6px;min-height:58px;font-size:11px}
 @media(max-width:700px){#stats{max-width:63vw}.name{font-size:21px}.sub{font-size:14px}#town{max-width:30vw;font-size:13px}.classes{grid-template-columns:1fr}.menu button,.community{font-size:14px}}
 </style>
@@ -48,11 +51,21 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div class="skills"><button id="a" class="btn">⚔️</button><button id="s" class="btn">☯️</button><button id="f" class="btn">🔥</button></div>
 <div class="menu"><button id="classBtn">🥋 Môn phái</button><button id="actBtn">🏆 Hoạt động</button></div>
 <button id="comBtn" class="community">👥 Cộng đồng</button>
-<div id="msg"></div><div id="status">🔴 Offline · Chế độ local</div>
+<div id="msg"></div>
+<div id="npcHint">💬 Chạm NPC để nhận nhiệm vụ</div>
+<div id="questTracker"></div>
+<div id="status">🔴 Offline · Chế độ local</div>
 
 <div id="classModal" class="modal"><button class="close" onclick="closeM('classModal')">×</button><h1>🥋 Chọn Môn Phái Nổi Bật</h1><div class="card">Đang chọn: <b id="selName">Võ Đang</b><br><small id="selDesc"></small></div><div id="classes" class="classes"></div><button class="action" onclick="confirmClass()">⚔️ Chọn môn phái này</button></div>
 <div id="actModal" class="modal"><button class="close" onclick="closeM('actModal')">×</button><h1>🏆 Hoạt động kinh điển</h1><div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚔️ Đã đăng ký Tống Kim')">Tham gia</button></div><div class="card">🥋 Liên Đấu<br><button class="action" onclick="toast('🥋 Đã đăng ký Liên Đấu')">Tham gia</button></div><div class="card">👑 Săn Boss Hoàng Kim<br><button class="action" onclick="toast('👑 Đã đăng ký săn Boss')">Tham gia</button></div></div>
 <div id="comModal" class="modal"><button class="close" onclick="closeM('comModal')">×</button><h1>👥 Cộng đồng giang hồ</h1><div class="card">🏯 Bang hội chiến · <b>Thiên Kiếm</b><br>Điểm bang: <b id="gs">1,280</b><br><button class="action" onclick="guild()">⚔️ Đăng ký</button></div><div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚙️ Phe Kim')">Phe Kim</button> <button class="action" onclick="toast('🏯 Phe Tống')">Phe Tống</button></div><div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." style="width:70%;padding:9px;border-radius:9px"><button class="action" onclick="sendChat()">Gửi</button></div></div>
+
+<div id="questModal" class="modal">
+<button class="close" onclick="closeM('questModal')">×</button>
+<h1>📜 Nhiệm vụ giang hồ</h1>
+<div id="questNpcTitle" class="card"></div>
+<div id="questList"></div>
+</div>
 <div id="bagModal" class="modal"><button class="close" onclick="closeM('bagModal')">×</button><h1>🎒 Túi đồ & Trang bị</h1><div id="equip"></div><h2>🎒 Túi <span id="cnt">0</span>/24</h2><div id="items"></div><h2>24 ô</h2><div id="slots" class="slots"></div></div>
 <div id="teleModal" class="modal"><button class="close" onclick="closeM('teleModal')">×</button><h1>🌀 Dịch chuyển</h1><div class="card">🏠 Tân Thủ Thôn · 1600,800<br><button class="action" onclick="tele('town')">Đi</button></div><div class="card">🏙️ Thành Thị · 2600,700<br><button class="action" onclick="tele('city')">Đi</button></div></div>
 </div>
@@ -96,6 +109,158 @@ const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao B�
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
 let cdA=0,cdS=0,cdF=0,stun=0,slow=0;
 
+
+/* ================= NPC + NHIỆM VỤ ================= */
+const npcs=[
+  {
+    id:"truongthon", name:"Trưởng Thôn", icon:"👴", x:1420,y:760,
+    title:"Người giao nhiệm vụ",
+    color:"#ffd978",
+    quests:[
+      {id:"bandit",name:"⚔️ Dẹp loạn Sơn Tặc",desc:"Hạ 3 Sơn Tặc quanh Tân Thủ Thôn.",goal:3,rewardGold:120,rewardExp:60},
+      {id:"report",name:"📜 Báo tin chiến sự",desc:"Đến gần Võ Sư và nghe chỉ thị.",goal:1,rewardGold:80,rewardExp:40}
+    ]
+  },
+  {
+    id:"vosu", name:"Võ Sư", icon:"🥋", x:1780,y:720,
+    title:"Sư phụ võ học",
+    color:"#f3d46b",
+    quests:[
+      {id:"training",name:"🥋 Thử chiêu",desc:"Đánh trúng Sơn Tặc 5 lần.",goal:5,rewardGold:100,rewardExp:70},
+      {id:"sword",name:"⚔️ Kiếm khí đầu tiên",desc:"Dùng kỹ năng ☯️ ít nhất 1 lần.",goal:1,rewardGold:90,rewardExp:50}
+    ]
+  },
+  {
+    id:"duocsu", name:"Dược Sư", icon:"🧙", x:1260,y:980,
+    title:"Người chữa thương",
+    color:"#8ddcff",
+    quests:[
+      {id:"herb",name:"🧪 Thu thập dược liệu",desc:"Nhặt 2 vật phẩm rơi từ Sơn Tặc.",goal:2,rewardGold:110,rewardExp:55},
+      {id:"potion",name:"💧 Hồi khí",desc:"Dùng 1 Bình Hồi Khí.",goal:1,rewardGold:70,rewardExp:35}
+    ]
+  },
+  {
+    id:"thoSan", name:"Thợ Săn", icon:"🏹", x:2050,y:930,
+    title:"Chuyên gia săn quái",
+    color:"#aee8ff",
+    quests:[
+      {id:"hunt",name:"🏹 Săn Sơn Tặc",desc:"Hạ 5 Sơn Tặc.",goal:5,rewardGold:180,rewardExp:100},
+      {id:"elite",name:"🔥 Trận chiến lớn",desc:"Hạ 8 Sơn Tặc.",goal:8,rewardGold:260,rewardExp:140}
+    ]
+  }
+];
+let activeNpc=null;
+let activeQuest=null;
+const questState={};
+for(const n of npcs) for(const q of n.quests) questState[q.id]={accepted:false,done:false,progress:0};
+
+function npcDistance(n){return Math.hypot(P.x-n.x,P.y-n.y)}
+function questProgress(id){
+  const q=questById(id);
+  return questState[id]?.progress||0;
+}
+function questById(id){
+  for(const n of npcs){const q=n.quests.find(v=>v.id===id);if(q)return q}
+  return null;
+}
+function updateQuestProgress(id,amount=1){
+  const st=questState[id],q=questById(id);
+  if(!st||!q||!st.accepted||st.done)return;
+  st.progress=Math.min(q.goal,st.progress+amount);
+  if(st.progress>=q.goal) toast("📜 Nhiệm vụ hoàn thành · "+q.name);
+  renderQuestTracker();
+}
+function acceptQuest(id){
+  const q=questById(id); if(!q)return;
+  const st=questState[id];
+  if(st.done){toast("✅ Nhiệm vụ đã hoàn thành");return}
+  st.accepted=true;
+  if(q.id==="report")st.progress=0;
+  renderQuestList();
+  renderQuestTracker();
+  toast("📜 Đã nhận: "+q.name);
+}
+function claimQuest(id){
+  const q=questById(id),st=questState[id]; if(!q||!st)return;
+  if(st.progress<q.goal){toast("📜 Chưa đủ điều kiện");return}
+  if(st.done){toast("✅ Đã nhận thưởng");return}
+  st.done=true;
+  gold+=q.rewardGold; exp=Math.min(600,exp+q.rewardExp);
+  renderQuestList(); renderQuestTracker(); hud();
+  toast("🎁 +"+q.rewardGold+" vàng · +"+q.rewardExp+" EXP");
+}
+function openNpcQuest(npc){
+  activeNpc=npc;
+  document.getElementById("questNpcTitle").innerHTML=
+    `<b>${npc.icon} ${npc.name}</b><br><small>${npc.title} · Đứng gần để nhận nhiệm vụ</small>`;
+  renderQuestList();
+  openM("questModal");
+}
+function renderQuestList(){
+  if(!activeNpc)return;
+  const box=document.getElementById("questList");
+  box.innerHTML=activeNpc.quests.map(q=>{
+    const st=questState[q.id];
+    const p=st.progress||0;
+    let action="";
+    if(st.done) action=`<button class="action" disabled>✅ Đã hoàn thành</button>`;
+    else if(!st.accepted) action=`<button class="action" onclick="acceptQuest('${q.id}')">📜 Nhận nhiệm vụ</button>`;
+    else if(p>=q.goal) action=`<button class="action" onclick="claimQuest('${q.id}')">🎁 Nhận thưởng</button>`;
+    else action=`<button class="action" disabled>⏳ Đang làm ${p}/${q.goal}</button>`;
+    return `<div class="card">
+      <b>${q.name}</b>
+      <small style="display:block;color:#d0d6db;margin:6px 0">${q.desc}</small>
+      <div style="color:#ffd978">Tiến độ: ${p}/${q.goal} · 🪙 ${q.rewardGold} · ✨ ${q.rewardExp}</div>
+      <div style="margin-top:8px">${action}</div>
+    </div>`;
+  }).join("");
+}
+function renderQuestTracker(){
+  const box=document.getElementById("questTracker");
+  const active=[];
+  for(const n of npcs) for(const q of n.quests){
+    const st=questState[q.id];
+    if(st.accepted&&!st.done) active.push(q);
+  }
+  if(!active.length){box.style.display="none";return}
+  const q=active[0],st=questState[q.id];
+  box.style.display="block";
+  box.innerHTML=`<b>📜 ${q.name}</b><small>${q.desc}</small><small>Tiến độ: ${st.progress}/${q.goal}</small>`;
+}
+function nearestNpc(max=125){
+  let best=null,bd=max;
+  for(const n of npcs){const d=npcDistance(n);if(d<bd){bd=d;best=n}}
+  return best;
+}
+function checkNpcHint(){
+  const n=nearestNpc(150),hint=document.getElementById("npcHint");
+  if(n){
+    hint.textContent=`💬 ${n.icon} ${n.name} · Chạm để nhận nhiệm vụ`;
+    hint.style.display="block";
+  }else hint.style.display="none";
+}
+
+function drawNpc(n){
+  const near=npcDistance(n)<150;
+  x.save();
+  if(near){
+    x.strokeStyle=n.color+"bb"; x.lineWidth=3;
+    x.beginPath();x.arc(n.x,n.y,43+Math.sin(performance.now()/220)*3,0,Math.PI*2);x.stroke();
+  }
+  x.fillStyle="#f0d2b4";x.beginPath();x.arc(n.x,n.y-30,16,0,7);x.fill();
+  x.fillStyle=n.color+"dd";x.beginPath();
+  x.moveTo(n.x-23,n.y+40);x.lineTo(n.x,n.y-8);x.lineTo(n.x+25,n.y+40);x.lineTo(n.x,n.y+55);x.closePath();x.fill();
+  x.font="27px sans-serif";x.textAlign="center";x.fillText(n.icon,n.x,n.y-52);
+  const label=`${n.icon} ${n.name}`;
+  x.font="bold 13px sans-serif";
+  const tw=x.measureText(label).width+12;
+  x.fillStyle="#071016e8";x.beginPath();x.roundRect(n.x-tw/2,n.y-83,tw,20,8);x.fill();
+  x.fillStyle="#fff";x.fillText(label,n.x,n.y-69);
+  x.font="11px sans-serif";x.fillStyle="#ffd978";
+  x.fillText("📜 Nhiệm vụ",n.x,n.y+75);
+  x.restore();
+}
+
 function toast(t){let q=document.getElementById("msg");q.textContent=t;q.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>q.style.display="none",1100)}
 function closeM(id){document.getElementById(id).style.display="none"}
 function openM(id){document.getElementById(id).style.display="block"}
@@ -110,12 +275,12 @@ function enh(k){let i=bag[k];if(!i||i.t=="tiêu hao")return toast("⚒️ Chỉ 
 function enhEq(k){let i=equip[k];if(i.en>=10)return toast("Đã +10");if(gold<cost(i))return toast("🪙 Không đủ vàng");gold-=cost(i);i.en++;bagUI();hud();toast("⚒️ "+i.n+" +"+i.en)}
 function eq(k){let i=bag[k];if(i.t=="vũ khí"){bag.push(equip.weapon);equip.weapon=i}else if(i.t=="áo"){bag.push(equip.armor);equip.armor=i}else return;bag.splice(k,1);if(bag.length>24)bag.pop();bagUI();hud()}
 function uneq(k){if(bag.length>=24)return toast("🎒 Túi đầy");bag.push(equip[k]);equip[k]=null;bagUI();hud()}
-function use(k){if(bag[k].t=="tiêu hao"){P.mp=Math.min(60,P.mp+30);bag.splice(k,1);bagUI();hud();toast("💧 Hồi 30 khí")}}
+function use(k){if(bag[k].t=="tiêu hao"){updateQuestProgress("potion",1);P.mp=Math.min(60,P.mp+30);bag.splice(k,1);bagUI();hud();toast("💧 Hồi 30 khí")}}
 function sell(k){bag.splice(k,1);gold+=20;bagUI();hud();toast("🪙 +20 vàng")}
 function nearest(){let b=null,bd=1e9;for(let m of mobs)if(m.alive){let d=Math.hypot(P.x-m.x,P.y-m.y);if(d<bd){bd=d;b=m}}return b}
-function hit(m,n){m.hp=Math.max(0,m.hp-Math.round(n));m.hit=.2;if(m.hp<=0){m.alive=false;exp=Math.min(600,exp+20);drops.push({x:m.x,y:m.y,g:10+Math.floor(Math.random()*30),i:its[Math.floor(Math.random()*5)]});toast("🎁 Sơn Tặc rơi đồ")}}
+function hit(m,n){m.hp=Math.max(0,m.hp-Math.round(n));m.hit=.2;updateQuestProgress("training",1);if(m.hp<=0){m.alive=false;exp=Math.min(600,exp+20);updateQuestProgress("bandit",1);updateQuestProgress("hunt",1);updateQuestProgress("elite",1);drops.push({x:m.x,y:m.y,g:10+Math.floor(Math.random()*30),i:its[Math.floor(Math.random()*5)]});updateQuestProgress("herb",1);toast("🎁 Sơn Tặc rơi đồ")}}
 function attack(){if(cdA>0)return;cdA=.45;let m=nearest();if(!m)return;let r=pc=="Thiên Nhẫn Hỏa Tiễn"?500:["Đường Môn","Ngũ Độc"].includes(pc)?350:160;if(Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,P.atk+equip.weapon.a+cls[pc][4])}
-function skill(){if(cdS>0)return;cdS=2;let z=cls[pc],r=260,n=40+z[4]+equip.weapon.a;if(pc=="Cái Bang Chưởng"){r=440;n+=30;toast("🐉 Giáng Long Thập Bát Chưởng!");mobs.forEach(m=>m.alive&&Math.hypot(P.x-m.x,P.y-m.y)<r&&hit(m,n));return}if(pc=="Thiên Nhẫn Hỏa Tiễn"){r=550;n+=25;toast("🔥 Hỏa Tiễn!")}else toast(z[3]);let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,n)}
+function skill(){if(cdS>0)return;cdS=2;updateQuestProgress("sword",1);let z=cls[pc],r=260,n=40+z[4]+equip.weapon.a;if(pc=="Cái Bang Chưởng"){r=440;n+=30;toast("🐉 Giáng Long Thập Bát Chưởng!");mobs.forEach(m=>m.alive&&Math.hypot(P.x-m.x,P.y-m.y)<r&&hit(m,n));return}if(pc=="Thiên Nhẫn Hỏa Tiễn"){r=550;n+=25;toast("🔥 Hỏa Tiễn!")}else toast(z[3]);let m=nearest();if(m&&Math.hypot(P.x-m.x,P.y-m.y)<r)hit(m,n)}
 function fire(){if(cdF>0)return;cdF=3;let m=nearest(),z=cls[pc];if(m&&Math.hypot(P.x-m.x,P.y-m.y)<300)hit(m,55+z[4]);toast(z[3])}
 
 const joy={x:0,y:0,on:false},je=document.getElementById("joy"),st=document.getElementById("stick");
@@ -131,6 +296,7 @@ x.fillStyle="#b49a68";x.beginPath();x.moveTo(0,1850);x.quadraticCurveTo(800,1450
 x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
 x.strokeStyle="#d9c56a88";x.lineWidth=4;x.setLineDash([16,12]);
 x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 22px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
+npcs.forEach(drawNpc);
 for(let m of mobs)if(m.alive){
   x.fillStyle=m.hit?"#ffbd59":"#814237";
   x.beginPath();x.arc(m.x,m.y,24,0,7);x.fill();
@@ -160,6 +326,18 @@ drawPlayer(P.x,P.y);x.fillStyle="#071016dd";
 x.beginPath();x.roundRect(P.x-52,P.y-82,104,20,8);x.fill();
 x.fillStyle="#fff";x.font="bold 13px sans-serif";
 x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-68);x.restore()}
+
+c.addEventListener("touchstart",e=>{
+  const t=e.touches[0]; if(!t)return;
+  const sx=(t.clientX-W/2)/Z+(cam.x), sy=(t.clientY-H/2)/Z+(cam.y);
+  let hitNpc=null,bd=105;
+  for(const n of npcs){const dd=Math.hypot(sx-n.x,sy-n.y);if(dd<bd){bd=dd;hitNpc=n}}
+  if(hitNpc){
+    if(npcDistance(hitNpc)<=150) openNpcQuest(hitNpc);
+    else toast("💬 Hãy đến gần "+hitNpc.name);
+  }
+},{passive:true});
+
 function update(dt){let dx=joy.x,dy=joy.y,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
 let living=mobs.filter(m=>m.alive);
 let aggroList=living.map(m=>({m,d:Math.hypot(P.x-m.x,P.y-m.y)}))
@@ -197,9 +375,15 @@ for(let i=0;i<living.length;i++){
     }
   }
 }
-cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
+checkNpcHint();renderQuestTracker();cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
 let vw=W/Z,vh=H/Z;cam.x+=(Math.max(vw/2,Math.min(world.w-vw/2,P.x))-cam.x)*Math.min(1,dt*5);cam.y+=(Math.max(vh/2,Math.min(world.h-vh/2,P.y))-cam.y)*Math.min(1,dt*5);
-for(let i=drops.length-1;i>=0;i--)if(Math.hypot(P.x-drops[i].x,P.y-drops[i].y)<75){gold+=drops[i].g;toast("🪙 +"+drops[i].g+" vàng");drops.splice(i,1)}hud()}
+for(let i=drops.length-1;i>=0;i--)if(Math.hypot(P.x-drops[i].x,P.y-drops[i].y)<75){
+  const d0=drops[i];
+  gold+=d0.g;toast("🪙 +"+d0.g+" vàng");
+  if(bag.length<24){bag.push({...its[5],n:d0.i[0],t:d0.i[1],r:d0.i[2],a:d0.i[3],df:d0.i[4],i:d0.i[5],en:0});}
+  updateQuestProgress("herb",1);
+  drops.splice(i,1)
+}hud()}
 function tele(where){let q=where=="city"?city:town;P.x=q.x;P.y=q.y;cam.x=P.x;cam.y=P.y;closeM("teleModal");toast("🌀 Đã dịch chuyển")}
 function guild(){let q=Number(document.getElementById("gs").textContent.replace(",",""))+50;document.getElementById("gs").textContent=q.toLocaleString("en-US");toast("🏯 Đã đăng ký chiến bang")}
 let chat=["Lãng Khách: Có ai săn Boss không?","Nga Mi: Ai cần buff?"];function renderChat(){document.getElementById("chat").innerHTML=chat.map(v=>"<div>"+v+"</div>").join("")}function sendChat(){let i=document.getElementById("input"),v=i.value.trim();if(v){chat.push("Thiếu Hiệp: "+v);i.value="";renderChat();toast("🌎 Đã gửi")}}
@@ -208,7 +392,7 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.3";
+classes();sel();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.3 · Nhiệm vụ NPC";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

@@ -1,794 +1,126 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Đại Việt Chiến Ký - Bản 2.x</title>
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Đại Việt Chiến Ký — Bản 3.1 Web</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;background:#172013;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button{border:0;border-radius:12px;padding:10px 8px;background:#70441f;color:#fff;font-weight:800;box-shadow:0 2px 0 #3c220e;font-size:12px}
-button:active{transform:translateY(1px);box-shadow:none}
-button:disabled{opacity:.45}
-#game{height:100dvh;display:flex;flex-direction:column}
-.top{background:linear-gradient(#3b2919,#24180e);padding:7px 8px 6px;border-bottom:2px solid #a77b3e}
-.brand{display:flex;align-items:center;justify-content:space-between}
-.brand h1{margin:0;color:#ffd66b;font-size:18px}.ver{font-size:9px;color:#cdbb9b}
-.resources{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}
-.res{background:#4b321d;border:1px solid #74562f;border-radius:8px;text-align:center;padding:4px 2px;font-size:10px}.res b{display:block;color:#ffe18b;font-size:12px}
-.scene{position:relative;flex:1;overflow:auto;background:
- radial-gradient(circle at 50% 35%,rgba(246,213,128,.18),transparent 35%),
- linear-gradient(#78905a 0 22%,#5e7647 22% 60%,#3e5a38 60% 100%);
- padding:8px 8px 82px}
-.sky{position:absolute;inset:0 0 auto 0;height:23%;background:linear-gradient(#9bbf78,#78965d);opacity:.7;pointer-events:none}
-.city-wall{position:absolute;left:3%;right:3%;top:16%;height:67%;border:6px solid #8c6238;border-radius:22px;background:rgba(139,101,54,.12);box-shadow:inset 0 0 0 4px #c09254;pointer-events:none}
-.moat{position:absolute;left:0;right:0;bottom:9%;height:12%;background:repeating-linear-gradient(175deg,#4b7d83 0 10px,#6da0a0 10px 18px);border-top:4px solid #a1c1a0;opacity:.9;pointer-events:none}
-.bridge{position:absolute;left:38%;right:38%;bottom:14%;height:10%;background:repeating-linear-gradient(90deg,#70431f 0 18px,#956034 18px 22px);border:3px solid #4a2a15;border-radius:5px;pointer-events:none}
-.flag{position:absolute;font-size:25px;animation:wave 2.5s ease-in-out infinite;pointer-events:none}.f1{top:20%;left:12%}.f2{top:19%;right:12%}
-@keyframes wave{50%{transform:rotate(4deg) translateY(-2px)}}
-.build{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1.35fr 1fr;grid-template-rows:auto auto auto;gap:7px;margin-top:12%}
-.bld{background:rgba(43,31,19,.93);border:1px solid #b4874a;border-radius:13px;padding:7px;text-align:center;min-height:78px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
-.bld .ico{font-size:28px}.bld b{display:block;color:#ffe08b;font-size:11px}.bld small{color:#d5c8b1;font-size:9px}
-.mainhall{grid-column:2;grid-row:1 / span 2;min-height:175px;background:linear-gradient(#654321,#3b2718);border:2px solid #d1a45b}
-.mainhall .ico{font-size:56px}.mainhall b{font-size:15px}.mainhall small{font-size:10px}
-.notice{position:relative;z-index:3;background:rgba(34,24,15,.94);border:1px solid #9b713b;border-radius:12px;padding:7px;margin:8px 0;font-size:11px}
-.notice b{color:#ffd66b}
-.actions{position:fixed;left:7px;right:7px;bottom:7px;z-index:20;background:rgba(31,20,11,.97);border:1px solid #8f6938;border-radius:15px;padding:6px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.actions button{font-size:10px;padding:9px 2px}
-.overlay{display:none;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.62);align-items:flex-end}
-.overlay.show{display:flex}
-.sheet{width:100%;max-height:82dvh;overflow:auto;background:#24180f;border:1px solid #aa7b40;border-radius:18px 18px 0 0;padding:12px 10px 20px}
-.sheetHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.sheetHead b{color:#ffd66b;font-size:17px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.card{background:#3b2b1b;border-radius:10px;padding:8px;font-size:11px}.card h3{margin:0 0 5px;color:#ffe08b;font-size:13px}.card p{margin:3px 0 7px;color:#d7cdbb;line-height:1.35}
-.item{display:flex;justify-content:space-between;align-items:center;gap:6px;background:#3b2b1b;border-radius:10px;padding:8px;margin-top:6px;font-size:11px}.rarity{background:#5b4328;border-radius:5px;padding:2px 4px;color:#ffe08b;font-size:9px}
-.progress{height:7px;background:#1b120b;border-radius:8px;overflow:hidden;margin:6px 0}.progress i{display:block;height:100%;background:#d59b3b;width:0}
-.log{max-height:120px;overflow:auto;font-size:10px;line-height:1.5;color:#d8cebd}
-.toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);z-index:40;background:#2d2015;border:1px solid #b88a49;border-radius:20px;padding:8px 13px;font-size:11px;display:none}
-.toast.show{display:block}
-@media(min-width:700px){.scene{padding-left:10%;padding-right:10%}.build{margin-top:7%}.actions{left:10%;right:10%}}
-
-.npc{position:absolute;z-index:8;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:9px;color:#ffe08b;text-shadow:0 1px 2px #000;cursor:pointer;animation:walk 3s ease-in-out infinite}
-.npc span{font-size:28px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))}
-.npc b{background:rgba(35,23,12,.85);padding:2px 5px;border-radius:8px}
-.npc-advisor{left:48%;top:30%}.npc-smith{left:12%;top:45%}.npc-merchant{right:12%;top:48%}
-.npc-captain{right:17%;top:29%}.npc-farmer{left:27%;top:60%}.npc-miner{right:28%;top:61%}.npc-scout{right:7%;top:23%}
-@keyframes walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.event-badge{display:inline-block;padding:3px 7px;border-radius:8px;background:#7d2d20;color:#ffe3a0;font-weight:900}
-
-.tutorial{position:fixed;inset:0;z-index:80;background:rgba(5,8,5,.82);display:none;align-items:flex-end}
-.tutorial.show{display:flex}
-.tutbox{width:100%;max-height:88dvh;overflow:auto;background:linear-gradient(#3b2919,#20140c);border:2px solid #d1a45b;border-radius:20px 20px 0 0;padding:14px 12px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.45)}
-.tuttop{display:flex;justify-content:space-between;align-items:center}.tuttop b{font-size:18px;color:#ffd66b}
-.tutnpc{display:flex;gap:10px;align-items:center;background:#302015;border-radius:14px;padding:9px;margin:8px 0}
-.tutnpc .face{font-size:46px}.tutnpc p{margin:3px 0;font-size:12px;line-height:1.45;color:#eee2ce}
-.tutstep{color:#d8c5a6;font-size:11px}.tuttitle{font-size:14px;color:#ffe08b;font-weight:900}
-.tutbtn{width:100%;margin-top:8px;background:#8b5a26;border:1px solid #d0a25c}
-.tutreward{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
-.tutreward div{background:#44301d;border-radius:10px;text-align:center;padding:10px;color:#ffe08b;font-weight:900}
-.highlight{animation:highlight 1s infinite}
-@keyframes highlight{50%{box-shadow:0 0 0 5px rgba(255,211,91,.35),0 0 25px rgba(255,211,91,.75)}}
-
-.generalHero{background:radial-gradient(circle at 50% 35%,#6b5433 0,#302318 48%,#17100b 100%);border:1px solid #b98b4a;border-radius:16px;min-height:360px;position:relative;overflow:hidden;text-align:center;padding-top:18px}
-.generalHero .sun{position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,215,120,.18);left:50%;top:18px;transform:translateX(-50%);filter:blur(3px)}
-.mount{position:relative;z-index:2;font-size:110px;line-height:1.05;margin-top:30px;animation:mountIdle 2.6s ease-in-out infinite}
-.rider{position:absolute;z-index:3;left:50%;top:82px;transform:translateX(-50%);font-size:58px;animation:riderIdle 2.6s ease-in-out infinite}
-.cape{position:absolute;z-index:1;left:34%;top:92px;font-size:55px;animation:capeWave 1.8s ease-in-out infinite}
-.dust{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);font-size:32px;opacity:.7;animation:dustMove 2.4s infinite}
-@keyframes mountIdle{50%{transform:translateY(-5px) scale(1.015)}}@keyframes riderIdle{50%{transform:translateX(-50%) translateY(-5px)}}@keyframes capeWave{50%{transform:translateX(-8px) rotate(5deg)}}@keyframes dustMove{50%{transform:translateX(-50%) scale(1.25);opacity:.35}}
-.statline{display:flex;justify-content:space-between;background:#3b2b1b;border-radius:9px;padding:7px;margin-top:6px;font-size:11px}
-
-.animStage{position:relative;height:330px;border-radius:16px;overflow:hidden;background:linear-gradient(#7f9d66,#526b43 58%,#33482f);border:1px solid #b98b4a}
-.animStage:before{content:"";position:absolute;left:0;right:0;bottom:0;height:32%;background:repeating-linear-gradient(8deg,rgba(80,57,30,.35) 0 8px,transparent 8px 18px)}
-.combatUnit{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);font-size:76px;z-index:3;filter:drop-shadow(0 8px 5px rgba(0,0,0,.35))}
-.combatCape{position:absolute;left:calc(50% - 62px);bottom:125px;font-size:45px;z-index:2}
-.combatWeapon{position:absolute;left:calc(50% + 22px);bottom:145px;font-size:32px;z-index:4}
-.combatDust{position:absolute;left:50%;bottom:38px;font-size:38px;opacity:.5;z-index:1}
-.animStage.idle .combatUnit{animation:idleUnit 1.5s infinite}
-.animStage.idle .combatCape{animation:capeAnim 1.2s infinite}
-.animStage.walk .combatUnit{animation:walkUnit .45s infinite}
-.animStage.attack .combatUnit{animation:attackUnit .45s 1}
-.animStage.attack .combatWeapon{animation:swingWeapon .45s 1}
-.animStage.skill .combatUnit{animation:skillUnit .9s 1}
-.animStage.skill .combatWeapon{animation:skillWeapon .9s 1}
-.animStage.hit .combatUnit{animation:hitUnit .4s 1}
-.animStage.death .combatUnit{animation:deathUnit 1.3s 1 forwards}
-.animStage.death .combatWeapon{animation:dropWeapon 1s 1 forwards}
-.animStage.skill:after{content:"✨";position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);font-size:90px;animation:skillFx .9s 1;z-index:5}
-.animStage.hit:after{content:"💥";position:absolute;left:50%;top:43%;font-size:52px;animation:hitFx .4s 1;z-index:5}
-.animStage.death:after{content:"🌫️";position:absolute;left:50%;bottom:30px;font-size:45px;animation:fadeFx 1.3s 1;z-index:5}
-@keyframes idleUnit{50%{transform:translateX(-50%) translateY(-5px)}}@keyframes capeAnim{50%{transform:translateX(-8px) rotate(5deg)}}
-@keyframes walkUnit{25%{transform:translateX(-54%) translateY(-2px)}75%{transform:translateX(-46%) translateY(0)}}
-@keyframes attackUnit{0%{transform:translateX(-50%)}45%{transform:translateX(15%)}100%{transform:translateX(-50%)}}
-@keyframes swingWeapon{45%{transform:rotate(-55deg) translate(12px,-8px)}100%{transform:none}}
-@keyframes skillUnit{35%{transform:translateX(-50%) scale(1.12)}70%{transform:translateX(-50%) translateY(-12px) scale(1.05)}}
-@keyframes skillWeapon{50%{transform:rotate(-25deg) scale(1.25)}}@keyframes skillFx{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}50%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}}
-@keyframes hitUnit{25%{transform:translateX(-64%);filter:drop-shadow(0 0 12px #e33)}100%{transform:translateX(-50%)}}
-@keyframes hitFx{100%{opacity:0;transform:scale(1.5)}}@keyframes deathUnit{40%{transform:translateX(-50%) translateY(12px) rotate(-12deg)}100%{transform:translateX(-50%) translateY(30px) rotate(-90deg);opacity:0}}
-@keyframes dropWeapon{100%{transform:translate(35px,35px) rotate(80deg);opacity:.2}}@keyframes fadeFx{100%{opacity:0;transform:scale(1.6)}}
-.combatControls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}
-
-.isoScene{position:relative;min-height:650px;overflow:hidden;background:linear-gradient(#8db27a 0 28%,#6f8f58 28% 100%);perspective:900px}
-.isoTerrain{position:absolute;left:8%;right:8%;top:18%;bottom:12%;transform:rotateX(52deg) rotateZ(0deg);background:linear-gradient(135deg,#708f56,#526f45);border:5px solid #8f7041;border-radius:24px;box-shadow:0 25px 35px rgba(0,0,0,.35);z-index:1}
-.isoRoad{position:absolute;left:34%;right:34%;top:42%;height:42%;background:linear-gradient(90deg,#8b6840,#b28a56,#8b6840);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%);z-index:2;opacity:.9}
-.isoMoat{position:absolute;left:5%;right:5%;top:27%;height:42%;border:13px solid #4d7778;border-radius:28px;background:rgba(85,143,145,.65);z-index:2;box-shadow:inset 0 0 0 3px #9dc3b4}
-.isoWall{position:absolute;left:12%;right:12%;top:30%;height:38%;border:16px solid #80603b;border-radius:18px;background:rgba(150,112,62,.14);z-index:3;box-shadow:inset 0 0 0 4px #c1985c}
-.isoGate{position:absolute;left:43%;top:57%;width:14%;height:14%;background:#4d2c18;border:7px solid #8d6136;border-radius:8px 8px 0 0;z-index:6;box-shadow:0 6px 12px #24150c}
-.isoBuilding{position:absolute;z-index:7;text-align:center;filter:drop-shadow(0 7px 5px rgba(0,0,0,.35))}
-.isoBuilding .roof{font-size:58px;line-height:.9}.isoBuilding b{display:block;background:rgba(39,25,14,.88);border:1px solid #b68a4c;border-radius:9px;padding:3px 6px;color:#ffe08b;font-size:10px}
-.bHall{left:39%;top:31%}.bBarracks{left:18%;top:40%}.bForge{right:17%;top:41%}.bFarm{left:26%;top:63%}.bMine{right:27%;top:64%}.bMarket{left:43%;top:72%}
-.isoNpc{position:absolute;z-index:12;font-size:29px;filter:drop-shadow(0 4px 3px rgba(0,0,0,.35));animation:npcFloat 2.4s ease-in-out infinite}
-.n1{left:48%;top:51%}.n2{left:28%;top:52%}.n3{right:26%;top:54%}.n4{left:38%;top:70%}.n5{right:39%;top:70%}
-@keyframes npcFloat{50%{transform:translateY(-4px)}}
-.isoLabel{position:absolute;left:50%;top:13%;transform:translateX(-50%);z-index:20;background:rgba(36,24,13,.9);padding:7px 13px;border-radius:18px;border:1px solid #c39a5d;color:#ffe08b;font-weight:900;font-size:12px}
-
-.advisorPanel{background:linear-gradient(135deg,#17283a,#263d55);border:1px solid #c5a05a;border-radius:16px;padding:10px;margin-bottom:8px}
-.advisorPortrait{display:flex;gap:10px;align-items:center}
-.advisorAvatar{width:86px;height:112px;border-radius:14px;background:linear-gradient(#34526a,#18283a);display:flex;align-items:center;justify-content:center;font-size:58px;border:2px solid #c5a05a;position:relative;overflow:hidden}
-.advisorAvatar:after{content:"🌬️";position:absolute;font-size:24px;right:4px;bottom:4px;animation:fanMove 1.8s infinite}
-.advisorInfo b{display:block;color:#ffe08b;font-size:15px}.advisorInfo small{color:#d8d2c6}
-.advisorAdvice{margin-top:8px;background:rgba(8,15,23,.35);border-radius:10px;padding:8px;font-size:11px;line-height:1.45}
-@keyframes fanMove{50%{transform:rotate(8deg) translateY(-2px)}}
-.advisorWarn{color:#ffcf78;font-weight:900}
-
-.wulinPanel{background:linear-gradient(135deg,#161b22,#263443);border:1px solid #b9a16b;border-radius:16px;padding:10px;margin-bottom:8px;position:relative;overflow:hidden}
-.wulinAura{position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;background:rgba(130,210,255,.12);filter:blur(6px);animation:auraPulse 2.4s infinite}
-.wulinPortrait{display:flex;gap:10px;align-items:center;position:relative;z-index:2}
-.wulinAvatar{width:88px;height:116px;border-radius:14px;background:linear-gradient(#303b49,#111820);border:2px solid #b9a16b;display:flex;align-items:center;justify-content:center;font-size:58px;position:relative}
-.wulinAvatar:after{content:"⚔️";position:absolute;right:-3px;bottom:8px;font-size:30px;animation:swordQi 1.8s infinite}
-.wulinInfo b{display:block;color:#e8d09a;font-size:15px}.wulinInfo small{color:#c8c4bd}
-.wulinQuote{margin-top:8px;background:rgba(7,12,18,.45);padding:8px;border-radius:10px;font-size:11px;line-height:1.45}
-@keyframes auraPulse{50%{transform:scale(1.25);opacity:.55}}@keyframes swordQi{50%{transform:translateY(-4px) rotate(-5deg)}}
+html,body{margin:0;background:#17150f;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100vh;overflow-x:hidden}
+button{font:inherit;border:0;color:#fff;background:#7d4c28;border-radius:14px;padding:12px 14px;font-weight:800}
+#app{max-width:900px;margin:auto;min-height:100vh;background:#526f43}
+header{background:#302116;padding:calc(14px + env(safe-area-inset-top)) 14px 12px;text-align:center;border-bottom:4px solid #a9894b}
+h1{margin:0;color:#ffe08b;font-size:25px}
+.sub{color:#d7c8ab;margin:4px 0 10px}
+.res{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.res div{background:#49331f;border:1px solid #886a3d;border-radius:12px;padding:8px 3px;font-weight:800;color:#ffe08b}
+main{padding:12px}
+.panel{background:#1f1d16;border:2px solid #a9894b;border-radius:18px;padding:12px;margin-bottom:12px;box-shadow:0 5px 12px #0005}
+.title{color:#ffe08b;font-size:21px;font-weight:900;margin-bottom:8px}
+.map{position:relative;height:470px;overflow:hidden;border:4px solid #ad925a;border-radius:20px;background:#5c7749}
+.map:before{content:"";position:absolute;inset:0;background:
+linear-gradient(105deg,transparent 42%,#6e9ba0 42%,#6e9ba0 47%,transparent 47%),
+linear-gradient(170deg,transparent 46%,#9a8a5c 46%,#9a8a5c 52%,transparent 52%);
+opacity:.8}
+.wall{position:absolute;inset:55px 55px;border:20px solid #755535;border-radius:24px;box-shadow:inset 0 0 0 4px #bd955a}
+.place,.npc{position:absolute;z-index:2;transform:translate(-50%,-50%);touch-action:manipulation}
+.place{width:112px;min-height:82px;border:3px solid #c5a65e;background:#3e3022;border-radius:18px;text-align:center;padding:8px;box-shadow:0 5px 9px #0007}
+.place .icon{font-size:30px}.place b{display:block;font-size:13px}
+.npc{width:90px;text-align:center;cursor:pointer}
+.npc .avatar{font-size:42px;filter:drop-shadow(0 4px 2px #0008)}
+.npc b{display:block;background:#211b15d9;border:1px solid #a9894b;border-radius:8px;padding:3px;font-size:11px}
+#message{background:#2b241b;border-radius:12px;padding:10px;line-height:1.4;color:#eee0c7}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;justify-content:center;z-index:20}
+#modal.show{display:flex}
+.sheet{width:min(900px,100%);max-height:78vh;overflow:auto;background:#201d16;border:2px solid #b99a58;border-radius:22px 22px 0 0;padding:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.sheet h2{color:#ffe08b;margin:0 0 8px}
+.close{float:right;background:#57351f}
+.advisor{background:linear-gradient(135deg,#1e3040,#283c4d);border:1px solid #c5a05a;border-radius:14px;padding:12px}
+.quote{background:#111a22aa;padding:10px;border-radius:10px;margin-top:8px}
+footer{position:sticky;bottom:0;background:#2b1d13;padding:9px calc(10px + env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+footer button{font-size:12px;padding:11px 4px}
+@media(max-width:480px){.res div{font-size:12px}.map{height:440px}.place{width:98px}.npc{width:78px}}
 </style>
-</head><body>
-<div id="game">
-<header class="top">
- <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • GIANG HỒ</span></div>
- <div class="resources">
-  <div class="res">🌾<b id="food">0</b></div><div class="res">💰<b id="gold">0</b></div>
-  <div class="res">🪵<b id="wood">0</b></div><div class="res">⛏️<b id="iron">0</b></div>
-  <div class="res">💎<b id="gems">0</b></div>
- </div>
+</head>
+<body>
+<div id="app">
+<header>
+<h1>⚔️ ĐẠI VIỆT CHIẾN KÝ</h1>
+<div class="sub">Bản 3.1 • Web Safari • Thành trì 2.5D</div>
+<div class="res">
+<div>🌾 <span id="food">1000</span></div><div>💰 <span id="gold">1000</span></div>
+<div>🪵 <span id="wood">600</span></div><div>⛏️ <span id="iron">400</span></div>
+<div>💎 <span id="gems">100</span></div>
+</div>
 </header>
-
-<main class="scene">
- <div class="isoScene">
-  <div class="isoLabel">🏯 ĐẠI VIỆT • THÀNH TRÌ 2.5D</div>
-  <div class="isoTerrain"></div><div class="isoRoad"></div><div class="isoMoat"></div><div class="isoWall"></div><div class="isoGate"></div>
-  <div class="isoBuilding bHall" onclick="openSheet('hall')"><div class="roof">🏯</div><b>CHÍNH ĐIỆN</b></div>
-  <div class="isoBuilding bBarracks" onclick="openSheet('military')"><div class="roof">⚔️</div><b>DOANH TRẠI</b></div>
-  <div class="isoBuilding bForge" onclick="openSheet('forge')"><div class="roof">🔨</div><b>LÒ RÈN</b></div>
-  <div class="isoBuilding bFarm" onclick="openSheet('farm')"><div class="roof">🌾</div><b>NÔNG ĐIỆN</b></div>
-  <div class="isoBuilding bMine" onclick="openSheet('mine')"><div class="roof">⛏️</div><b>MỎ SẮT</b></div>
-  <div class="isoBuilding bMarket" onclick="openSheet('market')"><div class="roof">🛒</div><b>CHỢ</b></div>
-  <div class="isoNpc n1" onclick="openAdvisor()" title="Lục Minh Triết">🧑🏻‍🏫</div><div class="isoNpc n2">👨‍🌾</div><div class="isoNpc n3">🔨</div><div class="isoNpc n4" onclick="openWulin()" title="Thẩm Hàn Phong">⚔️</div><div class="isoNpc n5">🛒</div>
- </div>
- <div class="notice">🏯 <b>Thành trì 2.5D</b> • 🛡️ Phòng thủ <b id="defense">0</b> • ⚔️ Sức mạnh <b id="power">0</b> • 👥 Dân <b id="population">0</b></div>
- <div class="notice"><b>📜 Chiếu thư:</b> Thành trì đang phát triển. Chạm công trình hoặc NPC để quản lý.</div><div class="notice">🪶 <b>Lục Minh Triết</b> • Quân sư đang quan sát thành trì và sẽ cảnh báo khi có vấn đề.</div>
- <div class="notice"><b>📖 Nhật ký:</b><div id="log" class="log"></div></div>
-</main>>
-
-<nav class="actions">
- <button type="button" onclick="openSheet('inventory')">🎒 Kho</button>
- <button type="button" onclick="openAdvisor()">👑 Quân sư</button>
- <button type="button" onclick="openWulin()">⚔️ Giang hồ</button>
- <button type="button" onclick="openSheet('world')">🗺️ Bản đồ</button>
- <button type="button" onclick="openSheet('more')">☰ Khác</button>
-</nav>
-
-<div id="toast" class="toast"></div>
-<div id="tutorial" class="tutorial">
- <div class="tutbox">
-  <div class="tuttop"><b>📜 KHỞI SỰ CƠ ĐỒ</b><button type="button" onclick="skipTutorial()">Bỏ qua</button></div>
-  <div class="tutstep" id="tutStep">Bước 1/4</div>
-  <div class="tutnpc"><div class="face">👑</div><div><div class="tuttitle" id="tutTitle"></div><p id="tutText"></p></div></div>
-  <div id="tutAction"></div>
- </div>
+<main>
+<section class="panel">
+<div class="title">🏯 Thành trì Đại Việt</div>
+<div class="map">
+<div class="wall"></div>
+<div class="place" data-name="Chính Điện" data-cost="100" style="left:50%;top:30%"><span class="icon">🏯</span><b>Chính Điện</b></div>
+<div class="place" data-name="Doanh Trại" data-cost="80" style="left:24%;top:48%"><span class="icon">⚔️</span><b>Doanh Trại</b></div>
+<div class="place" data-name="Lò Rèn" data-cost="76" style="left:76%;top:48%"><span class="icon">🔨</span><b>Lò Rèn</b></div>
+<div class="place" data-name="Nông Điền" data-cost="60" style="left:30%;top:76%"><span class="icon">🌾</span><b>Nông Điền</b></div>
+<div class="place" data-name="Mỏ Sắt" data-cost="70" style="left:70%;top:76%"><span class="icon">⛏️</span><b>Mỏ Sắt</b></div>
+<div class="npc" data-npc="Lục Minh Triết" style="left:43%;top:51%"><div class="avatar">👑</div><b>Lục Minh Triết</b></div>
+<div class="npc" data-npc="Thẩm Hàn Phong" style="left:57%;top:53%"><div class="avatar">⚔️</div><b>Thẩm Hàn Phong</b></div>
+<div class="npc" data-npc="Tiêu Mặc Bạch" style="left:50%;top:70%"><div class="avatar">🪶</div><b>Tiêu Mặc Bạch</b></div>
+</div>
+</section>
+<section class="panel"><div class="title">📜 Tương tác</div><div id="message">Chạm vào công trình hoặc NPC để bắt đầu.</div></section>
+<section class="panel">
+<div class="title">🎮 Bản 3.1</div>
+<div class="grid">
+<button onclick="openNpc('Lục Minh Triết')">👑 Quân sư triều đình</button>
+<button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
+<button onclick="openNpc('Tiêu Mặc Bạch')">🪶 Mưu sĩ</button>
+<button onclick="collect()">🌾 Thu hoạch</button>
+</div>
+</section>
+</main>
+<footer>
+<button onclick="openNpc('Lục Minh Triết')">📜 Quân sư</button>
+<button onclick="openNpc('Thẩm Hàn Phong')">⚔️ Giang hồ</button>
+<button onclick="openNpc('Tiêu Mặc Bạch')">🪶 Mưu sĩ</button>
+<button onclick="location.reload()">🔄 Chơi lại</button>
+</footer>
 </div>
 
-<div id="overlay" class="overlay" onclick="if(event.target===this)closeSheet()">
- <div class="sheet">
-  <div class="sheetHead"><b id="sheetTitle">Thành</b><button type="button" onclick="closeSheet()">✕</button></div>
-  <div id="sheetContent"></div>
- </div>
-</div>
-</div>
+<div id="modal"><div class="sheet"><button class="close" onclick="closeModal()">✕</button><h2 id="mtitle"></h2><div id="mcontent"></div></div></div>
+
 <script>
-const KEY="daiviet_chienky_11";
-let s=null;
-try{s=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){s=null;}
-function normalizeState(x){
- x=x||{};
- x.city2=x.city2||{level:1,houses:10,happiness:70};
- x.tech=x.tech||{food:0,iron:0,army:0,economy:0};
- x.campaign=x.campaign||{stage:1,stars:0,cleared:[]};
- x.commander=x.commander||{level:1,xp:0,name:"Đại tướng"};
- x.guild=x.guild||{level:1,xp:0,members:1};
- x.boss=x.boss||{hp:100,level:1,defeated:0,damage:0};
- x.market2=x.market2||{orders:0,sales:0};
- x.generals=x.generals||{archer:0,cavalry:0,guardian:0};
- x.formation=x.formation||"balanced";
- x.season=x.season||{points:0,rank:1,claimed:false};
- x.battleLog=x.battleLog||[];
- x.daily=x.daily||{harvest:0,battles:0,claimed:false};
- x.tutorial=x.tutorial||{step:0,done:false};
- x.mount=x.mount||{level:1,xp:0};
- x.wulin=x.wulin||{points:0,recruits:0,manuals:0};
- x.inventory=x.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0};
- x.craft=x.craft||{sword:0,armor:0,bow:0};
- x.loot=x.loot||{rare:0,good:0,normal:0};
- x.arena=x.arena||{rating:1000,wins:0,losses:0};
- x.legion=x.legion||{level:1,xp:0};
- x.quests=x.quests||{done:0,claimed:0};
- x.quests.harvest=x.quests.harvest||0;
- x.quests.research=x.quests.research||0;
- x.ach=x.ach||{};
- x.gems=x.gems||5; x.gold=x.gold||0; x.food=x.food||0; x.wood=x.wood||0; x.iron=x.iron||0;
- x.infantry=x.infantry||0; x.archers=x.archers||0; x.cavalry=x.cavalry||0; x.elephants=x.elephants||0;
- x.heroLevel=x.heroLevel||1; x.heroXp=x.heroXp||0; x.heroTier=x.heroTier||1;
- x.heroSkill=x.heroSkill||"none"; x.level=x.level||1; x.xp=x.xp||0; x.fame=x.fame||0;
- x.cityLevel=x.cityLevel||1; x.cityXp=x.cityXp||0; x.population=x.population||100;
- x.farm=x.farm||0; x.forge=x.forge||0; x.market=x.market||0; x.port=x.port||0; x.barracks=x.barracks||0;
- x.territory=x.territory||1; x.influence=x.influence||0; x.diplomacy=x.diplomacy||"Trung lập"; x.war=x.war||0;
- x.sword=!!x.sword; x.shield=!!x.shield; x.bow=!!x.bow; x.seal=!!x.seal; x.potion=x.potion||0;
- x.logs=x.logs||[];
- return x;
+const state={food:1000,gold:1000,wood:600,iron:400,gems:100};
+const npcText={
+"Lục Minh Triết":["Quân sư triều đình","Chúa công, hãy giữ kho lương vững, nâng Chính Điện và chuẩn bị đại quân.","📜 Hiến kế"],
+"Thẩm Hàn Phong":["Minh Chủ Võ Lâm","Triều đình có đại quân, giang hồ có cao thủ. Ta sẽ giúp ngài thu phục những người tài.","⚔️ Tuyển cao thủ"],
+"Tiêu Mặc Bạch":["Mưu sĩ quân đội","Một trận thắng bắt đầu từ việc đọc đúng thế trận. Ta có thể phân tích điểm yếu của địch.","🧠 Phân tích trận địa"]
+};
+function update(){for(const k of Object.keys(state))document.getElementById(k).textContent=state[k]}
+function msg(t){document.getElementById("message").textContent=t}
+function openNpc(n){
+ const d=npcText[n];document.getElementById("mtitle").textContent="🧑 "+n;
+ document.getElementById("mcontent").innerHTML=`<div class="advisor"><b>${d[0]}</b><div class="quote">“${d[1]}”</div><button style="margin-top:10px;width:100%" onclick="npcAction('${n}')">${d[2]}</button></div>`;
+ document.getElementById("modal").classList.add("show")
 }
-if(!s){
- const old=JSON.parse(localStorage.getItem("daiviet_chienky_10")||localStorage.getItem("daiviet_chienky_09")||null);
- s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 2.x."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 2.x bắt đầu."]};
+function npcAction(n){
+ if(n==="Lục Minh Triết"){state.food+=100;state.gold+=50;msg("📜 Lục Minh Triết ban kế hoạch: +100 🌾 và +50 💰.")}
+ if(n==="Thẩm Hàn Phong"){state.gems+=10;msg("⚔️ Thẩm Hàn Phong giới thiệu một cao thủ: +10 💎.")}
+ if(n==="Tiêu Mặc Bạch"){state.iron+=50;msg("🧠 Tiêu Mặc Bạch phân tích trận địa: +50 ⛏️.")}
+ update();closeModal()
 }
-s=normalizeState(s);s.mount=s.mount||{level:1,xp:0};s.wulin=s.wulin||{points:0,recruits:0,manuals:0};
-function save(){localStorage.setItem(KEY,JSON.stringify(s))}
-function log(v){s.logs.push("• "+v);if(s.logs.length>50)s.logs.shift();save();render()}
-function cap(v){return Math.min(1000+s.cityLevel*300,Math.max(0,Math.floor(v)))}
-function army(){return s.infantry+s.archers+s.cavalry+s.elephants}
-function equipBonus(){return (s.sword?35:0)+(s.bow?30:0)+(s.shield?10:0)+s.inventory.woodSword*45+s.inventory.warBow*40}
-function power(){let p=s.infantry*5+s.archers*8+s.cavalry*9+s.elephants*35+(s.barracks||0)*18+equipBonus();p*=1+s.heroLevel*.20;p*=1+(s.territory-1)*.03;p*=1+s.tech.army*.08;p*=1+s.legion.level*.04;p*=1+s.guild.level*.05;p*=1+s.generals.archer*.06;p*=1+s.generals.cavalry*.06;p*=1+s.mount.level*.06;if(s.seal)p*=1.12;if(s.heroSkill==="warcry")p*=1.2;return Math.floor(p)}
-function defense(){return 100+s.cityLevel*45+(s.barracks||0)*12+(s.shield?25:0)+s.inventory.ironArmor*35}
-function xpNeed(){return 100+s.level*100}
-function cityNeed(){return 400+s.cityLevel*300}
-function heroNeed(){return 120+s.heroLevel*100}
-
-function toast(msg){
- const e=document.getElementById("toast");if(!e)return;
- e.textContent=msg;e.classList.add("show");clearTimeout(window.__toast);
- window.__toast=setTimeout(()=>e.classList.remove("show"),1800);
-}
-
-function openNpc(id){
- const data={
-  advisor:["👑 Cố vấn Đại Việt","Chủ công, thành đang phát triển tốt. Tôi sẽ báo ngay khi có chiếu thư hoặc nguy cơ.","📜 Nhiệm vụ","quest"],
-  smith:["🔨 Thợ rèn","Lò rèn đã nóng! Ta có thể chế tạo trang bị cho quân đội.","🔨 Xưởng vũ khí","forge"],
-  merchant:["🛒 Thương nhân","Hàng hóa đã sẵn sàng. Có thể trao đổi tài nguyên tại chợ.","🛒 Chợ giao dịch","market"],
-  captain:["⚔️ Đại úy","Binh sĩ đã sẵn sàng. Hãy chọn đội hình và tuyển thêm quân.","⚔️ Doanh trại","military"],
-  farmer:["👨‍🌾 Nông dân","Ruộng lúa đang vào vụ. Chúng tôi có thể thu hoạch ngay.","🌾 Thu hoạch","farm"],
-  miner:["👷 Thợ mỏ","Mạch sắt mới đã được phát hiện dưới lòng đất.","⛏️ Khai thác","mine"],
-  scout:["🏹 Trinh sát","Biên giới hiện an toàn. Tôi sẽ cảnh báo khi phát hiện quân địch.","🗺️ Bản đồ","world"]
- };
- const d=data[id]||data.advisor;
- const t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent"),o=document.getElementById("overlay");
- t.textContent=d[0];
- c.innerHTML=`<div class="card"><h3>${d[0]}</h3><p>${d[1]}</p><span class="event-badge">NPC đang hoạt động</span><button type="button" style="width:100%;margin-top:8px" onclick="openSheet('${d[3]}')">${d[2]}</button></div>`;
- o.classList.add("show");
- toast("👤 "+d[0]);
-}
-
-function advisorState(){
- if(s.food<100)return {mood:"warn",msg:"Chúa công, kho lương đang cạn. Hãy cho người khai hoang và thu hoạch ngay.",action:"🌾 Nông Điện"};
- if(s.boss&&s.boss.hp<35)return {mood:"warn",msg:"Thám báo báo tin chiến trường nguy cấp. Hãy chuẩn bị quân lực.",action:"🐉 Chiến trường"};
- if((s.influence||0)<20)return {mood:"think",msg:"Biên cương cần thêm uy thế. Mở rộng lãnh thổ và hoàn thành chiến dịch sẽ giúp ích.",action:"🗺️ Bản đồ"};
- if(s.gold<200)return {mood:"think",msg:"Kho bạc còn thấp. Thương nhân có thể giúp cân đối tài nguyên.",action:"🛒 Chợ"};
- return {mood:"smile",msg:"Thành trì đang phát triển vững vàng. Hãy tiếp tục tích lũy lương thảo và chuẩn bị đại quân.",action:"📜 Chiếu thư"};
-}
-function openAdvisor(){
- const a=advisorState(),o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
- t.textContent="📜 Lục Minh Triết • Quân sư";
- c.innerHTML=`<div class="advisorPanel"><div class="advisorPortrait"><div class="advisorAvatar">🧑🏻‍🏫</div><div class="advisorInfo"><b>Lục Minh Triết</b><small>Quân sư cấp cao • Khoảng 40 tuổi</small><div class="advisorAdvice">“${a.msg}”</div></div></div><div class="statline"><span>🪶 Vai trò</span><b>Cố vấn chiến lược</b></div><div class="statline"><span>📐 Phong cách</span><b>2.5D Isometric</b></div><button type="button" style="width:100%;margin-top:8px" onclick="advisorAction('${a.action}')">${a.action}</button></div><div class="grid2"><button type="button" onclick="advisorMission()">📜 Giao nhiệm vụ</button><button type="button" onclick="advisorStrategy()">⚔️ Trận pháp</button></div>`;
- o.classList.add("show");render()
-}
-function advisorAction(a){
- closeSheet();
- if(a.includes("Nông"))openSheet("farm");
- else if(a.includes("chiến"))openSheet("world");
- else if(a.includes("Bản đồ"))openSheet("world");
- else if(a.includes("Chợ"))openSheet("market");
- else openSheet("quest");
-}
-function advisorMission(){
- s.fame+=10;gainXp(20);log("📜 Lục Minh Triết giao nhiệm vụ: củng cố cơ đồ và chuẩn bị xuất chinh.");
- openAdvisor();save()
-}
-function advisorStrategy(){
- s.influence=(s.influence||0)+5;gainXp(15);log("⚔️ Lục Minh Triết đề xuất trận pháp phòng thủ.");
- openAdvisor();save()
-}
-
-
-function openWulin(){
- const o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
- t.textContent="⚔️ Thẩm Hàn Phong • Minh Chủ Võ Lâm";
- c.innerHTML=`<div class="wulinPanel"><div class="wulinAura"></div><div class="wulinPortrait"><div class="wulinAvatar">🧑🏻‍🎤</div><div class="wulinInfo"><b>Thẩm Hàn Phong</b><small>Minh Chủ Võ Lâm • Cố vấn quân sự giang hồ • 32 tuổi</small><div class="wulinQuote">“Triều đình có đại quân, giang hồ có cao thủ. Biết dùng đúng người, thiên hạ sẽ nằm trong tay Chúa công.”</div></div></div></div>
- <div class="grid2">
-  <button type="button" onclick="recruitWulin('swordSaint');openWulin()">👤 Chiêu mộ Kiếm Khách</button>
-  <button type="button" onclick="wulinMission('bandits');openWulin()">🏹 Bình định sơn tặc</button>
-  <button type="button" onclick="wulinMission('raid');openWulin()">⚔️ Đột kích doanh trại</button>
-  <button type="button" onclick="wulinMission('scout');openWulin()">👁️ Do thám trận địa</button>
- </div>
- <div class="card" style="margin-top:7px"><h3>📖 Mật tịch võ công</h3><p>Điểm võ lâm: ${s.wulin.points} • Cao thủ: ${s.wulin.recruits}</p><div class="grid2"><button type="button" onclick="learnManual('qi');openWulin()">🌪️ Tâm Pháp</button><button type="button" onclick="learnManual('sword');openWulin()">🗡️ Kiếm Quyết</button></div></div>`;
- o.classList.add("show");render()
-}
-function recruitWulin(type){
- if(s.wulin.recruits>=3){log("⚔️ Đã chiêu mộ đủ cao thủ hiện tại.");return}
- const cost=150+s.wulin.recruits*100;
- if(s.gold<cost||s.influence<10){log("⚔️ Cần "+cost+"💰 và 10 uy thế để chiêu mộ.");return}
- s.gold-=cost;s.influence-=10;s.wulin.recruits++;s.wulin.points+=20;gainXp(35);
- log("⚔️ Một cao thủ giang hồ đã gia nhập.");save();render()
-}
-function wulinMission(type){
- const reward={bandits:[180,25],raid:[260,35],scout:[120,15]}[type];
- s.gold=cap(s.gold+reward[0]);s.influence=(s.influence||0)+reward[1];s.wulin.points+=20;gainXp(30);
- const name={bandits:"Bình định sơn tặc",raid:"Đột kích doanh trại",scout:"Do thám trận địa"}[type];
- log("⚔️ Hoàn thành: "+name+" • +"+reward[0]+"💰 +"+reward[1]+" uy thế.");
- save();render()
-}
-function learnManual(type){
- const cost=25+s.wulin.manuals*15;
- if(s.wulin.points<cost){log("📖 Chưa đủ điểm võ lâm.");return}
- s.wulin.points-=cost;s.wulin.manuals++;s.heroLevel=Math.max(s.heroLevel,1)+1;
- gainXp(45);log("📖 Học mật tịch thành công: "+(type==="qi"?"Tâm Pháp":"Kiếm Quyết")+" +1 cấp tướng.");save();render()
-}
-
-function openSheet(name){
- const o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
- if(!o||!t||!c)return;
- const views={
- hall:["🏯 Chính Điện",`<div class="card"><h3>🏯 Thành chính</h3><p>Cấp ${s.cityLevel} • Dân ${s.population} • Phòng thủ ${defense()}</p><div class="progress"><i id="cityBar"></i></div><button type="button" onclick="upgradeCity();openSheet('hall')">🏯 Nâng thành</button></div><div class="card" style="margin-top:7px"><h3>📜 Chiếu thư</h3><p>EXP thành: ${s.cityXp}/${cityNeed()}</p><button type="button" onclick="collectTax();openSheet('hall')">💰 Thu thuế</button></div>`],
- military:["⚔️ Khu Quân Sự",`<div class="grid2"><div class="card"><h3>⚔️ Doanh trại</h3><p>Cấp ${s.barracks}</p><button type="button" onclick="upgradeBarracks();openSheet('military')">Nâng cấp</button></div><div class="card"><h3>🛡️ Quân đoàn</h3><p>Cấp ${s.legion.level}</p><button type="button" onclick="upgradeLegion();openSheet('military')">Nâng quân đoàn</button></div></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="recruit('infantry')">🗡️ Bộ binh</button><button type="button" onclick="recruit('archers')">🏹 Cung binh</button><button type="button" onclick="recruit('cavalry')">🐎 Kỵ binh</button><button type="button" onclick="recruit('elephants')">🐘 Tượng binh</button></div>`],
- forge:["🔨 Xưởng Vũ Khí",`<div class="grid2"><button type="button" onclick="craftItem('sword')">🗡️ Rèn Kiếm</button><button type="button" onclick="craftItem('armor')">🛡️ Rèn Giáp</button><button type="button" onclick="craftItem('bow')">🏹 Rèn Cung</button><button type="button" onclick="buyItem('potion')">🧪 Bình hồi quân</button></div><div class="card" style="margin-top:7px">⛏️ Sắt ${s.iron} • 🪵 Gỗ ${s.wood}</div>`],
- farm:["🌾 Nông Điện",`<div class="card"><h3>🌾 Ruộng lúa</h3><p>Cấp ${s.farm}. Sản lượng tăng theo công trình và công nghệ.</p><button type="button" onclick="collect();openSheet('farm')">🌾 Thu hoạch ngay</button></div>`],
- mine:["⛏️ Mỏ Sắt",`<div class="card"><h3>⛏️ Mỏ quặng</h3><p>Lò rèn cấp ${s.forge}. Thu sắt để chế tạo.</p><button type="button" onclick="collect();openSheet('mine')">⛏️ Khai thác</button></div>`],
- market:["🛒 Chợ Thành",`<div class="grid2"><button type="button" onclick="sellMarket('food');openSheet('market')">Bán 100🌾</button><button type="button" onclick="sellMarket('wood');openSheet('market')">Bán 100🪵</button><button type="button" onclick="sellMarket('iron');openSheet('market')">Bán 100⛏️</button><button type="button" onclick="buyMarket('gold');openSheet('market')">Đổi vàng</button></div>`],
- inventory:["🎒 Kho Đồ",`<div class="grid2"><div class="card">🗡️ Kiếm rèn: ${s.inventory.woodSword}</div><div class="card">🛡️ Giáp rèn: ${s.inventory.ironArmor}</div><div class="card">🏹 Cung rèn: ${s.inventory.warBow}</div><div class="card">🧪 Bình: ${s.inventory.potion}</div></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="usePotion();openSheet('inventory')">🧪 Dùng bình</button><button type="button" onclick="sellLoot();openSheet('inventory')">💰 Bán chiến lợi phẩm</button></div>`],
- hero:["👑 Tướng Quân",`<div class="animStage idle" id="animStage"><div class="combatCape">🚩</div><div class="combatWeapon">🗡️</div><div class="combatUnit">🧍‍♂️</div><div class="combatDust">🌫️</div></div><div class="statline"><span>👑 Đại tướng</span><b>Cấp ${s.heroLevel}</b></div><div class="statline"><span>⚔️ Sức mạnh</span><b>${power()}</b></div><div class="combatControls"><button type="button" onclick="playAnim('idle')">🧍 Idle</button><button type="button" onclick="playAnim('walk')">🏃 Di chuyển</button><button type="button" onclick="playAnim('attack')">⚔️ Tấn công</button><button type="button" onclick="playAnim('skill')">🔥 Kỹ năng</button><button type="button" onclick="playAnim('hit')">💥 Bị thương</button><button type="button" onclick="playAnim('death')">☠️ Gục ngã</button></div><div class="grid2" style="margin-top:7px"><button type="button" onclick="trainHero();openSheet('hero')">📚 Huấn luyện</button><button type="button" onclick="upgradeMount();openSheet('hero')">🐎 Nâng chiến mã</button></div>`],
- quest:["📜 Nhiệm Vụ",`<div class="card"><h3>🌾 Thu hoạch</h3><p>${s.daily.harvest}/3</p><button type="button" onclick="claimDaily('harvest');openSheet('quest')">🎁 Nhận thưởng</button></div><div class="card" style="margin-top:7px"><h3>⚔️ Võ đài</h3><p>${s.daily.battles}/2</p><button type="button" onclick="claimDaily('battles');openSheet('quest')">🎁 Nhận thưởng</button></div>`],
- world:["🗺️ Bản Đồ Thế Giới",`<div class="grid2"><button type="button" onclick="campaignBattle();openSheet('world')">🏹 Chiến dịch</button><button type="button" onclick="arenaBattle();openSheet('world')">🏟️ Võ đài</button><button type="button" onclick="attackBoss();openSheet('world')">🐉 Đánh Boss</button><button type="button" onclick="claimLand('delta');openSheet('world')">🗺️ Mở lãnh thổ</button></div><div class="card" style="margin-top:7px">🏯 Lãnh thổ: ${s.territory} • 🏅 Uy thế: ${s.influence}</div>`],
- more:["☰ Quản Lý",`<div class="grid2"><button type="button" onclick="openSheet('season')">🏆 Mùa giải</button><button type="button" onclick="openSheet('tech')">🔬 Công nghệ</button><button type="button" onclick="openSheet('guild')">🏳️ Bang hội</button><button type="button" onclick="openSheet('generals')">👑 Tướng phụ</button><button type="button" onclick="saveGame();closeSheet()">💾 Lưu game</button><button type="button" onclick="closeSheet()">Đóng</button></div>`],
- season:["🏆 Mùa Giải",`<div class="card"><h3>🏆 Hạng ${s.season.rank}</h3><p>${s.season.points} điểm mùa</p><button type="button" onclick="claimSeason();openSheet('season')">🎁 Nhận thưởng</button></div>`],
- tech:["🔬 Công Nghệ",`<div class="grid2"><button type="button" onclick="researchTech('food');openSheet('tech')">🌾 Thâm canh</button><button type="button" onclick="researchTech('iron');openSheet('tech')">⛏️ Luyện sắt</button><button type="button" onclick="researchTech('army');openSheet('tech')">⚔️ Quân giới</button><button type="button" onclick="researchTech('economy');openSheet('tech')">💰 Thương mại</button></div>`],
- guild:["🏳️ Bang Hội",`<div class="card"><h3>Cấp ${s.guild.level}</h3><p>Thành viên ${s.guild.members} • EXP ${s.guild.xp}</p><button type="button" onclick="upgradeGuild16();openSheet('guild')">⬆️ Nâng bang</button></div>`],
- generals:["👑 Tướng Phụ",`<div class="grid2"><button type="button" onclick="recruitGeneral('archer');openSheet('generals')">🏹 Cung Thần</button><button type="button" onclick="recruitGeneral('cavalry');openSheet('generals')">🐎 Kỵ Thần</button><button type="button" onclick="recruitGeneral('guardian');openSheet('generals')">🛡️ Hộ Quốc</button></div>`]
- };
- const v=views[name]||views.more;t.textContent=v[0];c.innerHTML=v[1];o.classList.add("show");render()
-}
-function closeSheet(){document.getElementById("overlay").classList.remove("show")}
-
-
-
-function upgradeMount(){
- s.mount=s.mount||{level:1,xp:0};
- const cost=80+s.mount.level*60;
- if(s.gold<cost){log("🐎 Cần "+cost+"💰 để nâng chiến mã.");return}
- s.gold-=cost;s.mount.level++;s.mount.xp=0;gainXp(45);
- log("🐎 Chiến mã lên cấp "+s.mount.level+"!");render();save()
-}
-
-const TUTORIAL_KEY="dv_tutorial_20";
-const tutData=[
- {title:"Khởi Sự Cơ Đồ",text:"Chúa công! Trải qua loạn lạc, trăm họ lầm than, bờ cõi hoang phế. Nay thiên mệnh trao tay, giang sơn này đang chờ ngài đứng ra định quốc an dân!",button:"👆 Nhấp để bắt đầu"},
- {title:"Bước 1 • Phục hồi nông nghiệp",text:"Binh mã chưa động, lương thảo đã phải đi trước. Dân dĩ thực vi thiên. Xin Chúa công hạ lệnh khai hoang, xây dựng Nông Điền đầu tiên!",button:"🌾 Xây / thu hoạch Nông Điền"},
- {title:"Bước 2 • Củng cố Chính Điện",text:"Phủ Đường chính là long mạch của thành trì. Kính xin Chúa công nâng cấp Phủ Thành Chủ lên Cấp 2!",button:"🏯 Nâng cấp Chính Điện"},
- {title:"Bước 3 • Chiêu binh mãi mã",text:"Thảo khấu ngoài thành đang lăm le bờ cõi. Xin ngài dựng Binh Doanh và huấn luyện 100 Bộ Binh!",button:"⚔️ Xây doanh trại / tuyển quân"},
- {title:"Bước 4 • Xuất chinh",text:"Thế trận đã sẵn sàng! Xin Chúa công thân chinh cầm quân, dẹp tan lũ phỉ tặc để lập uy với thiên hạ!",button:"🏹 Xuất chinh trận đầu"}
-];
-function showTutorial(){
- const t=document.getElementById("tutorial");if(!t)return;
- t.classList.add("show");renderTutorial()
-}
-function renderTutorial(){
- const i=s.tutorial.step||0,d=tutData[Math.min(i,tutData.length-1)];
- document.getElementById("tutStep").textContent=i===0?"Mở đầu":"Bước "+i+"/4";
- document.getElementById("tutTitle").textContent=d.title;
- document.getElementById("tutText").textContent=d.text;
- const a=document.getElementById("tutAction");
- a.innerHTML='<button type="button" class="tutbtn" onclick="tutorialNext()">'+d.button+'</button>';
-}
-function tutorialNext(){
- const i=s.tutorial.step||0;
- if(i===0){s.tutorial.step=1;log("📜 Bắt đầu hành trình Khởi Sự Cơ Đồ.");}
- else if(i===1){s.farm=Math.max(1,s.farm);s.food=cap(s.food+300);s.tutorial.step=2;gainXp(40);log("🌾 Đã phục hồi Nông Điền đầu tiên.");}
- else if(i===2){if(s.cityLevel<2){s.cityLevel=2;s.cityXp=0;s.city2.level=Math.max(2,s.city2.level);gainXp(60);log("🏯 Chính Điện đã lên Cấp 2.");}s.tutorial.step=3;}
- else if(i===3){s.barracks=Math.max(1,s.barracks);s.infantry=Math.max(100,s.infantry);s.tutorial.step=4;gainXp(80);log("⚔️ Đã huấn luyện 100 Bộ Binh.");}
- else if(i===4){finishTutorial();return}
- save();render();renderTutorial()
-}
-function finishTutorial(){
- s.tutorial.done=true;
- s.tutorial.step=5;
- s.gold=cap(s.gold+1000);
- s.food=cap(s.food+1000);
- s.gems+=100;
- s.heroTier=Math.max(s.heroTier,3);
- s.heroLevel=Math.max(s.heroLevel,3);
- s.fame+=100;
- s.battleLog.push("🎆 Đại thắng trận đầu • Hoàn thành hướng dẫn tân thủ");
- log("🎆 Đại thắng! Nhận 1000💰 +1000🌾 +100💎 + Tướng tím.");
- document.getElementById("tutTitle").textContent="🎆 ĐẠI THẮNG!";
- document.getElementById("tutStep").textContent="Hoàn thành hướng dẫn";
- document.getElementById("tutText").textContent="Đại thắng trở về, oai danh chấn động bốn phương! Thần xin nguyện đem hết lòng phò tá!";
- document.getElementById("tutAction").innerHTML='<div class="tutreward"><div>💰 1000</div><div>🌾 1000</div><div>💎 100</div></div><button type="button" class="tutbtn" onclick="skipTutorial()">🏯 Bắt đầu trị vì</button>';
- save();render()
-}
-function skipTutorial(){
- s.tutorial.done=true;s.tutorial.step=5;save();
- document.getElementById("tutorial").classList.remove("show");render()
-}
-
-
-
-function isoAction(type){
- const map={hall:"hall",barracks:"military",forge:"forge",farm:"farm",mine:"mine",market:"market"};
- if(map[type])openSheet(map[type]);
-}
-
-function playAnim(state){
- const el=document.getElementById("animStage");if(!el)return;
- el.className="animStage "+state;
- if(state!=="idle"){
-   clearTimeout(window.__animTimer);
-   window.__animTimer=setTimeout(()=>{el.className="animStage idle"}, state==="death"?1400:1100);
- }
- if(state==="attack"){s.battleLog.push("⚔️ Tướng thực hiện đòn tấn công.");gainXp(3)}
- if(state==="skill"){s.battleLog.push("🔥 Tướng thi triển kỹ năng.");gainXp(5)}
- if(state==="hit")s.battleLog.push("💥 Tướng chịu sát thương.");
- if(state==="death")s.battleLog.push("☠️ Tướng gục ngã.");
- render();save();
-}
-
-function render(){
- const ids=["food","wood","iron","gold","gems","level","xp","cityLevel","population","defense","farm","forge","market","port","heroLevel","heroXp","fame","territory","influence","wins","infantry","archers","cavalry","elephants","city2Level","houses","happiness","arenaRating","arenaWins","arenaLosses","bossLevel","bossHp","bossDefeated","bossDamage","lootRare","lootGood","lootNormal","research","techFood","techIron","techArmy","techEconomy","campaignStage","campaignStars","commanderLevel","guildLevel","guildMembers","legionLevel","legionXp","seasonPoints","seasonRank","invSword","invArmor","invBow","invPotion"];
- ids.forEach(k=>{const e=document.getElementById(k);if(e&&s[k]!==undefined)e.textContent=Math.floor(s[k]||0)});
- const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
- set("storage",1000+s.cityLevel*300);set("defense",defense());set("power",power());
- set("heroBonus",(20+s.heroLevel*3)+"%");
- set("territory",s.territory||1);set("influence",s.influence||0);
- set("gems",s.gems||0);set("food",Math.floor(s.food));set("wood",Math.floor(s.wood));set("iron",Math.floor(s.iron));set("gold",Math.floor(s.gold));
- set("population",s.population||0);set("cityLevel",s.cityLevel||1);
- set("bossHp",Math.max(0,Math.round(s.boss.hp)));set("bossLevel",s.boss.level);set("bossDefeated",s.boss.defeated);set("bossDamage",Math.floor(s.boss.damage));
- set("lootRare",s.loot.rare);set("lootGood",s.loot.good);set("lootNormal",s.loot.normal);
- set("marketOrders",s.market2.orders);set("marketSales",s.market2.sales);
- set("formationText",{balanced:"Cân bằng",ranged:"Xa kích",charge:"Xung phong",defense:"Phòng thủ"}[s.formation]||"Cân bằng");
- set("city2Level",s.city2.level);set("houses",s.city2.houses);set("happiness",s.city2.happiness);
- set("arenaRating",s.arena.rating);set("arenaWins",s.arena.wins);set("arenaLosses",s.arena.losses);
- set("campaignStage",s.campaign.stage);set("campaignStars",s.campaign.stars);
- set("commanderLevel",s.commander.level);set("guildLevel",s.guild.level);set("guildMembers",s.guild.members);
- set("legionLevel",s.legion.level);set("legionXp",s.legion.xp);
- set("seasonPoints",s.season.points);set("seasonRank",s.season.rank);
- set("invSword",s.inventory.woodSword);set("invArmor",s.inventory.ironArmor);set("invBow",s.inventory.warBow);set("invPotion",s.inventory.potion);
- set("research",s.tech.food+s.tech.iron+s.tech.army+s.tech.economy);set("techFood",s.tech.food);set("techIron",s.tech.iron);set("techArmy",s.tech.army);set("techEconomy",s.tech.economy);
- const bars={
-   cityBar:Math.min(100,s.cityXp/cityNeed()*100),
-   heroBar:Math.min(100,s.heroXp/heroNeed()*100),
-   bossBar:Math.max(0,s.boss.hp),
-   happinessBar:Math.max(0,s.city2.happiness),
-   seasonBar:Math.min(100,(s.season.points%500)/500*100)
- };
- Object.entries(bars).forEach(([id,w])=>{const e=document.getElementById(id);if(e)e.style.width=w+"%"});
- set("heroRarity",s.heroTier>=4?"Sử thi":s.heroTier>=3?"Hiếm":s.heroTier>=2?"Tốt":"Thường");
- const logEl=document.getElementById("log");if(logEl)logEl.innerHTML=s.logs.slice(-8).reverse().map(x=>"<div>"+x+"</div>").join("");
- const bl=document.getElementById("battleLog");if(bl)bl.innerHTML=s.battleLog.slice(-8).reverse().map(x=>"<div>"+x+"</div>").join("");
-}
-
-function tab(n){
- document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
- document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
- const v=document.getElementById(n),t=document.getElementById("t-"+n);
- if(v)v.classList.add("on");
- if(t)t.classList.add("on");
-}
-function gainXp(n){s.xp+=n;s.fame+=Math.floor(n/30);while(s.xp>=xpNeed()){s.xp-=xpNeed();s.level++;s.gems++;log("⭐ Lên cấp "+s.level+"! +1💎.")}}
-function gainCity(n){s.cityXp+=n;while(s.cityXp>=cityNeed()){s.cityXp-=cityNeed();s.cityLevel++;s.population+=50;s.gems++;log("🏯 Thành lên cấp "+s.cityLevel+"!")}}
-function upgradeCity(){let c=250+s.cityLevel*180;if(s.wood<c||s.gold<100){log("Không đủ tài nguyên.");return}s.wood-=c;s.gold-=100;gainCity(450);log("🏯 Nâng cấp Thành chính.");render();save()}
-function upgradeBarracks(){let c=180+(s.barracks||0)*120;if(s.wood<c||s.iron<50){log("Không đủ tài nguyên.");return}s.wood-=c;s.iron-=50;s.barracks++;gainCity(100);log("⚔️ Doanh trại cấp "+s.barracks+".");render();save()}
-function build(t){let base={farm:120,forge:150,market:180,port:220}[t],c=Math.floor(base*(1+(s[t]||0)*.45));if(s.wood<c){log("Không đủ gỗ.");return}s.wood-=c;s[t]++;gainCity(80);log("🏗️ "+t+" lên cấp "+s[t]+".");render();save()}
-function trainHero(){if(s.gold<120){log("Không đủ vàng.");return}s.gold-=120;s.heroXp+=45;gainXp(10);while(s.heroXp>=heroNeed()){s.heroXp-=heroNeed();s.heroLevel++;s.fame+=15;log("👑 Tướng lên cấp "+s.heroLevel+"!")};render();save()}
-function promoteHero(){if(s.gems<3){log("Không đủ ngọc.");return}s.gems-=3;s.heroTier++;s.heroLevel+=1;s.fame+=30;log("⭐ Tướng thăng phẩm lên cấp hiếm "+s.heroTier+".");render();save()}
-function useSkill(k){if(s.heroSkill!=="none"){log("⚡ Đã có kỹ năng sẵn sàng.");return}s.heroSkill=k;log(k==="warcry"?"🔥 Hào khí: +20% sức mạnh trận kế tiếp.":"🛡️ Bày trận: giảm tổn thất trận kế tiếp.");render();save()}
-function recruit(t){let d={infantry:[10,100,0,40],archers:[5,80,0,60],cavalry:[5,120,0,100],elephants:[1,250,80,120]}[t];if(s.food<d[1]||s.iron<d[2]||s.gold<d[3]){log("Không đủ tài nguyên.");return}s.food-=d[1];s.iron-=d[2];s.gold-=d[3];s[t]+=d[0];gainXp(8);log("⚔️ Tuyển thêm quân.");render();save()}
-function buyItem(t){let ok=true;if(t==="sword"){if(s.sword||s.gold<140)ok=false;else{s.gold-=140;s.sword=true}}if(t==="shield"){if(s.shield||s.gold<110)ok=false;else{s.gold-=110;s.shield=true}}if(t==="bow"){if(s.bow||s.gold<150)ok=false;else{s.gold-=150;s.bow=true}}if(t==="seal"){if(s.seal||s.gems<3)ok=false;else{s.gems-=3;s.seal=true}}if(t==="potion"){if(s.gold<80)ok=false;else{s.gold-=80;s.potion++}}if(!ok){log("Không đủ tiền hoặc vật phẩm đã có.");return}gainXp(12);log("🏪 Mua vật phẩm thành công.");render();save()}
-function removeLoss(n){while(n>0&&army()>1){let ks=["infantry","archers","cavalry","elephants"].sort((a,b)=>s[b]-s[a]),k=ks.find(x=>s[x]>0);if(!k)break;s[k]--;n--}}
-function battle(hard=false){if(army()<5){log("Cần ít nhất 5 quân.");return}let enemy=hard?230:190,my=power(),chance=my/(my+enemy),win=Math.random()<Math.min(.92,Math.max(.12,chance));let loss=Math.max(1,Math.floor(army()*(win?.06:.15)));if(s.heroSkill==="formation")loss=Math.floor(loss*.8);removeLoss(Math.min(army()-1,loss));if(win){s.wins++;s.gold=cap(s.gold+150+(hard?60:0));s.iron=cap(s.iron+50);gainXp(100);gainCity(50);s.fame+=20;log("🏆 THẮNG trận! Mất "+loss+" quân.");}else{gainXp(30);log("⚠️ Thất bại! Mất "+loss+" quân.")}s.heroSkill="none";render();save()}
-function collect(){s.quests.harvest=(s.quests.harvest||0)+1;s.daily.harvest=(s.daily.harvest||0)+1;let f=(50+s.farm*25)*(1+s.tech.food*.10),w=30+s.farm*8,i=(15+s.forge*12)*(1+s.tech.iron*.10),g=(10+s.market*8+s.port*12)*(1+s.tech.economy*.10);s.food=cap(s.food+f);s.wood=cap(s.wood+w);s.iron=cap(s.iron+i);s.gold=cap(s.gold+g);gainCity(25);log("🌾 Thu hoạch +"+f+"🌾 +"+w+"🪵 +"+i+"⛏️ +"+g+"💰.");render();save()}
-function collectTax(){let g=35+s.cityLevel*25+s.market*15+s.port*20;s.gold=cap(s.gold+g);s.food=cap(s.food+15);gainCity(20);log("💰 Thu thuế +"+g+"💰.");render();save()}
-function dailyReward(){if(s.daily){log("🎁 Đã nhận thưởng hôm nay.");return}s.daily=true;s.gold=cap(s.gold+120);s.food=cap(s.food+50);gainXp(25);log("🎁 Nhận thưởng ngày.");render();save()}
-function renderAchievements(){let a=[["first","⚔️ Trận đầu tiên",s.wins>=1,80],["warrior","🏆 5 chiến thắng",s.wins>=5,150],["city","🏯 Thành cấp 2",s.cityLevel>=2,200],["rich","💰 1000 vàng",s.gold>=1000,200],["hero","👑 Tướng cấp 3",s.heroLevel>=3,250]];document.getElementById("achievements").innerHTML=a.map(x=>`<div class="item"><span>${x[2]?"✅":"🔒"} ${x[1]}</span><button type="button" ${x[2]&&!s.ach[x[0]]?"":"disabled"} onclick="claimAch('${x[0]}',${x[3]})">+${x[3]}💰</button></div>`).join("")}
-function claimAch(id,g){s.ach[id]=1;s.gold=cap(s.gold+g);gainXp(30);log("🏆 Nhận thưởng thành tựu.");render();save()}
-
-function claimLand(type){
- let cost={delta:[180,0,80],border:[180,120,0],port:[0,0,150]}[type];
- let wood=type==="port"?250:0;
- if(s.lands[type]){log("🗺️ Khu vực này đã thuộc Đại Việt.");return}
- if(s.food<cost[0]||s.iron<cost[1]||s.gold<cost[2]||s.wood<wood){log("Không đủ tài nguyên để mở rộng lãnh thổ.");return}
- s.food-=cost[0];s.iron-=cost[1];s.gold-=cost[2];s.wood-=wood;
- s.lands[type]=true;s.territory++;s.influence+=25;gainXp(50);gainCity(80);
- log("🗺️ Đại Việt mở rộng lãnh thổ!");render();save()
-}
-function diplomacyAction(type){
- const names={peace:"🕊️ Cầu hòa",trade:"💰 Giao thương",ally:"🤝 Kết minh",war:"🔥 Tuyên chiến"};
- if(type==="peace"){s.diplomacy="Hòa bình";s.war=Math.max(0,s.war-1);s.influence+=5}
- if(type==="trade"){if(s.gold<80){log("Không đủ 80💰.");return}s.gold-=80;s.diplomacy="Đang giao thương";s.influence+=15}
- if(type==="ally"){if(s.gems<1){log("Cần 1💎 để kết minh.");return}s.gems--;s.diplomacy="Đồng minh";s.influence+=30}
- if(type==="war"){s.diplomacy="Chiến tranh";s.war++;s.influence+=20}
- gainXp(20);log(names[type]+" • Quan hệ: "+s.diplomacy);render();save()
-}
-function randomEvent(){
- const events=[
-  ["🌾 Mùa màng bội thu","Nông dân thu được thêm lương thực.",()=>s.food=cap(s.food+180)],
-  ["🛡️ Quân dân một lòng","Quân đội nhận thêm sức mạnh.",()=>s.influence+=30],
-  ["💰 Thương nhân phương Nam","Thu được 180 vàng từ giao thương.",()=>s.gold=cap(s.gold+180)],
-  ["⛏️ Mỏ sắt mới","Phát hiện một mỏ sắt.",()=>s.iron=cap(s.iron+160)],
-  ["🔥 Biên ải báo động","Quân địch xuất hiện ở biên giới.",()=>s.war++],
-  ["👑 Chiếu chỉ của triều đình","Danh vọng tăng mạnh.",()=>{s.fame+=40;s.gems++}]
- ];
- const e=events[Math.floor(Math.random()*events.length)];
- e[2]();s.eventCount++;gainXp(35);
- document.getElementById("eventTitle").textContent=e[0];
- document.getElementById("eventText").textContent="Sự kiện đã được xử lý.";
- log("🎲 "+e[0]+" • "+e[1]);render();save()
-}
-
-
-function commanderNeed(){return 150+s.commander.level*120}
-function campaignBattle(){
- if(army()<8){log("🏹 Cần ít nhất 8 quân để tiến công chiến dịch.");return}
- const enemy=180+s.campaign.stage*35;
- let bonus=1+s.guild.level*.03+(s.commander.level*.04);
- let my=power()*bonus;
- let win=Math.random()<Math.min(.94,Math.max(.15,my/(my+enemy)));
- let loss=Math.max(1,Math.floor(army()*(win?.07:.16)));
- if(s.heroSkill==="formation")loss=Math.floor(loss*.8);
- removeLoss(Math.min(army()-1,loss));
- if(win){
-   s.campaign.stars++;
-   s.campaign.cleared.push(s.campaign.stage);
-   s.gold=cap(s.gold+180+s.campaign.stage*30);
-   s.food=cap(s.food+70);
-   s.iron=cap(s.iron+35);
-   s.campaign.stage++;
-   s.commander.xp+=70;
-   s.commander.prestige=(s.commander.prestige||0)+20;
-   gainXp(120);gainCity(70);
-   log("🏹 THẮNG ẢI "+(s.campaign.stage-1)+"! +1⭐ và phần thưởng.");
- }else{
-   s.commander.xp+=20;
-   gainXp(35);
-   log("⚠️ Chiến dịch thất bại. Mất "+loss+" quân.");
- }
- while(s.commander.xp>=commanderNeed()){
-   s.commander.xp-=commanderNeed();s.commander.level++;s.gems++;
-   log("👑 Đại tướng lên cấp "+s.commander.level+"! +1💎.");
- }
- s.heroSkill="none";render();save()
-}
-function trainCommander(){
- if(s.gold<180){log("Không đủ 180💰.");return}
- s.gold-=180;s.commander.xp+=55;s.commander.prestige=(s.commander.prestige||0)+5;
- gainXp(15);
- while(s.commander.xp>=commanderNeed()){
-   s.commander.xp-=commanderNeed();s.commander.level++;s.gems++;
-   log("👑 Đại tướng lên cấp "+s.commander.level+"! +1💎.");
- }
- log("📚 Huấn luyện đại tướng hoàn tất.");render();save()
-}
-function upgradeGuild(){
- if(s.gems<2){log("Cần 2💎 để nâng liên minh.");return}
- s.gems-=2;s.guild.level++;s.guild.prestige+=50;gainXp(40);
- log("🏳️ Liên minh lên cấp "+s.guild.level+".");render();save()
-}
-
-
-function upgradeCity2(){
- const cost=250+s.city2.level*120;
- if(s.wood<cost){log("Không đủ 🪵 để mở rộng đô thành.");return}
- s.wood-=cost;s.city2.level++;s.city2.happiness=Math.min(100,s.city2.happiness+5);gainCity(120);gainXp(35);
- log("🏙️ Đô thành lên cấp "+s.city2.level+".");render();save()
-}
-function buildHouse(){
- if(s.wood<70){log("Không đủ 70🪵.");return}
- s.wood-=70;s.city2.houses++;s.population+=5;s.city2.happiness=Math.max(0,s.city2.happiness-1);gainCity(20);
- log("🏠 Xây thêm nhà dân.");render();save()
-}
-function buildPark(){
- if(s.wood<100){log("Không đủ 100🪵.");return}
- s.wood-=100;s.city2.happiness=Math.min(100,s.city2.happiness+8);gainCity(25);
- log("🌳 Xây công viên.");render();save()
-}
-function festival(){
- if(s.gold<80){log("Không đủ 80💰.");return}
- s.gold-=80;s.city2.happiness=Math.min(100,s.city2.happiness+15);s.fame+=10;gainXp(25);
- log("🎉 Tổ chức lễ hội, dân chúng vui mừng.");render();save()
-}
-function researchTech(type){
- const current=s.tech[type]||0;
- if(current>=5){log("🔬 Công nghệ này đã đạt cấp tối đa.");return}
- const cost=120+current*100;
- if(s.iron<cost){log("Cần "+cost+"⛏️ để nghiên cứu.");return}
- s.iron-=cost;s.tech[type]=current+1;s.quests.research=(s.quests.research||0)+1;gainXp(35);
- log("🔬 Nghiên cứu thành công: "+type+" cấp "+s.tech[type]+".");render();save()
-}
-
-
-function arenaBattle(){
- if(army()<8){log("🏟️ Cần ít nhất 8 quân.");return}
- const enemy=power()*(0.75+Math.random()*0.55);
- const my=power()*(1+s.legion.level*.04);
- const win=Math.random()<Math.min(.9,Math.max(.1,my/(my+enemy)));
- const loss=Math.max(1,Math.floor(army()*(win?.05:.12)));
- removeLoss(Math.min(army()-1,loss));
- s.daily.battles=(s.daily.battles||0)+1;
- if(win){
-   s.arena.wins++;s.arena.rating+=20;s.gold=cap(s.gold+120);s.gems+=1;
-   s.season.points+=60;s.legion.xp+=45;gainXp(70);s.fame+=15;
-   s.battleLog.push("🏟️ Thắng võ đài • +60 điểm mùa");
-   log("🏟️ THẮNG võ đài! +20🏅 +120💰 +1💎.");
- }else{
-   s.arena.losses++;s.arena.rating=Math.max(0,s.arena.rating-15);
-   s.season.points=Math.max(0,s.season.points-10);s.legion.xp+=15;gainXp(25);
-   s.battleLog.push("🏟️ Thua võ đài • -10 điểm mùa");
-   log("🏟️ Thua võ đài. Mất "+loss+" quân.");
- }
- while(s.season.points>=s.season.rank*500){s.season.rank++;s.gems++;log("🏆 Tăng hạng mùa lên "+s.season.rank+"! +1💎.");}
- while(s.legion.xp>=100+s.legion.level*80){
-   s.legion.xp-=100+s.legion.level*80;s.legion.level++;s.gold=cap(s.gold+100);
-   log("🛡️ Quân đoàn lên cấp "+s.legion.level+"! +100💰.");
- }
- render();save()
-}
-function claimQuest(id){
- let ok=false;
- if(id===1 && s.arena.wins>0 && !s.quests.q1){s.quests.q1=1;s.gold=cap(s.gold+100);ok=true}
- if(id===2 && (s.quests.harvest||0)>=3 && !s.quests.q2){s.quests.q2=1;s.gold=cap(s.gold+150);ok=true}
- if(id===3 && (s.quests.research||0)>=1 && !s.quests.q3){s.quests.q3=1;s.gems+=2;ok=true}
- if(!ok){log("📜 Chưa đủ điều kiện hoặc đã nhận thưởng.");return}
- s.quests.claimed=(s.quests.claimed||0)+1;gainXp(30);log("🎁 Nhận thưởng nhiệm vụ ngày.");render();save()
-}
-function upgradeLegion(){
- if(s.gems<2){log("Cần 2💎 để nâng quân đoàn.");return}
- s.gems-=2;s.legion.level++;s.legion.xp=0;s.gold=cap(s.gold+100);gainXp(40);
- log("🛡️ Quân đoàn lên cấp "+s.legion.level+".");render();save()
-}
-
-
-function bossMaxHp(){return 100}
-function attackBoss(){
- s=normalizeState(s);
- if(army()<5){log("🐉 Cần ít nhất 5 quân.");return}
- let dmg=Math.max(5,power()/20+Math.random()*8);
- if(s.heroSkill==="warcry")dmg*=1.2;
- s.boss.damage+=dmg;
- s.boss.hp=Math.max(0,s.boss.hp-dmg);
- s.guild.xp+=Math.floor(dmg/2);
- if(s.boss.hp<=0){
-   defeatBoss();
- }else{
-   gainXp(20);
-   log("🐉 Gây "+Math.round(dmg)+" sát thương lên Boss. HP còn "+Math.round(s.boss.hp)+"%.");
- }
- s.heroSkill="none";render();save();
-}
-function bossSkill(){
- s=normalizeState(s);
- if(army()<8){log("⚡ Cần ít nhất 8 quân để dùng đại chiêu.");return}
- let dmg=Math.max(15,power()/11+Math.random()*12);
- s.boss.damage+=dmg;
- s.boss.hp=Math.max(0,s.boss.hp-dmg);
- s.guild.xp+=Math.floor(dmg);
- if(s.boss.hp<=0){
-   defeatBoss();
- }else{
-   gainXp(35);
-   log("⚡ Đại chiêu gây "+Math.round(dmg)+" sát thương! HP Boss còn "+Math.round(s.boss.hp)+"%.");
- }
- render();save();
-}
-function defeatBoss(){
- s=normalizeState(s);
- const r=Math.random();
- if(r<.18)s.loot.rare++;
- else if(r<.55)s.loot.good++;
- else s.loot.normal++;
- s.boss.defeated++;
- s.boss.level++;
- s.boss.hp=100;
- s.boss.damage=0;
- s.gold=cap(s.gold+220+s.boss.level*20);
- s.gems+=2;
- s.fame+=30;
- gainXp(150);
- gainCity(80);
- s.guild.xp+=80;
- log("🎉 Hạ Boss! Boss lên cấp "+s.boss.level+" • nhận chiến lợi phẩm +2💎.");
- render();save();
-}
-function upgradeGuild16(){
- if(s.gems<3){log("Cần 3💎.");return}
- s.gems-=3;
- s.guild.level++;
- s.guild.members+=5;
- s.guild.xp=0;
- s.fame+=20;
- gainXp(50);
- log("🏳️ Bang hội lên cấp "+s.guild.level+"! Thành viên +5.");
- render();save();
-}
-
-function sellMarket(type){
- const gain={food:35,wood:30,iron:45}[type];
- if(s[type]<100){log("🛒 Không đủ tài nguyên.");return}
- s[type]-=100;s.gold=cap(s.gold+gain);s.market2.orders++;s.market2.sales++;gainXp(8);
- log("🛒 Bán 100 "+type+" nhận +"+gain+"💰.");render();save()
-}
-function buyMarket(type){
- if(type==="gold"){
-   if(s.food<120){log("🛒 Cần 120🌾.");return}
-   s.food-=120;s.gold=cap(s.gold+100);s.market2.orders++;s.market2.sales++;gainXp(8);
-   log("🛒 Đổi 120🌾 lấy 100💰.");render();save()
- }
-}
-function setFormation(f){
- s.formation=f;
- log("⚔️ Đội hình: "+({balanced:"Cân bằng",ranged:"Xa kích",charge:"Xung phong",defense:"Phòng thủ"}[f]));
- render();save()
-}
-function recruitGeneral(type){
- if(s.generals[type]>0){log("👑 Tướng này đã có.");return}
- if(s.gems<2){log("👑 Cần 2💎.");return}
- s.gems-=2;s.generals[type]=1;gainXp(25);
- log("👑 Đã chiêu mộ tướng phụ.");render();save()
-}
-
-
-function claimSeason(){
- if(s.season.claimed){log("🏆 Đã nhận thưởng mùa.");return}
- const need=s.season.rank*500;
- if(s.season.points<need){log("🏆 Chưa đủ điểm mùa.");return}
- const reward=100+s.season.rank*50;
- s.gold=cap(s.gold+reward);s.gems++;s.season.claimed=true;gainXp(60);
- log("🎁 Nhận thưởng mùa: +"+reward+"💰 +1💎.");render();save()
-}
-function claimDaily(type){
- if(type==="harvest"){
-   if(s.daily.harvest<3||s.daily.harvestClaimed){log("📜 Chưa đủ điều kiện hoặc đã nhận.");return}
-   s.gold=cap(s.gold+120);s.daily.harvestClaimed=true;
- }else{
-   if(s.daily.battles<2||s.daily.battleClaimed){log("📜 Chưa đủ điều kiện hoặc đã nhận.");return}
-   s.gems+=2;s.daily.battleClaimed=true;
- }
- gainXp(30);log("🎁 Nhận thưởng nhiệm vụ ngày.");render();save()
-}
-
-
-function craftItem(type){
- const cost={sword:[120,80],armor:[150,100],bow:[130,90]}[type];
- if(s.iron<cost[0]||s.wood<cost[1]){log("🔨 Không đủ ⛏️/🪵 để chế tạo.");return}
- s.iron-=cost[0];s.wood-=cost[1];s.craft[type]++;gainXp(20);
- if(type==="sword")s.inventory.woodSword++;
- if(type==="armor")s.inventory.ironArmor++;
- if(type==="bow")s.inventory.warBow++;
- log("🔨 Chế tạo thành công.");render();save()
-}
-function usePotion(){
- if(s.inventory.potion<1){log("🧪 Không có bình hồi quân.");return}
- s.inventory.potion--;const add=Math.max(1,Math.floor(army()*.08));
- s.infantry+=add;gainXp(8);log("🧪 Hồi phục "+add+" quân.");render();save()
-}
-function sellLoot(){
- const total=s.loot.rare*180+s.loot.good*90+s.loot.normal*30;
- if(total<=0){log("🎒 Chưa có chiến lợi phẩm để bán.");return}
- s.gold=cap(s.gold+total);s.loot={rare:0,good:0,normal:0};gainXp(15);
- log("💰 Bán chiến lợi phẩm nhận +"+total+"💰.");render();save()
-}
-
-function saveGame(){save();log("💾 Đã lưu Bản 2.x.")}
-function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.x?")){localStorage.removeItem(KEY);location.reload()}}
-setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);
-render();
-setTimeout(function(){
- const tt=normalizeState(s);
- if(!tt.tutorial.done)showTutorial();
-},500);
-</script></body></html>
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function collect(){state.food+=120;state.wood+=60;msg("🌾 Thu hoạch thành công: +120 🌾, +60 🪵.");update()}
+document.querySelectorAll(".npc").forEach(el=>el.addEventListener("pointerup",()=>openNpc(el.dataset.npc)));
+document.querySelectorAll(".place").forEach(el=>el.addEventListener("pointerup",()=>{
+ const name=el.dataset.name,cost=Number(el.dataset.cost);
+ if(state.gold<cost){msg(`❌ Không đủ vàng để nâng cấp ${name}. Cần ${cost} 💰.`);return}
+ state.gold-=cost;msg(`🏗️ ${name} đã được nâng cấp! -${cost} 💰.`);update()
+}));
+update();
+</script>
+</body>
+</html>

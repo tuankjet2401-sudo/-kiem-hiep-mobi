@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.12.2">
-<meta name="game-protocol" content="4.12.2">
+<meta name="game-version" content="4.12.3">
+<meta name="game-protocol" content="4.12.3">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.2</title>
+<title>Kiếm Thế Mobi – Bản 4.12.3</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -84,10 +84,13 @@ const trees=[[250,300],[600,420],[940,250],[1260,500],[1760,350],[2180,300],[270
 let mobs=[];
 for(let i=0;i<14;i++){
   let mx=650+(i*223)%2050, my=600+(i*151)%1350;
-  if(Math.hypot(mx-P.x,my-P.y)<280 || Math.hypot(mx-town.x,my-town.y)<240){
+  if(Math.hypot(mx-P.x,my-P.y)<320 || Math.hypot(mx-town.x,my-town.y)<300){
     mx=420+(i*307)%2450; my=420+(i*197)%1650;
   }
-  mobs.push({x:mx,y:my,hp:65,alive:true,hit:0,e:elems[i%5]});
+  mobs.push({
+    x:mx,y:my,homeX:mx,homeY:my,
+    hp:65,alive:true,hit:0,e:elems[i%5],idx:i,aggro:false
+  });
 }
 const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao Bào","áo","Thường",0,5,"🥋"],["Giáp Tinh Anh","áo","Tốt",0,13,"🛡️"],["Đao Tinh Anh","vũ khí","Hiếm",18,0,"⚔️"],["Đao Sơn Tặc","vũ khí","Thường",9,0,"🗡️"],["Bình Hồi Khí","tiêu hao","Thường",0,0,"🧪"]];
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
@@ -127,14 +130,73 @@ x.fillStyle="#3f91bd";x.beginPath();x.moveTo(0,1650);x.bezierCurveTo(600,1500,10
 x.fillStyle="#b49a68";x.beginPath();x.moveTo(0,1850);x.quadraticCurveTo(800,1450,1600,1700);x.quadraticCurveTo(2400,1950,3200,1500);x.lineTo(3200,1760);x.quadraticCurveTo(2300,2150,1600,1950);x.quadraticCurveTo(700,1750,0,2100);x.closePath();x.fill();
 x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
 x.strokeStyle="#d9c56a88";x.lineWidth=4;x.setLineDash([16,12]);
-x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 24px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
-for(let m of mobs)if(m.alive){x.fillStyle=m.hit?"#ffbd59":"#814237";x.beginPath();x.arc(m.x,m.y,24,0,7);x.fill();x.fillStyle="#ffe58a";x.beginPath();x.arc(m.x-7,m.y-4,4,0,7);x.arc(m.x+7,m.y-4,4,0,7);x.fill();x.fillStyle="#fff";x.font="13px sans-serif";x.fillText(icons[m.e]+" Sơn Tặc",m.x,m.y-34);x.fillStyle="#d95c5c";x.fillRect(m.x-30,m.y+29,60*(m.hp/65),5)}
+x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 22px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
+for(let m of mobs)if(m.alive){
+  x.fillStyle=m.hit?"#ffbd59":"#814237";
+  x.beginPath();x.arc(m.x,m.y,24,0,7);x.fill();
+  x.fillStyle="#ffe58a";
+  x.beginPath();x.arc(m.x-7,m.y-4,4,0,7);x.arc(m.x+7,m.y-4,4,0,7);x.fill();
+
+  const labelY=m.y-38-(m.idx%3)*13;
+  x.font="12px sans-serif";
+  const label=icons[m.e]+" Sơn Tặc";
+  const tw=x.measureText(label).width+10;
+  x.fillStyle="#071016dd";
+  x.beginPath();
+  x.roundRect(m.x-tw/2,labelY-13,tw,17,7);
+  x.fill();
+  x.fillStyle="#fff";
+  x.fillText(label,m.x,labelY);
+
+  x.fillStyle="#18221a";
+  x.fillRect(m.x-30,m.y+29,60,5);
+  x.fillStyle="#d95c5c";
+  x.fillRect(m.x-30,m.y+29,60*(m.hp/65),5);
+}
 for(let d0 of drops){x.fillStyle="#e8c64f";x.beginPath();x.arc(d0.x,d0.y,21,0,7);x.fill();x.font="16px sans-serif";x.fillStyle="#111";x.fillText("🎁",d0.x,d0.y+6)}
 if(mounted){x.font="38px sans-serif";x.fillText("🐎",P.x,P.y+30)}x.strokeStyle="#ffffff55";x.lineWidth=2;
 x.beginPath();x.ellipse(P.x,P.y+55,38,10,0,0,Math.PI*2);x.stroke();
-drawPlayer(P.x,P.y);x.fillStyle="#fff";x.font="bold 14px sans-serif";x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-60);x.restore()}
+drawPlayer(P.x,P.y);x.fillStyle="#071016dd";
+x.beginPath();x.roundRect(P.x-52,P.y-82,104,20,8);x.fill();
+x.fillStyle="#fff";x.font="bold 13px sans-serif";
+x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-68);x.restore()}
 function update(dt){let dx=joy.x,dy=joy.y,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
-for(let m of mobs)if(m.alive){let q=Math.hypot(P.x-m.x,P.y-m.y);if(q<330){m.x+=(P.x-m.x)/Math.max(q,1)*(slow>0?18:45)*dt;m.y+=(P.y-m.y)/Math.max(q,1)*(slow>0?18:45)*dt}m.hit=Math.max(0,m.hit-dt)}
+let living=mobs.filter(m=>m.alive);
+let aggroList=living.map(m=>({m,d:Math.hypot(P.x-m.x,P.y-m.y)}))
+  .filter(o=>o.d<360)
+  .sort((a,b)=>a.d-b.d)
+  .slice(0,3);
+
+for(const m of living){
+  const q=Math.hypot(P.x-m.x,P.y-m.y);
+  const aggro=aggroList.some(o=>o.m===m);
+  m.aggro=aggro;
+  if(aggro && q>88){
+    const ms=slow>0?18:42;
+    m.x+=(P.x-m.x)/Math.max(q,1)*ms*dt;
+    m.y+=(P.y-m.y)/Math.max(q,1)*ms*dt;
+  }else if(!aggro){
+    const hd=Math.hypot(m.homeX-m.x,m.homeY-m.y);
+    if(hd>45){
+      m.x+=(m.homeX-m.x)/Math.max(hd,1)*16*dt;
+      m.y+=(m.homeY-m.y)/Math.max(hd,1)*16*dt;
+    }
+  }
+  m.hit=Math.max(0,m.hit-dt);
+}
+
+for(let i=0;i<living.length;i++){
+  for(let j=i+1;j<living.length;j++){
+    const a=living[i],b=living[j];
+    let dx=b.x-a.x,dy=b.y-a.y,dd=Math.hypot(dx,dy);
+    if(dd<58){
+      if(dd<1){dx=1;dy=0;dd=1}
+      const push=(58-dd)/dd*0.5;
+      a.x-=dx*push;b.x+=dx*push;
+      a.y-=dy*push;b.y+=dy*push;
+    }
+  }
+}
 cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
 let vw=W/Z,vh=H/Z;cam.x+=(Math.max(vw/2,Math.min(world.w-vw/2,P.x))-cam.x)*Math.min(1,dt*5);cam.y+=(Math.max(vh/2,Math.min(world.h-vh/2,P.y))-cam.y)*Math.min(1,dt*5);
 for(let i=drops.length-1;i>=0;i--)if(Math.hypot(P.x-drops[i].x,P.y-drops[i].y)<75){gold+=drops[i].g;toast("🪙 +"+drops[i].g+" vàng");drops.splice(i,1)}hud()}
@@ -146,7 +208,7 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.2";
+classes();sel();bagUI();hud();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.3";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

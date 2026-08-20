@@ -3,349 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Đại Việt Chiến Ký">
-<meta name="theme-color" content="#17110c">
-<title>Đại Việt Chiến Ký — RPG 2.5D v2</title>
+<title>Giang Há» LÃ£ng KhÃ¡ch</title>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17110c;font-family:system-ui,-apple-system,sans-serif;touch-action:none}
-canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
-#top{position:fixed;z-index:5;top:calc(8px + env(safe-area-inset-top));left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none}
-.panel{background:#24170fe8;color:#ffe7ad;border:2px solid #b88943;border-radius:13px;box-shadow:0 5px 18px #0008;padding:7px 10px}
-#stats{min-width:184px;font-size:12px}
-#stats b{font-size:14px}
-.bar{height:8px;width:132px;background:#301b1b;border:1px solid #000;border-radius:8px;overflow:hidden;margin:2px 0 3px}
-#hp{height:100%;background:#d43d36}#mp{height:100%;background:#367fcb}
-#buttons{display:flex;gap:5px;pointer-events:auto}
-.ui{width:43px;height:43px;font-size:19px;border:2px solid #b88943;border-radius:10px;background:#352114e8;color:#ffe7ad}
-#zone{position:fixed;z-index:5;top:calc(9px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:#24170fe8;color:#ffe7ad;border:1.5px solid #b88943;border-radius:20px;padding:6px 13px;font-size:12px;pointer-events:none}
-#joystick{position:fixed;z-index:7;left:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:126px;height:126px;border-radius:50%;background:#21170dcc;border:2px solid #b8894388}
-#knob{position:absolute;left:34px;top:34px;width:54px;height:54px;border-radius:50%;background:#b8894399;border:2px solid #ffe6a2}
-#combat{position:fixed;z-index:7;right:14px;bottom:calc(18px + env(safe-area-inset-bottom));display:flex;gap:7px;align-items:end}
-.action{width:54px;height:54px;border-radius:50%;border:2px solid #b88943;background:#352114e8;color:#ffe7ad;font-size:20px}
-#attack{width:70px;height:70px;background:#852c20e8;font-size:27px}
-#quest{position:fixed;z-index:6;left:50%;bottom:calc(151px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:82vw;text-align:center;background:#21160de6;color:#ffe5a4;border:1px solid #9c763d;border-radius:18px;padding:7px 12px;font-size:11px;pointer-events:none}
-.modal{display:none;position:fixed;z-index:20;inset:0;background:#0009;align-items:center;justify-content:center}
-.modal.show{display:flex}
-.box{width:min(92vw,430px);max-height:78vh;overflow:auto;background:#28190f;color:#ffe7ad;border:2px solid #b88943;border-radius:16px;padding:15px}
-.box h2{text-align:center;margin:0 0 12px}.close{float:right;background:#6d281e;color:white;border:0;border-radius:7px;padding:5px 9px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.slot{aspect-ratio:1;background:#170e09;border:1px solid #76582f;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:23px}.slot small{font-size:9px;text-align:center}
-#toast{display:none;position:fixed;z-index:30;left:50%;top:43%;transform:translate(-50%,-50%);background:#27170eea;color:#ffe8a9;border:2px solid #c4964b;border-radius:12px;padding:13px 18px;text-align:center;box-shadow:0 8px 25px #0008}
-button:active{transform:scale(.94)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#071218;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff}
+#app{position:fixed;inset:0;overflow:hidden;background:#102b2d}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.ui{position:absolute;inset:0;pointer-events:none}
+button{font:inherit;color:#fff}
+.top{position:absolute;left:10px;right:10px;top:max(8px,env(safe-area-inset-top));display:flex;justify-content:space-between}
+.card{background:linear-gradient(180deg,#10202be8,#071018e8);border:1px solid #d8b45b88;border-radius:15px;box-shadow:0 6px 20px #0008}
+.profile{width:250px;padding:7px 10px 9px 62px;position:relative}
+.avatar{position:absolute;left:7px;top:7px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 45% 35%,#f2d0ad 0 17%,#502f3e 18% 46%,#17202c 47%);border:2px solid #7ed0cc}
+.pname{font-weight:900;font-size:14px}.power{color:#ffb94f;font-weight:900;font-size:14px}
+.currency{display:flex;gap:9px;margin-top:4px;font-size:11px;color:#e8dcae}
+.currency b{color:#fff}
+.stage{position:absolute;top:76px;left:50%;transform:translateX(-50%);width:min(410px,58vw);text-align:center}
+.stage h2{margin:0;font-size:16px;text-shadow:0 2px 3px #000;font-weight:900}.road{height:10px;margin:8px auto;background:#f4bd45;border-radius:10px;box-shadow:0 0 12px #ffc34c99}.nodes{display:flex;justify-content:space-between;margin-top:-19px}.node{width:18px;height:18px;border-radius:50%;background:#ffe18a;border:3px solid #7d531a;box-shadow:0 0 10px #ffda55}
+.side{position:absolute;top:150px;display:flex;flex-direction:column;gap:8px}.left{left:8px}.right{right:8px}
+.icon{pointer-events:auto;width:64px;height:64px;border:0;border-radius:15px;background:linear-gradient(180deg,#17313b,#0a151c);border:1px solid #d8b45b77;box-shadow:0 5px 12px #0009;font-size:25px;text-shadow:0 2px 2px #000;position:relative}.icon span{display:block;font-size:10px;font-weight:900;color:#fff}.badge{position:absolute;right:-2px;top:-4px;background:#d92323;border-radius:50%;font-size:10px;padding:3px 5px}
+.notice{position:absolute;left:10px;top:76px;width:145px;padding:8px;background:#101b1fe6;border:1px solid #e4c46b66;border-radius:10px;font-size:10px;text-align:center}.notice strong{font-size:20px;color:#ffd75c;display:block}
+.bottom{position:absolute;left:0;right:0;bottom:0;height:38%;min-height:255px;background:linear-gradient(180deg,#08151be8,#061018f7 15%,#0d2229 100%);border-top:2px solid #9e8145;pointer-events:auto}
+.hpRow{height:70px;display:flex;align-items:center;padding:8px 16px;gap:10px}.level{font-size:22px;font-weight:900;color:#fff}.orb{width:70px;height:70px;margin-top:-28px;border-radius:50%;background:radial-gradient(circle at 65% 35%,#ff927d,#b32d4d 45%,#241a27 47%);border:3px solid #56697b;box-shadow:inset 0 0 12px #000,0 5px 12px #000}.bars{flex:1}.bar{height:11px;background:#15222b;border-radius:9px;overflow:hidden;margin:4px 0;border:1px solid #000}.bar i{display:block;height:100%;background:linear-gradient(90deg,#13a98f,#77d95a);width:85%}.bar.mana i{background:linear-gradient(90deg,#2479db,#68d9ff);width:70%}.numbers{text-align:center;font-size:11px;color:#e6edf2}
+.inventory{height:calc(100% - 70px - 64px);padding:3px 10px 6px;display:grid;grid-template-columns:1.05fr 1fr 1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:5px}
+.item{border-radius:10px;border:2px solid #a9e2e9;background:linear-gradient(135deg,#d6f7ff22,#58cde022);display:flex;align-items:center;justify-content:center;position:relative;font-size:33px;box-shadow:inset 0 0 15px #b6ffff22}.item.purple{border-color:#a76ed5;background:#5b237722}.item.big{grid-row:span 2;font-size:55px}.lv{position:absolute;right:4px;bottom:3px;font-size:9px;font-weight:900;color:#fff;text-shadow:0 1px 2px #000}
+.nav{height:64px;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #d6b45a55}.nav button{pointer-events:auto;background:none;border:0;text-align:center;font-size:26px}.nav small{display:block;font-size:10px;font-weight:900}.fight{width:76px;height:76px;border-radius:50%;margin-top:-30px;background:radial-gradient(circle,#f8d06b,#73521f);border:4px solid #d8bd70;box-shadow:0 0 20px #ffd55a66}
+#start{position:absolute;inset:0;background:linear-gradient(#06101699,#061016ee);display:flex;align-items:center;justify-content:center;z-index:10;pointer-events:auto}
+.startbox{width:min(380px,88vw);padding:25px;text-align:center;border:1px solid #dcb75d88;border-radius:22px;background:#08131ddd;box-shadow:0 20px 60px #000c}.logo{font-size:38px;font-weight:1000;color:#e5bd62;text-shadow:0 4px 0 #493616}.startbox p{color:#9fb0ba;font-size:13px}.startBtn{width:100%;padding:14px;border:0;border-radius:13px;background:linear-gradient(135deg,#e7c15c,#986c25);color:#18130a;font-weight:1000;font-size:17px}
+#toast{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);background:#050b10ee;border:1px solid #ffd76b77;padding:9px 15px;border-radius:18px;opacity:0;transition:.2s;font-size:13px}
 </style>
 </head>
 <body>
-<canvas id="game"></canvas>
-<div id="zone">🏯 Thành Đại Việt</div>
-<div id="top">
-  <div id="stats" class="panel">
-    <b>⚔️ ĐẠI VIỆT CHIẾN KÝ</b><br>
-    Lv <span id="lv">1</span> · ❤️ <span id="hpText">120/120</span>
-    <div class="bar"><div id="hp"></div></div>
-    🔵 <span id="mpText">80/80</span>
-    <div class="bar"><div id="mp"></div></div>
-    💰 <span id="gold">900</span> · ⭐ <span id="exp">0</span>
-  </div>
-  <div id="buttons">
-    <button class="ui" id="bag">🎒</button>
-    <button class="ui" id="hero">🧑</button>
-    <button class="ui" id="save">💾</button>
-  </div>
+<div id="app"><canvas id="game"></canvas>
+<div class="ui">
+ <div class="top">
+  <div class="card profile"><div class="avatar"></div><div class="pname">Giang Há» LÃ£ng KhÃ¡ch</div><div class="power">â 9.41Tr</div><div class="currency">ðª <b>120.49 Váº¡n</b>ãð <b>4.018</b></div></div>
+  <button class="icon" id="map">ðºï¸<span>Báº£n Äá»</span></button>
+ </div>
+ <div class="notice"><strong>18+</strong>ChÆ¡i quÃ¡ 180 phÃºt má»t ngÃ y cÃ³ thá» áº£nh hÆ°á»ng xáº¥u Äáº¿n sá»©c khá»e</div>
+ <div class="stage"><h2>Rá»«ng TrÃºc BÃ³ng Tá»i 31-6</h2><div class="road"></div><div class="nodes"><i class="node"></i><i class="node"></i><i class="node"></i><i class="node"></i><i class="node"></i><i class="node"></i></div></div>
+ <div class="side left">
+  <button class="icon" onclick="toast('Quáº§n Hiá»p Tá»¥')">ð¦<span>Quáº§n Hiá»p Tá»¥</span><b class="badge">!</b></button>
+  <button class="icon" onclick="toast('TÃ­ch Náº¡p')">ð<span>TÃ­ch Náº¡p</span></button>
+  <button class="icon" onclick="toast('Nhiá»m Vá»¥')">ð<span>Nhiá»m Vá»¥</span><b class="badge">!</b></button>
+  <button class="icon" onclick="toast('Háº£o Há»¯u')">ð¥<span>Háº£o Há»¯u</span></button>
+ </div>
+ <div class="side right">
+  <button class="icon" onclick="toast('Tiá»m')">ð<span>Tiá»m</span><b class="badge">!</b></button>
+  <button class="icon" onclick="toast('GÃ³i Náº¡p Äáº§u')">ð<span>GÃ³i Náº¡p Äáº§u</span></button>
+  <button class="icon" onclick="toast('PhÃºc Lá»£i')">ð<span>PhÃºc Lá»£i</span><b class="badge">!</b></button>
+  <button class="icon" onclick="toast('Sá»± Kiá»n')">ð<span>Sá»± Kiá»n</span></button>
+  <button class="icon" onclick="toast('Náº¡p NgÃ y')">ð°<span>Náº¡p NgÃ y</span></button>
+  <button class="icon" onclick="toast('VÃ²ng Quay')">ð¡<span>VÃ²ng Quay</span></button>
+  <button class="icon" onclick="toast('Pet')">ð²<span>Pet</span></button>
+ </div>
+ <div id="toast"></div>
+ <div class="bottom">
+   <div class="hpRow"><div class="orb"></div><div class="level">201</div><div class="bars"><div class="bar"><i></i></div><div class="bar mana"><i></i></div><div class="numbers">11.290 / 13.325ããNá»i lá»±c 72%</div></div></div>
+   <div class="inventory">
+    <div class="item big">ð¡ï¸<span class="lv">Cáº¥p 199</span></div>
+    <div class="item">ð¥<span class="lv">Cáº¥p 190</span></div><div class="item">ð©<span class="lv">Cáº¥p 201</span></div><div class="item">ð¡ï¸<span class="lv">Cáº¥p 197</span></div><div class="item purple">ð§¥<span class="lv">Báº­c 2 Cáº¥p 40</span></div>
+    <div class="item">ð<span class="lv">Cáº¥p 198</span></div><div class="item">ð§¤<span class="lv">Cáº¥p 197</span></div><div class="item">ð¥¾<span class="lv">Cáº¥p 200</span></div><div class="item">ð<span class="lv">Cáº¥p 199</span></div>
+   </div>
+   <div class="nav">
+    <button onclick="toast('Táº§ng 1')">ð¯<small>Táº§ng 1</small></button>
+    <button onclick="toast('CÃ´ng PhÃ¡p')">ð<small>CÃ´ng PhÃ¡p</small></button>
+    <button class="fight" onclick="toast('âï¸ Báº¯t Äáº§u chiáº¿n Äáº¥u!')">âï¸<small>Chiáº¿n Äáº¥u</small></button>
+    <button onclick="toast('XÃ´ng PhÃ¡')">ð¡ï¸<small>XÃ´ng PhÃ¡</small></button>
+    <button onclick="toast('Tháº§n Binh')">ð¿<small>Tháº§n Binh</small></button>
+   </div>
+ </div>
 </div>
-<div id="joystick"><div id="knob"></div></div>
-<div id="combat">
-  <button class="action" id="fire">🔥</button>
-  <button class="action" id="light">⚡</button>
-  <button class="action" id="attack">⚔️</button>
+<div id="start"><div class="startbox"><div class="logo">GIANG Há»</div><h2>LÃNG KHÃCH</h2><p>Game web vÃµ hiá»p 2D phong cÃ¡ch chibi, giao diá»n mobile, báº£n Äá»c láº­p â khÃ´ng dÃ¹ng key cá»§a game khÃ¡c.</p><button class="startBtn" id="play">VÃO GIANG Há»</button></div></div>
 </div>
-<div id="quest">Nhiệm vụ: Hạ 3 Sơn Tặc · Tiến độ <span id="q">0/3</span></div>
-
-<div class="modal" id="invModal"><div class="box"><button class="close" id="closeInv">✕</button><h2>🎒 Túi đồ 24 ô</h2><div class="grid" id="inventory"></div></div></div>
-<div class="modal" id="heroModal"><div class="box"><button class="close" id="closeHero">✕</button><h2>🧑 Nhân vật</h2><p>⚔️ Công: <b id="statAtk">18</b></p><p>🛡️ Thủ: <b id="statDef">7</b></p><p>❤️ Sinh lực: <b id="statHp">120</b></p><p>🔵 Nội lực: <b id="statMp">80</b></p><p>⭐ Cấp: <b id="statLv">1</b></p><p>🗺️ Khu vực: <b id="statZone">Thành Đại Việt</b></p></div></div>
-<div id="toast"></div>
-
 <script>
-const canvas=document.getElementById("game"),ctx=canvas.getContext("2d");
-let W=innerWidth,H=innerHeight,DPR=Math.min(devicePixelRatio||1,2);
-function resize(){W=innerWidth;H=innerHeight;canvas.width=W*DPR;canvas.height=H*DPR;canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(DPR,0,0,DPR,0,0)}
-addEventListener("resize",resize);resize();
-
-const MAP={w:70,h:70,tile:42};
-const player={x:35,y:36,z:0,level:1,hp:120,maxHp:120,mp:80,maxMp:80,atk:18,def:7,exp:0,gold:900};
-const _startIso=iso; const _initial=(()=>{const q=iso(player.x,player.y);return {x:q.x,y:q.y}})(); const camera={x:_initial.x,y:_initial.y};
-let questKills=0;
-let particles=[];
-let floating=[];
-let mobs=[],npcs=[],items=[];
-
-const names=["Sơn Tặc","Đạo Tặc","Sói Hoang","Hắc Y Nhân","Thổ Phỉ"];
-for(let i=0;i<28;i++){
-  let x=6+Math.random()*58,y=8+Math.random()*57;
-  if(Math.abs(x-35)<10&&Math.abs(y-36)<10){x+=12}
-  mobs.push({x,y,hp:55+Math.floor(Math.random()*30),maxHp:55+Math.floor(Math.random()*30),spd:.018+Math.random()*.012,dmg:5+Math.floor(Math.random()*5),name:names[i%names.length],alive:true,cd:0,hit:0});
+const c=document.getElementById('game'),x=c.getContext('2d');let W,H,d=1,t=0;
+function resize(){d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0)}addEventListener('resize',resize);resize();
+function draw(t){x.clearRect(0,0,W,H);
+ let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#1b5148');g.addColorStop(.45,'#315f52');g.addColorStop(1,'#11282a');x.fillStyle=g;x.fillRect(0,0,W,H);
+ // bamboo forest
+ for(let i=0;i<14;i++){let px=(i*103+(t*.008)%103)-30, hh=260+(i%5)*75;x.fillStyle=i%2?'#0e3730':'#17473a';x.fillRect(px,-20,32,H*.64);x.fillStyle='#0a2b25';x.beginPath();x.ellipse(px+70,120+i*18,130,55,0,0,7);x.fill()}
+ // temple
+ x.fillStyle='#172b2d';x.fillRect(W*.23,H*.24,W*.54,H*.34);x.fillStyle='#263c3a';x.beginPath();x.moveTo(W*.17,H*.25);x.lineTo(W*.5,H*.11);x.lineTo(W*.83,H*.25);x.closePath();x.fill();x.fillStyle='#9b7141';x.fillRect(W*.45,H*.3,W*.1,H*.28);
+ x.fillStyle='#102025';x.fillRect(W*.46,H*.37,W*.08,H*.21);
+ // ground
+ x.fillStyle='#152528';x.fillRect(0,H*.58,W,H*.12);x.fillStyle='#3e5139';x.fillRect(0,H*.56,W,H*.035);
+ // bird
+ x.fillStyle='#6b4b6d';x.beginPath();x.ellipse(W*.38,H*.33,52,25,-.25,0,7);x.fill();x.fillStyle='#e3c46b';x.beginPath();x.arc(W*.42,H*.31,12,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(W*.425,H*.308,3,0,7);x.fill();
+ // fighters
+ const fy=H*.57; // left
+ x.fillStyle='#20293b';x.beginPath();x.ellipse(W*.34,fy,42,58,0,0,7);x.fill();x.fillStyle='#9bb4c9';x.beginPath();x.arc(W*.34,fy-52,27,0,7);x.fill();x.fillStyle='#29354b';x.beginPath();x.moveTo(W*.30,fy-78);x.lineTo(W*.38,fy-70);x.lineTo(W*.42,fy-50);x.lineTo(W*.34,fy-42);x.lineTo(W*.28,fy-55);x.closePath();x.fill();
+ // right chibi hero
+ x.fillStyle='#5a2748';x.beginPath();x.ellipse(W*.62,fy,55,72,-.15,0,7);x.fill();x.fillStyle='#f2c9b0';x.beginPath();x.arc(W*.62,fy-60,27,0,7);x.fill();x.fillStyle='#512c46';x.beginPath();x.arc(W*.62,fy-70,30,Math.PI,Math.PI*2);x.fill();x.fillStyle='#fff0d1';x.beginPath();x.moveTo(W*.58,fy-68);x.lineTo(W*.63,fy-78);x.lineTo(W*.66,fy-51);x.lineTo(W*.61,fy-45);x.closePath();x.fill();x.fillStyle='#d39c39';x.beginPath();x.arc(W*.64,fy-84,8,0,7);x.fill();
+ // aura
+ x.strokeStyle='#ff9b45aa';x.lineWidth=7;x.beginPath();x.arc(W*.62,fy,76+Math.sin(t/200)*5,3.5,5.6);x.stroke();
 }
-npcs=[
- {x:32,y:31,name:"Lão Trương",icon:"🧓",color:"#f0c46c"},
- {x:39,y:31,name:"Chưởng Quầy",icon:"👨",color:"#f0c46c"},
- {x:35,y:40,name:"Thầy Thuốc",icon:"🧙",color:"#79d2ff"},
- {x:23,y:50,name:"Võ Sư",icon:"🥋",color:"#ff9a62"},
- {x:11,y:54,name:"Tiều Phu",icon:"🧔",color:"#d2a76d"}
-];
-const gates=[
- {x:35,y:8,name:"Bờ Sông",tx:35,ty:4},
- {x:8,y:36,name:"Rừng Trúc",tx:4,ty:54},
- {x:62,y:36,name:"Đồng Cỏ",tx:66,ty:36}
-];
-const inv=new Array(24).fill(null);
-inv[0]={icon:"🗡️",name:"Kiếm Tân Binh",type:"atk",value:5};
-inv[1]={icon:"🥋",name:"Áo Võ",type:"def",value:3};
-inv[2]={icon:"🧪",name:"Bình Hồi Khí",type:"mp"};
-
-const keys={};
-addEventListener("keydown",e=>keys[e.key.toLowerCase()]=true);
-addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);
-
-let joy={active:false,id:null,x:0,y:0};
-const joyEl=document.getElementById("joystick"),knob=document.getElementById("knob");
-function joyMove(t){
- const r=joyEl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
- let dx=t.clientX-cx,dy=t.clientY-cy,max=42,d=Math.hypot(dx,dy)||1;
- if(d>max){dx=dx/d*max;dy=dy/d*max}
- joy.x=dx/max;joy.y=dy/max;
- knob.style.left=34+dx+"px";knob.style.top=34+dy+"px";
-}
-joyEl.addEventListener("touchstart",e=>{e.preventDefault();let t=e.changedTouches[0];joy.active=true;joy.id=t.identifier;joyMove(t)},{passive:false});
-joyEl.addEventListener("touchmove",e=>{e.preventDefault();for(const t of e.changedTouches)if(t.identifier===joy.id)joyMove(t)},{passive:false});
-joyEl.addEventListener("touchend",e=>{for(const t of e.changedTouches)if(t.identifier===joy.id){joy.active=false;joy.x=joy.y=0;knob.style.left="34px";knob.style.top="34px"}});
-
-function iso(wx,wy){
-  return {x:(wx-wy)*MAP.tile/Math.sqrt(2),y:(wx+wy)*MAP.tile/2};
-}
-function screen(wx,wy){
- const p=iso(wx,wy);
- return {x:p.x-camera.x+W/2,y:p.y-camera.y+H/2};
-}
-function worldSize(){const a=iso(MAP.w,0),b=iso(0,MAP.h);return {w:Math.abs(a.x)+Math.abs(b.x),h:MAP.h*MAP.tile}}
-function toast(t){const e=document.getElementById("toast");e.innerHTML=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",1700)}
-function say(t){document.getElementById("quest").innerHTML=t;clearTimeout(say.t);say.t=setTimeout(()=>document.getElementById("quest").innerHTML='Nhiệm vụ: Hạ 3 Sơn Tặc · Tiến độ <span id="q">'+questKills+'/3</span>',2200)}
-function addFloat(wx,wy,text){floating.push({x:wx,y:wy,text,life:55})}
-function addParticle(wx,wy,type){for(let i=0;i<10;i++)particles.push({x:wx,y:wy,vx:(Math.random()-.5)*.08,vy:(Math.random()-.5)*.08,life:25,type})}
-
-function tileType(x,y){
- if(x<13&&y>43)return"forest";
- if(x>51&&y>44)return"grass";
- if(x>22&&x<48&&y>21&&y<48)return"city";
- return"field";
-}
-function drawGround(){
- const range=19;
- for(let gy=Math.max(0,Math.floor(player.y-range));gy<Math.min(MAP.h,Math.ceil(player.y+range));gy++){
-  for(let gx=Math.max(0,Math.floor(player.x-range));gx<Math.min(MAP.w,Math.ceil(player.x+range));gx++){
-   const s=screen(gx,gy),s2=screen(gx+1,gy),s3=screen(gx+1,gy+1),s4=screen(gx,gy+1);
-   let type=tileType(gx,gy);
-   ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s2.x,s2.y);ctx.lineTo(s3.x,s3.y);ctx.lineTo(s4.x,s4.y);ctx.closePath();
-   ctx.fillStyle=type==="forest"?"#416b3b":type==="city"?"#74714f":type==="grass"?"#6d9a50":"#829b57";ctx.fill();
-   ctx.strokeStyle="#ffffff08";ctx.stroke();
-  }
- }
- // roads
- road(35,0,35,70);road(0,36,70,36);
- // river
- river();
-}
-function road(x1,y1,x2,y2){
- ctx.save();ctx.strokeStyle="#b89968";ctx.lineWidth=MAP.tile*.8;ctx.lineCap="round";
- let a=screen(x1,y1),b=screen(x2,y2);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
- ctx.restore();
-}
-function river(){
- ctx.save();ctx.strokeStyle="#3d7792";ctx.lineWidth=MAP.tile*.95;ctx.lineCap="round";
- let a=screen(0,12),b=screen(70,7);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
- ctx.strokeStyle="#75aabd";ctx.lineWidth=3;
- for(let i=0;i<12;i++){let xx=5+i*6,yy=12-i*.07,s=screen(xx,yy);ctx.beginPath();ctx.moveTo(s.x-8,s.y);ctx.lineTo(s.x+8,s.y);ctx.stroke()}
- ctx.restore();
-}
-function drawCastle(){
- const sx=screen(29,24),sy=screen(41,24),back=screen(41,18),left=screen(29,18);
- ctx.fillStyle="#4d321f";poly([left,sx,sy,back],"#72583a");
- // main palace elevated
- const base=screen(35,25);
- drawBuilding(base.x,base.y,150,100,"#d0bd89","#62361f","ĐẠI VIỆT");
- // towers
- [[29,22],[41,22],[29,27],[41,27]].forEach(([x,y])=>{let p=screen(x,y);drawTower(p.x,p.y)});
-}
-function poly(points,color){ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.closePath();ctx.fill()}
-function drawBuilding(cx,cy,w,h,wall,roof,label){
- ctx.fillStyle="#0004";ctx.fillRect(cx-w/2+7,cy-h+9,w,h);
- ctx.fillStyle=wall;ctx.fillRect(cx-w/2,cy-h,w,h);
- ctx.fillStyle=roof;ctx.beginPath();ctx.moveTo(cx-w/2-18,cy-h);ctx.lineTo(cx,cy-h-42);ctx.lineTo(cx+w/2+18,cy-h);ctx.closePath();ctx.fill();
- ctx.fillStyle="#3a2519";ctx.fillRect(cx-18,cy-h+48,36,h-48);
- ctx.fillStyle="#ffe0a0";ctx.font="bold 16px Arial";ctx.textAlign="center";ctx.fillText(label,cx,cy-h-50);
-}
-function drawTower(cx,cy){
- ctx.fillStyle="#0004";ctx.fillRect(cx-28+5,cy-75+8,56,75);
- ctx.fillStyle="#c9b47f";ctx.fillRect(cx-28,cy-75,56,75);
- ctx.fillStyle="#62351f";ctx.beginPath();ctx.moveTo(cx-36,cy-75);ctx.lineTo(cx,cy-104);ctx.lineTo(cx+36,cy-75);ctx.closePath();ctx.fill();
-}
-function drawTrees(){
- for(let i=0;i<24;i++){
-   let wx=4+(i*13)%61,wy=5+(i*17)%61;
-   if(tileType(wx,wy)!=="forest")continue;
-   let s=screen(wx,wy);drawTree(s.x,s.y);
- }
-}
-function drawTree(sx,sy){
- ctx.fillStyle="#0004";ctx.beginPath();ctx.ellipse(sx,sy+18,18,6,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#704829";ctx.fillRect(sx-4,sy-18,8,35);
- ctx.fillStyle="#294f31";ctx.beginPath();ctx.arc(sx,sy-35,25,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#4d813e";ctx.beginPath();ctx.arc(sx-14,sy-45,18,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#66974b";ctx.beginPath();ctx.arc(sx+13,sy-46,16,0,Math.PI*2);ctx.fill();
-}
-function drawHouses(){
- [[26,29,"Làng"],[44,29,"Quán"],[22,42,"Nhà"],[47,42,"Kho"]].forEach(([wx,wy,n])=>{
-   let s=screen(wx,wy);drawBuilding(s.x,s.y,90,60,"#b98a50","#63351f",n);
- });
-}
-function drawNPCs(){
- npcs.forEach(n=>{
-   let s=screen(n.x,n.y);
-   ctx.fillStyle="#0005";ctx.beginPath();ctx.ellipse(s.x,s.y+13,17,6,0,0,Math.PI*2);ctx.fill();
-   ctx.font="27px serif";ctx.textAlign="center";ctx.fillText(n.icon,s.x,s.y+5);
-   ctx.fillStyle=n.color;ctx.font="11px Arial";ctx.fillText(n.name,s.x,s.y-20);
- });
-}
-function drawGates(){
- gates.forEach(g=>{
-  let s=screen(g.x,g.y);ctx.fillStyle="#6b3d21";ctx.fillRect(s.x-20,s.y-30,40,30);ctx.fillStyle="#e0c77f";ctx.fillRect(s.x-14,s.y-24,28,24);
-  ctx.fillStyle="#ffe6a4";ctx.font="10px Arial";ctx.textAlign="center";ctx.fillText("CỔNG",s.x,s.y-36);
- });
-}
-function drawMobs(){
- mobs.forEach(m=>{
-  if(!m.alive)return;let s=screen(m.x,m.y);
-  ctx.fillStyle="#0005";ctx.beginPath();ctx.ellipse(s.x,s.y+14,17,6,0,0,Math.PI*2);ctx.fill();
-  ctx.font="27px serif";ctx.textAlign="center";ctx.fillText(m.name.includes("Sói")?"🐺":m.name.includes("Hắc")?"👹":"👺",s.x,s.y+6);
-  ctx.fillStyle="#281313";ctx.fillRect(s.x-22,s.y-28,44,5);ctx.fillStyle="#d93832";ctx.fillRect(s.x-22,s.y-28,44*Math.max(0,m.hp/m.maxHp),5);
-  if(m.hit){ctx.strokeStyle="#ffe4a1";ctx.lineWidth=3;ctx.beginPath();ctx.arc(s.x,s.y-3,27,0,Math.PI*2);ctx.stroke()}
- });
-}
-function drawPlayer(){
- let s=screen(player.x,player.y);
- ctx.fillStyle="#0006";ctx.beginPath();ctx.ellipse(s.x,s.y+18,20,7,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#1f4f79";ctx.beginPath();ctx.moveTo(s.x-13,s.y-3);ctx.lineTo(s.x+13,s.y-3);ctx.lineTo(s.x+17,s.y+17);ctx.lineTo(s.x-17,s.y+17);ctx.closePath();ctx.fill();
- ctx.fillStyle="#c83b31";ctx.fillRect(s.x-12,s.y-7,24,5);
- ctx.fillStyle="#e1a478";ctx.beginPath();ctx.arc(s.x,s.y-19,10,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#201712";ctx.beginPath();ctx.arc(s.x,s.y-23,11,Math.PI,Math.PI*2);ctx.fill();
- ctx.strokeStyle="#eee";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(s.x+10,s.y+6);ctx.lineTo(s.x+30,s.y-16);ctx.stroke();
-}
-function drawEffects(){
- particles.forEach(pt=>{let s=screen(pt.x,pt.y);ctx.globalAlpha=Math.max(0,pt.life/25);ctx.fillStyle=pt.type==="fire"?"#ff8c31":"#8dd7ff";ctx.beginPath();ctx.arc(s.x,s.y,3,0,Math.PI*2);ctx.fill()});
- ctx.globalAlpha=1;
- floating.forEach(f=>{let s=screen(f.x,f.y);ctx.fillStyle="#ffe9a9";ctx.font="bold 13px Arial";ctx.textAlign="center";ctx.fillText(f.text,s.x,s.y-f.life*.35);});
-}
-function draw(){
- ctx.clearRect(0,0,W,H);
- // nền ngoài bản đồ
- ctx.fillStyle="#263e2b";ctx.fillRect(0,0,W,H);
- drawGround();drawCastle();drawHouses();drawTrees();drawGates();drawNPCs();drawMobs();drawPlayer();drawEffects();
-}
-
-function update(){
- let dx=0,dy=0;
- if(keys.a||keys.arrowleft)dx-=1;if(keys.d||keys.arrowright)dx+=1;if(keys.w||keys.arrowup)dy-=1;if(keys.s||keys.arrowdown)dy+=1;
- if(joy.active){dx=joy.x;dy=joy.y}
- let len=Math.hypot(dx,dy)||1;if(dx||dy){dx/=len;dy/=len;player.x+=dx*.11;player.y+=dy*.11}
- player.x=clamp(player.x,2,MAP.w-2);player.y=clamp(player.y,2,MAP.h-2);
-
- // Camera follows isometric player
- const pp=iso(player.x,player.y);camera.x+=(pp.x-camera.x)*.12;camera.y+=(pp.y-camera.y)*.12;
-
- mobs.forEach(m=>{
-   if(!m.alive)return;
-   let d=Math.hypot(m.x-player.x,m.y-player.y);
-   if(d<7&&d>1){m.x+=(player.x-m.x)/d*m.spd;m.y+=(player.y-m.y)/d*m.spd}
-   m.cd--;if(d<1.1&&m.cd<=0){let dmg=Math.max(1,m.dmg-player.def);player.hp-=dmg;m.cd=50;addFloat(player.x,player.y,"-"+dmg);if(player.hp<=0){player.hp=player.maxHp;player.mp=player.maxMp;player.x=35;player.y=36;toast("💀 Bạn đã bị hạ!<br>Hồi sinh tại Thành Đại Việt")}}
-   if(m.hit)m.hit--;
- });
- particles.forEach(a=>{a.x+=a.vx;a.y+=a.vy;a.life--});particles=particles.filter(a=>a.life>0);
- floating.forEach(a=>{a.y-=.015;a.life--});floating=floating.filter(a=>a.life>0);
- if(player.mp<player.maxMp&&Math.random()<.012)player.mp++;
- hud();
-}
-function zone(){
- if(player.x<15&&player.y>43)return"🌳 Rừng Trúc";
- if(player.x>50&&player.y>43)return"🌾 Đồng Cỏ";
- if(player.y<16)return"🌊 Bờ Sông";
- if(player.x>21&&player.x<49&&player.y>20&&player.y<48)return"🏯 Thành Đại Việt";
- return"🏘️ Ngoại Thành";
-}
-function hud(){
- document.getElementById("lv").textContent=player.level;
- document.getElementById("hpText").textContent=Math.ceil(player.hp)+"/"+player.maxHp;
- document.getElementById("mpText").textContent=Math.ceil(player.mp)+"/"+player.maxMp;
- document.getElementById("gold").textContent=player.gold;
- document.getElementById("exp").textContent=player.exp;
- document.getElementById("hp").style.width=Math.max(0,player.hp/player.maxHp*100)+"%";
- document.getElementById("mp").style.width=Math.max(0,player.mp/player.maxMp*100)+"%";
- document.getElementById("zone").textContent=zone();
-}
-
-function nearest(range){
- let best=null,bd=range;
- mobs.forEach(m=>{if(!m.alive)return;let d=Math.hypot(m.x-player.x,m.y-player.y);if(d<bd){bd=d;best=m}});
- return best;
-}
-function hit(kind){
- let cost=kind===1?18:kind===2?24:0;
- if(player.mp<cost){say("🔵 Nội lực không đủ");return}
- let m=nearest(kind?5.2:3.2);if(!m){say("⚔️ Không có mục tiêu trong tầm");return}
- player.mp-=cost;
- let dmg=player.atk+(kind===1?30:kind===2?46:Math.floor(Math.random()*10));
- m.hp-=dmg;m.hit=8;addFloat(m.x,m.y,(kind===1?"🔥 ":"⚡ ")+dmg);addParticle(m.x,m.y,kind===1?"fire":"light");
- if(m.hp<=0){
-   m.alive=false;let ex=12+Math.floor(Math.random()*13),g=8+Math.floor(Math.random()*14);
-   player.exp+=ex;player.gold+=g;
-   if(m.name==="Sơn Tặc")questKills++;
-   addFloat(m.x,m.y,"+"+ex+" EXP");
-   if(Math.random()<.58){let slot=inv.findIndex(v=>v===null);if(slot>=0)inv[slot]=Math.random()<.3?{icon:"🟣",name:"Trang Bị Hiếm",type:"atk",value:9}:{icon:"🧪",name:"Bình Hồi Khí",type:"mp"}}
-   if(player.exp>=player.level*100){player.exp-=player.level*100;player.level++;player.maxHp+=28;player.maxMp+=14;player.atk+=5;player.def+=2;player.hp=player.maxHp;player.mp=player.maxMp;toast("🎉 LÊN CẤP "+player.level+"!")}
-   setTimeout(()=>{m.x=5+Math.random()*60;m.y=8+Math.random()*58;m.hp=m.maxHp;m.alive=true},4500);
- }
- hud();
-}
-function interact(){
- for(const n of npcs)if(Math.hypot(n.x-player.x,n.y-player.y)<1.7){toast("💬 "+n.name+"<br>Chào hiệp khách!");return}
- for(const g of gates)if(Math.hypot(g.x-player.x,g.y-player.y)<1.8){player.x=g.tx;player.y=g.ty;toast("🚪 Đã tới "+g.name);return}
- say("Đến gần NPC hoặc cổng để tương tác");
-}
-canvas.addEventListener("touchend",interact,{passive:true});
-
-function openInv(){
- const el=document.getElementById("inventory");el.innerHTML="";
- inv.forEach((it,i)=>{let s=document.createElement("div");s.className="slot";s.innerHTML=it?it.icon+"<small>"+it.name+"</small>":"<small>Trống</small>";s.onclick=()=>{if(!it)return;if(it.type==="mp"){player.mp=player.maxMp;inv[i]=null;say("🧪 Nội lực hồi đầy")}else if(it.type==="atk"){player.atk+=it.value;inv[i]=null;say("⚔️ Trang bị tăng công")}else if(it.type==="def"){player.def+=it.value;inv[i]=null;say("🛡️ Trang bị tăng thủ")}openInv();hud()};el.appendChild(s)});
- document.getElementById("invModal").classList.add("show");
-}
-function openHero(){
- statAtk.textContent=player.atk;statDef.textContent=player.def;statHp.textContent=player.maxHp;statMp.textContent=player.maxMp;statLv.textContent=player.level;statZone.textContent=zone();
- document.getElementById("heroModal").classList.add("show");
-}
-function closeAll(){document.querySelectorAll(".modal").forEach(m=>m.classList.remove("show"))}
-function saveGame(){localStorage.setItem("daiviet_rpg_3d2d",JSON.stringify({player,inv,questKills}));toast("💾 Đã lưu game")}
-function loadGame(){try{let d=JSON.parse(localStorage.getItem("daiviet_rpg_3d2d")||"null");if(d){Object.assign(player,d.player);for(let i=0;i<24;i++)inv[i]=d.inv?.[i]??null;questKills=d.questKills||0}}catch(e){}}
-
-document.getElementById("bag").onclick=openInv;
-document.getElementById("hero").onclick=openHero;
-document.getElementById("save").onclick=saveGame;
-document.getElementById("closeInv").onclick=closeAll;
-document.getElementById("closeHero").onclick=closeAll;
-document.getElementById("attack").onclick=()=>hit(0);
-document.getElementById("fire").onclick=()=>hit(1);
-document.getElementById("light").onclick=()=>hit(2);
-
-loadGame();hud();setInterval(saveGame,20000);
-function loop(){update();draw();requestAnimationFrame(loop)}loop();
+function loop(z){draw(z);requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function toast(s){let e=document.getElementById('toast');e.textContent=s;e.style.opacity=1;clearTimeout(e.t);e.t=setTimeout(()=>e.style.opacity=0,1100)}
+document.getElementById('play').onclick=()=>document.getElementById('start').style.display='none';
 </script>
 </body>
 </html>

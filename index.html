@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="game-version" content="4.12.1">
-<meta name="game-protocol" content="4.12.1">
+<meta name="game-version" content="4.12.2">
+<meta name="game-protocol" content="4.12.2">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Kiếm Thế Mobi – Bản 4.12.1</title>
+<title>Kiếm Thế Mobi – Bản 4.12.2</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
@@ -17,7 +17,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 #town{width:250px;max-width:31vw;text-align:right;font-size:15px}
 .btn{position:absolute;z-index:10;width:62px;height:62px;border-radius:50%;border:3px solid #68727d;background:#0d141be8;color:#fff;font-size:27px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px #0005}
 #bag{right:14px;top:145px}.travel{right:14px}.mount{top:220px}.tele{top:295px}.cape{top:370px}.on{box-shadow:0 0 0 3px #f3d46b,0 8px 20px #0005}
-.skills{position:absolute;z-index:10;right:12px;bottom:max(125px,calc(env(safe-area-inset-bottom) + 115px));display:flex;gap:9px}
+.skills{position:absolute;z-index:10;right:12px;bottom:max(125px,calc(env(safe-area-inset-bottom) + 115px));display:flex;gap:9px;align-items:center}.skills .btn{position:relative;inset:auto;flex:0 0 62px}
 #joy{position:absolute;z-index:10;left:12px;bottom:max(140px,calc(env(safe-area-inset-bottom) + 130px));width:108px;height:108px;border-radius:50%;background:#14221bcc;border:4px solid #43504c}
 #stick{position:absolute;left:50%;top:50%;width:48px;height:48px;border-radius:50%;background:#e8c45c;border:5px solid #fff0b0;transform:translate(-50%,-50%)}
 .menu{position:absolute;z-index:10;right:12px;bottom:max(265px,calc(env(safe-area-inset-bottom) + 255px));display:flex;gap:7px}.menu button,.community{background:#111a20ee;border:3px solid #65727c;color:#fff;border-radius:16px;padding:9px 12px;font-weight:800;font-size:15px}.community{position:absolute;z-index:10;right:12px;bottom:max(200px,calc(env(safe-area-inset-bottom) + 190px))}
@@ -54,7 +54,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 <div id="actModal" class="modal"><button class="close" onclick="closeM('actModal')">×</button><h1>🏆 Hoạt động kinh điển</h1><div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚔️ Đã đăng ký Tống Kim')">Tham gia</button></div><div class="card">🥋 Liên Đấu<br><button class="action" onclick="toast('🥋 Đã đăng ký Liên Đấu')">Tham gia</button></div><div class="card">👑 Săn Boss Hoàng Kim<br><button class="action" onclick="toast('👑 Đã đăng ký săn Boss')">Tham gia</button></div></div>
 <div id="comModal" class="modal"><button class="close" onclick="closeM('comModal')">×</button><h1>👥 Cộng đồng giang hồ</h1><div class="card">🏯 Bang hội chiến · <b>Thiên Kiếm</b><br>Điểm bang: <b id="gs">1,280</b><br><button class="action" onclick="guild()">⚔️ Đăng ký</button></div><div class="card">⚔️ Tống Kim<br><button class="action" onclick="toast('⚙️ Phe Kim')">Phe Kim</button> <button class="action" onclick="toast('🏯 Phe Tống')">Phe Tống</button></div><div class="card"><h3>🌎 Kênh thế giới</h3><div id="chat"></div><input id="input" placeholder="Nhập tin nhắn..." style="width:70%;padding:9px;border-radius:9px"><button class="action" onclick="sendChat()">Gửi</button></div></div>
 <div id="bagModal" class="modal"><button class="close" onclick="closeM('bagModal')">×</button><h1>🎒 Túi đồ & Trang bị</h1><div id="equip"></div><h2>🎒 Túi <span id="cnt">0</span>/24</h2><div id="items"></div><h2>24 ô</h2><div id="slots" class="slots"></div></div>
-<div id="teleModal" class="modal"><button class="close" onclick="closeM('teleModal')">×</button><h1>🌀 Dịch chuyển</h1><div class="card">🏠 Tân Thủ Thôn · 1600,1200<br><button class="action" onclick="tele('town')">Đi</button></div><div class="card">🏙️ Thành Thị · 2600,700<br><button class="action" onclick="tele('city')">Đi</button></div></div>
+<div id="teleModal" class="modal"><button class="close" onclick="closeM('teleModal')">×</button><h1>🌀 Dịch chuyển</h1><div class="card">🏠 Tân Thủ Thôn · 1600,800<br><button class="action" onclick="tele('town')">Đi</button></div><div class="card">🏙️ Thành Thị · 2600,700<br><button class="action" onclick="tele('city')">Đi</button></div></div>
 </div>
 
 <script>
@@ -63,7 +63,7 @@ const c=document.getElementById("c"),x=c.getContext("2d",{alpha:false});let W=in
 function size(){W=innerWidth;H=innerHeight;d=Math.min(devicePixelRatio||1,2);c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0)}addEventListener("resize",size);size();
 
 const world={w:3200,h:2400},Z=.62,P={x:1600,y:1500,hp:180,mp:33,maxHp:220,maxMp:60,atk:15},cam={x:1600,y:1500};
-const town={x:1600,y:1200},city={x:2600,y:700};let mounted=false,cape=true,gold=733,exp=519,pc="Võ Đang",pending=pc;
+const town={x:1600,y:800},city={x:2600,y:700};let mounted=false,cape=true,gold=733,exp=519,pc="Võ Đang",pending=pc;
 const elems=["Kim","Mộc","Thủy","Hỏa","Thổ"],icons={Kim:"⚙️",Mộc:"🌳",Thủy:"💧",Hỏa:"🔥",Thổ:"⛰️"};
 const cls={
 "Thiếu Lâm":["🥋","Kim hệ · Cận chiến","Ngoại hình oai phong, phòng thủ cao.","✨ Kim hệ sáng chói",5,"#f3d46b","Kim"],
@@ -81,7 +81,14 @@ const cls={
 "Thúy Yên Đao":["🌊","Đao · Nữ hiệp","Đao pháp thanh thoát.","🌊 Thủy đao",7,"#70d9ff","Thủy"],
 "Thúy Yên Song Đao":["⚔️","Song đao · Tốc độ","Liên kích tốc độ rất cao.","💠 Song đao",9,"#8be7ff","Thủy"]};
 const trees=[[250,300],[600,420],[940,250],[1260,500],[1760,350],[2180,300],[2700,450],[380,900],[800,850],[1150,760],[2050,800],[2500,850],[2950,950],[260,1450],[720,1320],[1080,1550],[2150,1420],[2680,1510],[3000,1350],[500,2050],[950,1900],[1450,2100],[2050,2000],[2500,2050],[2900,1900]];
-let mobs=[];for(let i=0;i<14;i++)mobs.push({x:650+(i*223)%2050,y:600+(i*151)%1350,hp:65,alive:true,hit:0,e:elems[i%5]});
+let mobs=[];
+for(let i=0;i<14;i++){
+  let mx=650+(i*223)%2050, my=600+(i*151)%1350;
+  if(Math.hypot(mx-P.x,my-P.y)<280 || Math.hypot(mx-town.x,my-town.y)<240){
+    mx=420+(i*307)%2450; my=420+(i*197)%1650;
+  }
+  mobs.push({x:mx,y:my,hp:65,alive:true,hit:0,e:elems[i%5]});
+}
 const its=[["Kiếm Tân Thủ+","vũ khí","Thường",5,0,"🗡️"],["Đao Bào","áo","Thường",0,5,"🥋"],["Giáp Tinh Anh","áo","Tốt",0,13,"🛡️"],["Đao Tinh Anh","vũ khí","Hiếm",18,0,"⚔️"],["Đao Sơn Tặc","vũ khí","Thường",9,0,"🗡️"],["Bình Hồi Khí","tiêu hao","Thường",0,0,"🧪"]];
 let bag=its.slice(0,6).map((a)=>({n:a[0],t:a[1],r:a[2],a:a[3],df:a[4],i:a[5],en:0}));bag.push({...bag[5]});let equip={weapon:{...bag[3]},armor:{...bag[2]}},drops=[];
 let cdA=0,cdS=0,cdF=0,stun=0,slow=0;
@@ -118,10 +125,14 @@ function draw(){x.clearRect(0,0,W,H);x.fillStyle="#32683d";x.fillRect(0,0,W,H);x
 x.strokeStyle="#ffffff12";for(let a=0;a<world.w;a+=160){x.beginPath();x.moveTo(a,0);x.lineTo(a,world.h);x.stroke()}for(let b=0;b<world.h;b+=160){x.beginPath();x.moveTo(0,b);x.lineTo(world.w,b);x.stroke()}
 x.fillStyle="#3f91bd";x.beginPath();x.moveTo(0,1650);x.bezierCurveTo(600,1500,1000,1850,1500,1720);x.bezierCurveTo(2200,1600,2700,1800,3200,1700);x.lineTo(3200,2400);x.lineTo(0,2400);x.closePath();x.fill();
 x.fillStyle="#b49a68";x.beginPath();x.moveTo(0,1850);x.quadraticCurveTo(800,1450,1600,1700);x.quadraticCurveTo(2400,1950,3200,1500);x.lineTo(3200,1760);x.quadraticCurveTo(2300,2150,1600,1950);x.quadraticCurveTo(700,1750,0,2100);x.closePath();x.fill();
-x.fillStyle="#765239";x.fillRect(1495,1130,210,140);x.fillStyle="#ffe48b";x.font="bold 24px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",1600,1208);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",1600,1235);trees.forEach(t=>drawTree(t[0],t[1]));
+x.fillStyle="#765239";x.fillRect(town.x-105,town.y-70,210,140);
+x.strokeStyle="#d9c56a88";x.lineWidth=4;x.setLineDash([16,12]);
+x.beginPath();x.arc(town.x,town.y,205,0,Math.PI*2);x.stroke();x.setLineDash([]);x.fillStyle="#ffe48b";x.font="bold 24px sans-serif";x.textAlign="center";x.fillText("THÔN TÂN THỦ",town.x,town.y+8);x.font="14px sans-serif";x.fillText("KHU AN TOÀN",town.x,town.y+35);trees.forEach(t=>drawTree(t[0],t[1]));
 for(let m of mobs)if(m.alive){x.fillStyle=m.hit?"#ffbd59":"#814237";x.beginPath();x.arc(m.x,m.y,24,0,7);x.fill();x.fillStyle="#ffe58a";x.beginPath();x.arc(m.x-7,m.y-4,4,0,7);x.arc(m.x+7,m.y-4,4,0,7);x.fill();x.fillStyle="#fff";x.font="13px sans-serif";x.fillText(icons[m.e]+" Sơn Tặc",m.x,m.y-34);x.fillStyle="#d95c5c";x.fillRect(m.x-30,m.y+29,60*(m.hp/65),5)}
 for(let d0 of drops){x.fillStyle="#e8c64f";x.beginPath();x.arc(d0.x,d0.y,21,0,7);x.fill();x.font="16px sans-serif";x.fillStyle="#111";x.fillText("🎁",d0.x,d0.y+6)}
-if(mounted){x.font="38px sans-serif";x.fillText("🐎",P.x,P.y+30)}drawPlayer(P.x,P.y);x.fillStyle="#fff";x.font="bold 14px sans-serif";x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-60);x.restore()}
+if(mounted){x.font="38px sans-serif";x.fillText("🐎",P.x,P.y+30)}x.strokeStyle="#ffffff55";x.lineWidth=2;
+x.beginPath();x.ellipse(P.x,P.y+55,38,10,0,0,Math.PI*2);x.stroke();
+drawPlayer(P.x,P.y);x.fillStyle="#fff";x.font="bold 14px sans-serif";x.fillText(icons[cls[pc][6]]+" Thiếu Hiệp",P.x,P.y-60);x.restore()}
 function update(dt){let dx=joy.x,dy=joy.y,l=Math.hypot(dx,dy)||1;if(dx||dy){let sp=mounted?330:230;P.x+=dx/l*sp*dt;P.y+=dy/l*sp*dt}P.x=Math.max(25,Math.min(world.w-25,P.x));P.y=Math.max(25,Math.min(world.h-25,P.y));
 for(let m of mobs)if(m.alive){let q=Math.hypot(P.x-m.x,P.y-m.y);if(q<330){m.x+=(P.x-m.x)/Math.max(q,1)*(slow>0?18:45)*dt;m.y+=(P.y-m.y)/Math.max(q,1)*(slow>0?18:45)*dt}m.hit=Math.max(0,m.hit-dt)}
 cdA=Math.max(0,cdA-dt);cdS=Math.max(0,cdS-dt);cdF=Math.max(0,cdF-dt);stun=Math.max(0,stun-dt);slow=Math.max(0,slow-dt);
@@ -135,7 +146,7 @@ document.getElementById("bagBtn").onclick=()=>{bagUI();openM("bagModal")};docume
 document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getElementById("mountBtn").classList.toggle("on",mounted);toast(mounted?"🐎 Lên ngựa":"🐎 Xuống ngựa")};
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
-classes();sel();bagUI();hud();document.getElementById("status").textContent="🔴 Offline · Chế độ local";
+classes();sel();bagUI();hud();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.2";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script>
 </body></html>

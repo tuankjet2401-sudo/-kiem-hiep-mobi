@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Đại Việt Chiến Ký - Bản 2.0</title>
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Đại Việt Chiến Ký - Bản 2.x</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:#172013;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -41,6 +41,14 @@ button:disabled{opacity:.45}
 .toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);z-index:40;background:#2d2015;border:1px solid #b88a49;border-radius:20px;padding:8px 13px;font-size:11px;display:none}
 .toast.show{display:block}
 @media(min-width:700px){.scene{padding-left:10%;padding-right:10%}.build{margin-top:7%}.actions{left:10%;right:10%}}
+
+.npc{position:absolute;z-index:8;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:9px;color:#ffe08b;text-shadow:0 1px 2px #000;cursor:pointer;animation:walk 3s ease-in-out infinite}
+.npc span{font-size:28px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))}
+.npc b{background:rgba(35,23,12,.85);padding:2px 5px;border-radius:8px}
+.npc-advisor{left:48%;top:30%}.npc-smith{left:12%;top:45%}.npc-merchant{right:12%;top:48%}
+.npc-captain{right:17%;top:29%}.npc-farmer{left:27%;top:60%}.npc-miner{right:28%;top:61%}.npc-scout{right:7%;top:23%}
+@keyframes walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.event-badge{display:inline-block;padding:3px 7px;border-radius:8px;background:#7d2d20;color:#ffe3a0;font-weight:900}
 </style>
 </head><body>
 <div id="game">
@@ -56,6 +64,14 @@ button:disabled{opacity:.45}
 <main class="scene">
  <div class="sky"></div><div class="city-wall"></div><div class="moat"></div><div class="bridge"></div>
  <div class="flag f1">🚩</div><div class="flag f2">🚩</div>
+<div class="npc npc-advisor" onclick="openNpc('advisor')"><span>👑</span><b>Cố vấn</b></div>
+<div class="npc npc-smith" onclick="openNpc('smith')"><span>🔨</span><b>Thợ rèn</b></div>
+<div class="npc npc-merchant" onclick="openNpc('merchant')"><span>🛒</span><b>Thương nhân</b></div>
+<div class="npc npc-captain" onclick="openNpc('captain')"><span>⚔️</span><b>Đại úy</b></div>
+<div class="npc npc-farmer" onclick="openNpc('farmer')"><span>👨‍🌾</span><b>Nông dân</b></div>
+<div class="npc npc-miner" onclick="openNpc('miner')"><span>👷</span><b>Thợ mỏ</b></div>
+<div class="npc npc-scout" onclick="openNpc('scout')"><span>🏹</span><b>Trinh sát</b></div>
+
 
  <div class="notice">👑 <b>Phủ Thành Chủ</b> • Cấp <b id="cityLevel">1</b> • Sức mạnh <b id="power">0</b> • Dân <b id="population">0</b></div>
 
@@ -71,7 +87,7 @@ button:disabled{opacity:.45}
 
  <div class="notice">🛡️ <b>Tường thành</b> • Phòng thủ <b id="defense">0</b> • 🌊 Hào thành • 🚪 Cổng thành</div>
 
- <div class="notice"><b>📜 Chiếu thư:</b> Thành đang phát triển. Hãy thu hoạch tài nguyên, huấn luyện quân và mở rộng lãnh thổ.</div>
+ <div class="notice"><b>📜 Chiếu thư:</b> Thành đang phát triển. Hãy thu hoạch tài nguyên, huấn luyện quân và mở rộng lãnh thổ.</div><div class="notice">👥 <b>Dân chúng:</b> NPC đang làm việc trong thành • 🛡️ Trạng thái: <span class="event-badge">Bình thường</span></div>
 
  <div class="notice"><b>📖 Nhật ký:</b><div id="log" class="log"></div></div>
 </main>
@@ -132,7 +148,7 @@ function normalizeState(x){
 }
 if(!s){
  const old=JSON.parse(localStorage.getItem("daiviet_chienky_10")||localStorage.getItem("daiviet_chienky_09")||null);
- s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 2.0."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 2.0 bắt đầu."]};
+ s=old?{...old,heroXp:old.heroXp||0,heroTier:old.heroTier||1,heroSkill:"none",daily:false,bow:false,potion:old.potion||0,claims:old.claims||{},ach:old.ach||{},influence:old.influence||0,diplomacy:old.diplomacy||"Trung lập",war:old.war||0,lands:old.lands||{delta:false,border:false,port:false},eventCount:old.eventCount||0,campaign:old.campaign||{stage:1,stars:0,cleared:[]},commander:old.commander||{level:1,xp:0,name:"Đại tướng"},guild:old.guild||{level:1,prestige:0},city2:old.city2||{level:1,houses:10,happiness:70},tech:old.tech||{food:0,iron:0,army:0,economy:0},dailyStreak:old.dailyStreak||0,quests:old.quests||{done:0,claimed:0},arena:old.arena||{rating:1000,wins:0,losses:0},legion:old.legion||{level:1,xp:0},guild:old.guild||{level:1,xp:0,members:1},boss:old.boss||{hp:100,level:1,defeated:0,damage:0},loot:old.loot||{rare:0,good:0,normal:0},market2:old.market2||{orders:0,sales:0},generals:old.generals||{archer:0,cavalry:0,guardian:0},formation:old.formation||"balanced",season:old.season||{points:0,rank:1,claimed:false},battleLog:old.battleLog||[],daily:old.daily||{harvest:0,battles:0,claimed:false},inventory:old.inventory||{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:old.craft||{sword:0,armor:0,bow:0},logs:["• Đã chuyển tiến trình lên Bản 2.x."]}:{food:500,wood:500,iron:250,gold:300,gems:5,infantry:20,archers:0,cavalry:0,elephants:0,wins:0,level:1,xp:0,fame:0,cityLevel:1,cityXp:0,population:100,farm:0,forge:0,market:0,port:0,barracks:0,heroLevel:1,heroXp:0,heroTier:1,heroSkill:"none",sword:false,shield:false,bow:false,seal:false,potion:0,daily:false,ach:{},territory:1,influence:0,diplomacy:"Trung lập",war:0,lands:{delta:false,border:false,port:false},eventCount:0,campaign:{stage:1,stars:0,cleared:[]},commander:{level:1,xp:0,name:"Đại tướng"},guild:{level:1,prestige:0},city2:{level:1,houses:10,happiness:70},tech:{food:0,iron:0,army:0,economy:0},dailyStreak:0,quests:{done:0,claimed:0},arena:{rating:1000,wins:0,losses:0},legion:{level:1,xp:0},guild:{level:1,xp:0,members:1},boss:{hp:100,level:1,defeated:0,damage:0},loot:{rare:0,good:0,normal:0},market2:{orders:0,sales:0},generals:{archer:0,cavalry:0,guardian:0},formation:"balanced",season:{points:0,rank:1,claimed:false},battleLog:[],daily:{harvest:0,battles:0,claimed:false},inventory:{woodSword:0,ironArmor:0,warBow:0,potion:0,scroll:0},craft:{sword:0,armor:0,bow:0},logs:["• Đại Việt Chiến Ký Bản 2.x bắt đầu."]};
 }
 s=normalizeState(s);
 function save(){localStorage.setItem(KEY,JSON.stringify(s))}
@@ -150,6 +166,24 @@ function toast(msg){
  const e=document.getElementById("toast");if(!e)return;
  e.textContent=msg;e.classList.add("show");clearTimeout(window.__toast);
  window.__toast=setTimeout(()=>e.classList.remove("show"),1800);
+}
+
+function openNpc(id){
+ const data={
+  advisor:["👑 Cố vấn Đại Việt","Chủ công, thành đang phát triển tốt. Tôi sẽ báo ngay khi có chiếu thư hoặc nguy cơ.","📜 Nhiệm vụ","quest"],
+  smith:["🔨 Thợ rèn","Lò rèn đã nóng! Ta có thể chế tạo trang bị cho quân đội.","🔨 Xưởng vũ khí","forge"],
+  merchant:["🛒 Thương nhân","Hàng hóa đã sẵn sàng. Có thể trao đổi tài nguyên tại chợ.","🛒 Chợ giao dịch","market"],
+  captain:["⚔️ Đại úy","Binh sĩ đã sẵn sàng. Hãy chọn đội hình và tuyển thêm quân.","⚔️ Doanh trại","military"],
+  farmer:["👨‍🌾 Nông dân","Ruộng lúa đang vào vụ. Chúng tôi có thể thu hoạch ngay.","🌾 Thu hoạch","farm"],
+  miner:["👷 Thợ mỏ","Mạch sắt mới đã được phát hiện dưới lòng đất.","⛏️ Khai thác","mine"],
+  scout:["🏹 Trinh sát","Biên giới hiện an toàn. Tôi sẽ cảnh báo khi phát hiện quân địch.","🗺️ Bản đồ","world"]
+ };
+ const d=data[id]||data.advisor;
+ const t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent"),o=document.getElementById("overlay");
+ t.textContent=d[0];
+ c.innerHTML=`<div class="card"><h3>${d[0]}</h3><p>${d[1]}</p><span class="event-badge">NPC đang hoạt động</span><button type="button" style="width:100%;margin-top:8px" onclick="openSheet('${d[3]}')">${d[2]}</button></div>`;
+ o.classList.add("show");
+ toast("👤 "+d[0]);
 }
 function openSheet(name){
  const o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
@@ -519,8 +553,8 @@ function sellLoot(){
  log("💰 Bán chiến lợi phẩm nhận +"+total+"💰.");render();save()
 }
 
-function saveGame(){save();log("💾 Đã lưu Bản 2.0.")}
-function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.0?")){localStorage.removeItem(KEY);location.reload()}}
+function saveGame(){save();log("💾 Đã lưu Bản 2.x.")}
+function resetGame(){if(confirm("Xóa toàn bộ tiến trình Bản 2.x?")){localStorage.removeItem(KEY);location.reload()}}
 setInterval(()=>{s.food=cap(s.food+s.farm*3);s.wood=cap(s.wood+s.farm);s.iron=cap(s.iron+s.forge*2);s.gold=cap(s.gold+s.market+s.port*2);render();save()},10000);
 render();
 </script></body></html>

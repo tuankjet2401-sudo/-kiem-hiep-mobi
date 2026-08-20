@@ -201,6 +201,9 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 }
 .skills .btn,.btn{width:54px !important;height:54px !important;font-size:23px !important}
 #joy{
+  touch-action:none !important;
+  user-select:none !important;
+  -webkit-user-select:none !important;
   width:92px !important;height:92px !important;left:10px !important;
   bottom:max(104px,calc(env(safe-area-inset-bottom) + 96px)) !important;
 }
@@ -235,9 +238,49 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17351f;fon
 }
 .menu,#classBtn,#actBtn,#comBtn{display:none !important}
 
+
+/* ===== LANDSCAPE MODE · iPHONE SAFARI ===== */
+#rotateOverlay{
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:#071016f5; color:#fff; align-items:center; justify-content:center;
+  text-align:center; padding:24px;
+}
+#rotateOverlay .rotateCard{
+  max-width:360px; background:#101820; border:2px solid #d2a44e;
+  border-radius:20px; padding:22px 20px; box-shadow:0 12px 35px #0008;
+}
+#rotateOverlay .phone{font-size:56px; margin-bottom:8px}
+#rotateOverlay b{font-size:21px; color:#ffd978}
+#rotateOverlay small{display:block; margin-top:8px; color:#d5dce1; line-height:1.45}
+@media (orientation:portrait) and (max-width:900px){
+  #rotateOverlay{display:flex}
+}
+@media (orientation:landscape){
+  #rotateOverlay{display:none!important}
+  #stats{width:235px!important;max-width:31vw!important}
+  #stats .name{font-size:16px!important}
+  #stats .sub{font-size:10px!important}
+  #town{width:145px!important;max-width:22vw!important}
+  #bagBtn{top:78px!important}
+  .mount{top:140px!important}.tele{top:202px!important}.cape{top:264px!important}
+  #joy{left:18px!important;bottom:max(32px,calc(env(safe-area-inset-bottom) + 22px))!important;width:92px!important;height:92px!important}
+  .skills{right:18px!important;bottom:max(28px,calc(env(safe-area-inset-bottom) + 18px))!important}
+  .quickSocial{right:18px!important;bottom:max(6px,calc(env(safe-area-inset-bottom) + 2px))!important}
+  #status{left:18px!important;bottom:max(6px,env(safe-area-inset-bottom))!important;font-size:10px!important}
+  #vlMini{right:18px!important;top:78px!important;width:120px!important;height:86px!important}
+  #vlZoneTitle{top:8px!important;font-size:12px!important}
+  #vlArea{top:38px!important}
+}
 </style>
 </head>
 <body>
+<div id="rotateOverlay">
+  <div class="rotateCard">
+    <div class="phone">📱↔️</div>
+    <b>Hãy xoay iPhone sang màn hình ngang</b>
+    <small>Kiếm Thế Mobi · Võ Lâm 1 · Mốc 5<br>Chế độ ngang giúp bản đồ và điều khiển dễ nhìn hơn.</small>
+  </div>
+</div>
 <div id="game">
 <canvas id="c"></canvas>
 
@@ -997,73 +1040,51 @@ function fire(){
   if(m&&Math.hypot(P.x-m.x,P.y-m.y)<300){startCombat("fire",m,55+z[4],.8,.32);toast(z[3])}else toast("🔥 Quái quá xa");
 }
 
-/* ===== JOYSTICK FIX V2 · GLOBAL TOUCH / SAFARI ===== */
+/* ===== JOYSTICK FIX V3 · POINTER ONLY / SAFARI ===== */
 const joy={x:0,y:0,on:false,id:null},je=document.getElementById("joy"),st=document.getElementById("stick");
-let joyStartX=0,joyStartY=0;
 function joyReset(){
   joy.x=0; joy.y=0; joy.on=false; joy.id=null;
   st.style.transform="translate(-50%,-50%)";
 }
 function joyUpdate(clientX,clientY){
   const r=je.getBoundingClientRect();
-  let dx=clientX-r.left-r.width/2, dy=clientY-r.top-r.height/2;
-  const lim=r.width*.36, len=Math.hypot(dx,dy);
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  let dx=clientX-cx, dy=clientY-cy;
+  const lim=Math.max(18,r.width*.38), len=Math.hypot(dx,dy);
   if(len>lim){dx=dx*lim/len;dy=dy*lim/len}
   joy.x=Math.max(-1,Math.min(1,dx/lim));
   joy.y=Math.max(-1,Math.min(1,dy/lim));
   st.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
 }
-function isJoyArea(x,y){
-  const r=je.getBoundingClientRect();
-  /* Cho phép chạm vào cả vòng joystick và vùng ngay quanh nó. */
-  return x>=r.left-35 && x<=r.right+35 && y>=r.top-35 && y<=r.bottom+35;
-}
-document.addEventListener("touchstart",e=>{
-  if(joy.on)return;
-  for(const t of e.changedTouches){
-    if(isJoyArea(t.clientX,t.clientY)){
-      joy.on=true; joy.id=t.identifier;
-      joyStartX=t.clientX; joyStartY=t.clientY;
-      joyUpdate(t.clientX,t.clientY);
-      e.preventDefault();
-      break;
-    }
-  }
-},{passive:false});
-document.addEventListener("touchmove",e=>{
-  if(!joy.on)return;
-  for(const t of e.changedTouches){
-    if(t.identifier===joy.id){
-      joyUpdate(t.clientX,t.clientY);
-      e.preventDefault();
-      break;
-    }
-  }
-},{passive:false});
-document.addEventListener("touchend",e=>{
-  if(!joy.on)return;
-  for(const t of e.changedTouches){
-    if(t.identifier===joy.id){joyReset();e.preventDefault();break}
-  }
-},{passive:false});
-document.addEventListener("touchcancel",e=>{
-  if(!joy.on)return;
-  for(const t of e.changedTouches){
-    if(t.identifier===joy.id){joyReset();e.preventDefault();break}
-  }
-},{passive:false});
-
-/* Pointer fallback, không dùng pointer capture để tránh Safari mất touch. */
 je.addEventListener("pointerdown",e=>{
-  if(e.pointerType==="touch"||e.pointerType==="pen"){
-    joy.on=true;joy.id=e.pointerId;joyUpdate(e.clientX,e.clientY);e.preventDefault();
-  }
+  if(e.pointerType!=="touch" && e.pointerType!=="pen" && e.pointerType!=="mouse")return;
+  joy.on=true; joy.id=e.pointerId; joyUpdate(e.clientX,e.clientY);
+  if(e.pointerType!=="mouse") e.preventDefault();
 },{passive:false});
 je.addEventListener("pointermove",e=>{
-  if(joy.on && joy.id===e.pointerId){joyUpdate(e.clientX,e.clientY);e.preventDefault()}
+  if(!joy.on || joy.id!==e.pointerId)return;
+  joyUpdate(e.clientX,e.clientY);
+  if(e.pointerType!=="mouse") e.preventDefault();
 },{passive:false});
 je.addEventListener("pointerup",e=>{if(joy.id===e.pointerId)joyReset()},{passive:false});
 je.addEventListener("pointercancel",e=>{if(joy.id===e.pointerId)joyReset()},{passive:false});
+je.addEventListener("pointerleave",e=>{if(joy.id===e.pointerId && e.pointerType!=="mouse")joyReset()},{passive:false});
+je.addEventListener("lostpointercapture",joyReset,{passive:true});
+
+// Cố gắng khóa ngang sau một thao tác của người dùng. Safari có thể từ chối lock; CSS overlay vẫn hoạt động.
+async function requestLandscape(){
+  try{
+    if(screen.orientation && screen.orientation.lock){
+      await screen.orientation.lock("landscape");
+    }
+  }catch(e){}
+}
+function bindLandscapeGesture(){
+  requestLandscape();
+  document.removeEventListener("pointerdown",bindLandscapeGesture);
+}
+document.addEventListener("pointerdown",bindLandscapeGesture,{once:true,passive:true});
+
 function drawTree(a,b){
   x.fillStyle="#6a432b";x.fillRect(a-9,b+24,18,52);
   x.fillStyle="#8a5a35";x.fillRect(a-4,b+25,7,48);
@@ -1428,7 +1449,7 @@ document.getElementById("mountBtn").onclick=()=>{mounted=!mounted;document.getEl
 document.getElementById("capeBtn").onclick=()=>{cape=!cape;document.getElementById("capeBtn").classList.toggle("on",cape);toast(cape?"🪽 Phi phong bật":"🪽 Phi phong tắt")};
 document.getElementById("a").onclick=attack;document.getElementById("s").onclick=skill;document.getElementById("f").onclick=fire;
 try{const save=JSON.parse(localStorage.getItem("ktm_moc5")||"null");if(save&&cls[save.pc])pc=save.pc;if(save&&costumeData[save.costume])selectedCostume=save.costume;if(save&&weaponData[save.weapon])selectedWeapon=save.weapon}catch(e){}
-classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · NPC · Điều khiển FIX";
+classes();sel();renderM5Options();bagUI();hud();renderQuestTracker();document.getElementById("status").textContent="🔴 Offline · Chế độ local · 4.12.5 · Mốc 5 · Võ Lâm 1 · Ngang · Joystick FIX V3";
 let last=performance.now();function loop(t){let dt=Math.min(.035,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 
 /* ===== VÕ LÂM 1 MOBI VISUAL PACK · Mốc 5 =====

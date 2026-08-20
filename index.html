@@ -115,11 +115,20 @@ button:disabled{opacity:.45}
 .n1{left:48%;top:51%}.n2{left:28%;top:52%}.n3{right:26%;top:54%}.n4{left:38%;top:70%}.n5{right:39%;top:70%}
 @keyframes npcFloat{50%{transform:translateY(-4px)}}
 .isoLabel{position:absolute;left:50%;top:13%;transform:translateX(-50%);z-index:20;background:rgba(36,24,13,.9);padding:7px 13px;border-radius:18px;border:1px solid #c39a5d;color:#ffe08b;font-weight:900;font-size:12px}
+
+.advisorPanel{background:linear-gradient(135deg,#17283a,#263d55);border:1px solid #c5a05a;border-radius:16px;padding:10px;margin-bottom:8px}
+.advisorPortrait{display:flex;gap:10px;align-items:center}
+.advisorAvatar{width:86px;height:112px;border-radius:14px;background:linear-gradient(#34526a,#18283a);display:flex;align-items:center;justify-content:center;font-size:58px;border:2px solid #c5a05a;position:relative;overflow:hidden}
+.advisorAvatar:after{content:"🌬️";position:absolute;font-size:24px;right:4px;bottom:4px;animation:fanMove 1.8s infinite}
+.advisorInfo b{display:block;color:#ffe08b;font-size:15px}.advisorInfo small{color:#d8d2c6}
+.advisorAdvice{margin-top:8px;background:rgba(8,15,23,.35);border-radius:10px;padding:8px;font-size:11px;line-height:1.45}
+@keyframes fanMove{50%{transform:rotate(8deg) translateY(-2px)}}
+.advisorWarn{color:#ffcf78;font-weight:900}
 </style>
 </head><body>
 <div id="game">
 <header class="top">
- <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • 2.5D ISOMETRIC</span></div>
+ <div class="brand"><h1>🏯 ĐẠI VIỆT CHIẾN KÝ</h1><span class="ver">BẢN 2.x • LỤC MINH TRIẾT</span></div>
  <div class="resources">
   <div class="res">🌾<b id="food">0</b></div><div class="res">💰<b id="gold">0</b></div>
   <div class="res">🪵<b id="wood">0</b></div><div class="res">⛏️<b id="iron">0</b></div>
@@ -137,16 +146,16 @@ button:disabled{opacity:.45}
   <div class="isoBuilding bFarm" onclick="openSheet('farm')"><div class="roof">🌾</div><b>NÔNG ĐIỆN</b></div>
   <div class="isoBuilding bMine" onclick="openSheet('mine')"><div class="roof">⛏️</div><b>MỎ SẮT</b></div>
   <div class="isoBuilding bMarket" onclick="openSheet('market')"><div class="roof">🛒</div><b>CHỢ</b></div>
-  <div class="isoNpc n1">👑</div><div class="isoNpc n2">👨‍🌾</div><div class="isoNpc n3">🔨</div><div class="isoNpc n4">🛡️</div><div class="isoNpc n5">🛒</div>
+  <div class="isoNpc n1" onclick="openAdvisor()" title="Lục Minh Triết">🧑🏻‍🏫</div><div class="isoNpc n2">👨‍🌾</div><div class="isoNpc n3">🔨</div><div class="isoNpc n4">🛡️</div><div class="isoNpc n5">🛒</div>
  </div>
  <div class="notice">🏯 <b>Thành trì 2.5D</b> • 🛡️ Phòng thủ <b id="defense">0</b> • ⚔️ Sức mạnh <b id="power">0</b> • 👥 Dân <b id="population">0</b></div>
- <div class="notice"><b>📜 Chiếu thư:</b> Thành trì đang phát triển. Chạm công trình hoặc NPC để quản lý.</div>
+ <div class="notice"><b>📜 Chiếu thư:</b> Thành trì đang phát triển. Chạm công trình hoặc NPC để quản lý.</div><div class="notice">🪶 <b>Lục Minh Triết</b> • Quân sư đang quan sát thành trì và sẽ cảnh báo khi có vấn đề.</div>
  <div class="notice"><b>📖 Nhật ký:</b><div id="log" class="log"></div></div>
 </main>>
 
 <nav class="actions">
  <button type="button" onclick="openSheet('inventory')">🎒 Kho</button>
- <button type="button" onclick="openSheet('hero')">👑 Tướng</button>
+ <button type="button" onclick="openAdvisor()">👑 Quân sư</button>
  <button type="button" onclick="openSheet('quest')">📜 Nhiệm vụ</button>
  <button type="button" onclick="openSheet('world')">🗺️ Bản đồ</button>
  <button type="button" onclick="openSheet('more')">☰ Khác</button>
@@ -248,6 +257,37 @@ function openNpc(id){
  o.classList.add("show");
  toast("👤 "+d[0]);
 }
+
+function advisorState(){
+ if(s.food<100)return {mood:"warn",msg:"Chúa công, kho lương đang cạn. Hãy cho người khai hoang và thu hoạch ngay.",action:"🌾 Nông Điện"};
+ if(s.boss&&s.boss.hp<35)return {mood:"warn",msg:"Thám báo báo tin chiến trường nguy cấp. Hãy chuẩn bị quân lực.",action:"🐉 Chiến trường"};
+ if((s.influence||0)<20)return {mood:"think",msg:"Biên cương cần thêm uy thế. Mở rộng lãnh thổ và hoàn thành chiến dịch sẽ giúp ích.",action:"🗺️ Bản đồ"};
+ if(s.gold<200)return {mood:"think",msg:"Kho bạc còn thấp. Thương nhân có thể giúp cân đối tài nguyên.",action:"🛒 Chợ"};
+ return {mood:"smile",msg:"Thành trì đang phát triển vững vàng. Hãy tiếp tục tích lũy lương thảo và chuẩn bị đại quân.",action:"📜 Chiếu thư"};
+}
+function openAdvisor(){
+ const a=advisorState(),o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
+ t.textContent="📜 Lục Minh Triết • Quân sư";
+ c.innerHTML=`<div class="advisorPanel"><div class="advisorPortrait"><div class="advisorAvatar">🧑🏻‍🏫</div><div class="advisorInfo"><b>Lục Minh Triết</b><small>Quân sư cấp cao • Khoảng 40 tuổi</small><div class="advisorAdvice">“${a.msg}”</div></div></div><div class="statline"><span>🪶 Vai trò</span><b>Cố vấn chiến lược</b></div><div class="statline"><span>📐 Phong cách</span><b>2.5D Isometric</b></div><button type="button" style="width:100%;margin-top:8px" onclick="advisorAction('${a.action}')">${a.action}</button></div><div class="grid2"><button type="button" onclick="advisorMission()">📜 Giao nhiệm vụ</button><button type="button" onclick="advisorStrategy()">⚔️ Trận pháp</button></div>`;
+ o.classList.add("show");render()
+}
+function advisorAction(a){
+ closeSheet();
+ if(a.includes("Nông"))openSheet("farm");
+ else if(a.includes("chiến"))openSheet("world");
+ else if(a.includes("Bản đồ"))openSheet("world");
+ else if(a.includes("Chợ"))openSheet("market");
+ else openSheet("quest");
+}
+function advisorMission(){
+ s.fame+=10;gainXp(20);log("📜 Lục Minh Triết giao nhiệm vụ: củng cố cơ đồ và chuẩn bị xuất chinh.");
+ openAdvisor();save()
+}
+function advisorStrategy(){
+ s.influence=(s.influence||0)+5;gainXp(15);log("⚔️ Lục Minh Triết đề xuất trận pháp phòng thủ.");
+ openAdvisor();save()
+}
+
 function openSheet(name){
  const o=document.getElementById("overlay"),t=document.getElementById("sheetTitle"),c=document.getElementById("sheetContent");
  if(!o||!t||!c)return;

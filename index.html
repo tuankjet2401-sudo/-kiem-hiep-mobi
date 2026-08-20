@@ -4,139 +4,199 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Đại Việt Chiến Ký</title>
+<title>Đại Việt Chiến Ký — Bản Chơi</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{
-  margin:0;width:100%;height:100%;overflow:hidden;background:#06130d;
-  font-family:Arial,sans-serif;-webkit-text-size-adjust:100%;
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06130d;font-family:Arial,sans-serif}
 body{display:flex;justify-content:center}
-#game{
-  position:relative;width:100vw;height:100dvh;max-width:720px;
-  overflow:hidden;background:#06130d;
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
-}
-#art{
-  position:absolute;left:0;top:0;width:100%;height:100%;
-  object-fit:cover;object-position:center center;display:block;
-}
-button{
-  border:2px solid #a87424;background:rgba(18,12,5,.88);
-  color:#ffe5a0;border-radius:18px;font-weight:800;
-  box-shadow:0 2px 8px #0009;
-  font-family:Arial,sans-serif;
-}
-.hot{position:absolute;z-index:3}
-#mission{
-  left:3%;top:19%;width:31%;min-height:88px;padding:10px;
-  font-size:clamp(12px,2.2vw,16px);line-height:1.35;
-}
-.side{
-  right:3%;width:13%;min-width:64px;height:7%;
-  font-size:clamp(10px,1.8vw,14px);line-height:1.25;
-}
-#shop{top:14%}#bag{top:22%}#skill{top:30%}#quest{top:38%}
-#pet{top:46%}#spin{top:54%}#event{top:62%}
-
-#joy{
-  left:6%;bottom:15%;width:25vw;height:25vw;max-width:135px;max-height:135px;
-  border-radius:50%;font-size:30px;
-}
-#skill1,#skill2{
-  bottom:17%;width:65px;height:65px;border-radius:50%;font-size:28px;
-}
-#skill1{right:23%}#skill2{right:14%}
-#attack{
-  right:3%;bottom:15%;width:88px;height:88px;border-radius:50%;
-  font-size:38px;background:#7c281e;
-}
-.menu{
-  bottom:2.5%;height:8%;min-height:58px;padding:4px 2px;
-  font-size:clamp(10px,1.8vw,14px);line-height:1.25;
-}
-#m1{left:3%;width:18%}
-#m2{left:22%;width:18%}
-#m3{left:41%;width:18%}
-#m4{left:60%;width:18%}
-#m5{right:3%;width:18%}
-
-#msg{
-  position:absolute;left:50%;bottom:28%;transform:translateX(-50%);
-  z-index:10;padding:10px 18px;border-radius:16px;
-  background:#111d;color:#ffe5a0;border:1px solid #a87424;
-  opacity:0;transition:.2s;pointer-events:none;font-size:15px;
-  text-align:center;white-space:nowrap;
-}
+#game{position:relative;width:100vw;height:100dvh;max-width:720px;overflow:hidden;background:#07140e}
+#bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#cv{position:absolute;inset:0;width:100%;height:100%;z-index:1;touch-action:none}
+button{border:2px solid #a87424;background:rgba(18,12,5,.9);color:#ffe5a0;border-radius:18px;font-weight:800;box-shadow:0 2px 8px #0009;font-family:Arial,sans-serif}
+.ui{position:absolute;z-index:5}
+#hud{left:3%;top:3%;width:44%;padding:10px 12px;border:2px solid #a87424;border-radius:18px;background:rgba(10,10,5,.82);color:#ffe5a0;font-weight:800;font-size:clamp(12px,2.5vw,18px)}
+.bar{height:10px;border-radius:8px;background:#111;margin:6px 0;overflow:hidden;border:1px solid #333}
+.bar i{display:block;height:100%;width:100%}.hp i{background:#e22}.mp i{background:#1687e8}
+#mission{left:3%;top:20%;width:31%;padding:10px;font-size:clamp(11px,2vw,15px);line-height:1.35}
+.side{right:3%;width:14%;min-width:62px;height:7%;font-size:clamp(10px,1.8vw,14px)}
+#shop{top:14%}#bag{top:22%}#skill{top:30%}#quest{top:38%}#pet{top:46%}#spin{top:54%}#event{top:62%}
+#joy{left:5%;bottom:15%;width:120px;height:120px;border-radius:50%;font-size:32px}
+#skill1,#skill2{bottom:17%;width:64px;height:64px;border-radius:50%;font-size:27px}
+#skill1{right:24%}#skill2{right:15%}
+#attack{right:3%;bottom:15%;width:86px;height:86px;border-radius:50%;font-size:36px;background:#7c281e}
+.menu{bottom:2%;height:8%;font-size:clamp(9px,1.8vw,13px);padding:3px}
+#m1{left:3%;width:18%}#m2{left:22%;width:18%}#m3{left:41%;width:18%}#m4{left:60%;width:18%}#m5{right:3%;width:18%}
+#msg{left:50%;bottom:31%;transform:translateX(-50%);padding:10px 18px;border-radius:15px;background:#111d;color:#ffe5a0;border:1px solid #a87424;opacity:0;transition:.2s;z-index:8;pointer-events:none;white-space:nowrap}
 #msg.show{opacity:1}
-
+#hint{position:absolute;left:50%;top:11%;transform:translateX(-50%);z-index:4;color:#fff0b0;background:#0008;padding:6px 12px;border-radius:12px;font-size:12px}
 @media(max-width:430px){
-  #mission{width:34%;top:20%;font-size:12px}
-  .side{width:15%;right:2%;min-width:62px}
-  #joy{left:5%;bottom:17%;width:118px;height:118px}
-  #attack{width:76px;height:76px;bottom:17%;font-size:32px}
-  #skill1,#skill2{width:58px;height:58px;bottom:18%;font-size:24px}
-  #skill1{right:23%}#skill2{right:14%}
-  .menu{height:8.5%;bottom:2%;font-size:10px}
+ #hud{width:46%;font-size:12px}
+ #mission{width:34%;top:21%;font-size:11px}
+ .side{width:15%;min-width:60px}
+ #joy{width:112px;height:112px;bottom:17%}
+ #attack{width:76px;height:76px;bottom:17%}
+ #skill1,#skill2{width:57px;height:57px;bottom:18%}
+ .menu{height:8.5%;font-size:10px}
 }
 </style>
 </head>
 <body>
 <div id="game">
-<img id="art" src="game-art.jpg" alt="Đại Việt Chiến Ký">
+<img id="bg" src="game-art.jpg" alt="">
+<canvas id="cv"></canvas>
 
-<button id="mission" class="hot">🎯 NHIỆM VỤ<br>Hạ 3 Sơn Tặc<br>Tiến độ <b id="progress">0/3</b></button>
-<button id="shop" class="hot side">🧰<br>Tiệm</button>
-<button id="bag" class="hot side">🎒<br>Túi Đồ</button>
-<button id="skill" class="hot side">⚡<br>Kỹ Năng</button>
-<button id="quest" class="hot side">📜<br>Nhiệm Vụ</button>
-<button id="pet" class="hot side">🐕<br>Pet</button>
-<button id="spin" class="hot side">🎡<br>Vòng Quay</button>
-<button id="event" class="hot side">🎁<br>Sự Kiện</button>
+<div id="hud" class="ui">
+  ⚔️ ĐẠI VIỆT CHIẾN KÝ<br>
+  Lv <span id="lv">1</span> · ❤️ <span id="hpText">120</span>/120
+  <div class="bar hp"><i id="hpbar"></i></div>
+  🔵 80/80
+  <div class="bar mp"><i></i></div>
+  🪙 <span id="gold">1760</span> · ⭐ <span id="star">3</span>
+</div>
 
-<button id="joy" class="hot">✦</button>
-<button id="skill1" class="hot">🔥</button>
-<button id="skill2" class="hot">⚡</button>
-<button id="attack" class="hot">⚔️</button>
+<div id="hint">Kéo joystick để di chuyển • ⚔️ để đánh quái</div>
+<button id="mission" class="ui">🎯 NHIỆM VỤ<br>Hạ 3 Sơn Tặc<br>Tiến độ <b id="progress">0/3</b></button>
+<button id="shop" class="ui side">🧰<br>Tiệm</button>
+<button id="bag" class="ui side">🎒<br>Túi Đồ</button>
+<button id="skill" class="ui side">⚡<br>Kỹ Năng</button>
+<button id="quest" class="ui side">📜<br>Nhiệm Vụ</button>
+<button id="pet" class="ui side">🐕<br>Pet</button>
+<button id="spin" class="ui side">🎡<br>Vòng Quay</button>
+<button id="event" class="ui side">🎁<br>Sự Kiện</button>
 
-<button id="m1" class="hot menu">👤<br>Nhân Vật</button>
-<button id="m2" class="hot menu">🛡️<br>Trang Bị</button>
-<button id="m3" class="hot menu">🚩<br>Bang Hội</button>
-<button id="m4" class="hot menu">👥<br>Bạn Bè</button>
-<button id="m5" class="hot menu">⚙️<br>Cài Đặt</button>
-
-<div id="msg"></div>
+<button id="joy" class="ui">✦</button>
+<button id="skill1" class="ui">🔥</button>
+<button id="skill2" class="ui">⚡</button>
+<button id="attack" class="ui">⚔️</button>
+<button id="m1" class="ui menu">👤<br>Nhân Vật</button>
+<button id="m2" class="ui menu">🛡️<br>Trang Bị</button>
+<button id="m3" class="ui menu">🚩<br>Bang Hội</button>
+<button id="m4" class="ui menu">👥<br>Bạn Bè</button>
+<button id="m5" class="ui menu">⚙️<br>Cài Đặt</button>
+<div id="msg" class="ui"></div>
 </div>
 
 <script>
-const msg=document.getElementById('msg');
-const progress=document.getElementById('progress');
-let kills=0;
-function toast(t){
- msg.textContent=t;msg.classList.add('show');
- clearTimeout(window.tt);
- window.tt=setTimeout(()=>msg.classList.remove('show'),1100);
+const canvas=document.getElementById('cv'),ctx=canvas.getContext('2d');
+const game=document.getElementById('game');
+let W=0,H=0,dpr=1;
+function resize(){dpr=Math.min(devicePixelRatio||1,2);W=game.clientWidth;H=game.clientHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize); resize();
+
+const player={x:.50,y:.61,r:24,hp:120,max:120,speed:.00028};
+let enemies=[
+ {x:.29,y:.54,hp:60,max:60,alive:true},
+ {x:.70,y:.52,hp:60,max:60,alive:true},
+ {x:.73,y:.68,hp:60,max:60,alive:true}
+];
+let kills=0,joyX=0,joyY=0,joyActive=false,last=performance.now(),attackCd=0;
+
+function toast(t){const m=document.getElementById('msg');m.textContent=t;m.classList.add('show');clearTimeout(window.tm);window.tm=setTimeout(()=>m.classList.remove('show'),1000)}
+function pos(o){return {x:o.x*W,y:o.y*H}}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+
+function drawHero(){
+ const p=pos(player),s=28;
+ ctx.save();ctx.translate(p.x,p.y);
+ // shadow
+ ctx.fillStyle='rgba(0,0,0,.4)';ctx.beginPath();ctx.ellipse(0,s*.65,s*.75,s*.28,0,0,7);ctx.fill();
+ // body
+ ctx.fillStyle='#173c61';ctx.beginPath();ctx.roundRect(-s*.5,-s*.05,s,s*.9,10);ctx.fill();
+ // belt
+ ctx.fillStyle='#8b4d23';ctx.fillRect(-s*.5,s*.25,s,s*.13);
+ // head
+ ctx.fillStyle='#f0bd88';ctx.beginPath();ctx.arc(0,-s*.48,s*.38,0,7);ctx.fill();
+ // hair
+ ctx.fillStyle='#1b1515';ctx.beginPath();ctx.arc(0,-s*.62,s*.43,Math.PI,0);ctx.fill();
+ ctx.fillStyle='#1b1515';ctx.fillRect(s*.2,-s*.8,s*.18,s*.5);
+ // sword
+ ctx.strokeStyle='#dce9ef';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(s*.35,s*.05);ctx.lineTo(s*.95,-s*.55);ctx.stroke();
+ ctx.restore();
 }
-document.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
- if(b.id==='attack'){
-   kills=Math.min(3,kills+1);
-   progress.textContent=kills+'/3';
-   toast(kills===3?'🎉 Hoàn thành nhiệm vụ!':'⚔️ Đánh Sơn Tặc!');
- }else if(b.id==='skill1')toast('🔥 Kỹ năng Hỏa Kích!');
- else if(b.id==='skill2')toast('⚡ Kỹ năng Lôi Kích!');
- else toast(b.innerText.replace(/\n/g,' · '));
-}));
-let sx=0,sy=0;
+
+function drawEnemy(e){
+ const p=pos(e),s=25;
+ ctx.save();ctx.translate(p.x,p.y);
+ ctx.fillStyle='rgba(0,0,0,.4)';ctx.beginPath();ctx.ellipse(0,s*.65,s*.75,s*.28,0,0,7);ctx.fill();
+ ctx.fillStyle='#70411e';ctx.beginPath();ctx.roundRect(-s*.48,-s*.02,s*.96,s*.85,8);ctx.fill();
+ ctx.fillStyle='#b66d3a';ctx.beginPath();ctx.arc(0,-s*.48,s*.36,0,7);ctx.fill();
+ ctx.fillStyle='#3b2018';ctx.fillRect(-s*.4,-s*.76,s*.8,s*.16);
+ ctx.strokeStyle='#e8edf1';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-s*.25,s*.1);ctx.lineTo(-s*.9,-s*.45);ctx.stroke();
+ ctx.fillStyle='#e11';ctx.fillRect(-s*.7,-s*1.0,s*1.4,5);
+ ctx.fillStyle='#4f0000';ctx.fillRect(-s*.7,-s*1.0,s*1.4*(e.hp/e.max),5);
+ ctx.fillStyle='#fff';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.fillText('Sơn Tặc',0,-s*1.08);
+ ctx.restore();
+}
+
+function update(dt){
+ if(joyActive){
+   player.x=clamp(player.x+joyX*player.speed*dt,.10,.88);
+   player.y=clamp(player.y+joyY*player.speed*dt,.22,.82);
+ }
+ attackCd-=dt;
+ for(const e of enemies){
+   if(!e.alive) continue;
+   const dx=player.x-e.x,dy=player.y-e.y,dist=Math.hypot(dx,dy);
+   if(dist<.22){
+     e.x+=dx/dist*.000045*dt;
+     e.y+=dy/dist*.000045*dt;
+   }
+   if(dist<.055 && Math.random()<.012){player.hp=Math.max(0,player.hp-2);document.getElementById('hpText').textContent=player.hp}
+ }
+ document.getElementById('hpbar').style.width=(player.hp/player.max*100)+'%';
+}
+function render(){
+ ctx.clearRect(0,0,W,H);
+ // faint interactive area glow
+ ctx.fillStyle='rgba(0,0,0,.05)';ctx.fillRect(0,H*.35,W,H*.5);
+ for(const e of enemies)if(e.alive)drawEnemy(e);
+ drawHero();
+ requestAnimationFrame(loop);
+}
+function loop(t){const dt=Math.min(40,t-last);last=t;update(dt);render()}
+requestAnimationFrame(loop);
+
+function attack(){
+ if(attackCd>0)return;
+ attackCd=350;
+ let target=null,best=1e9;
+ for(const e of enemies)if(e.alive){
+   const d=Math.hypot(player.x-e.x,player.y-e.y);
+   if(d<best){best=d;target=e}
+ }
+ if(target && best<.20){
+   target.hp-=25;
+   toast(target.hp<=0?'💥 Hạ Sơn Tặc!':'⚔️ Gây 25 sát thương!');
+   if(target.hp<=0){
+     target.alive=false;kills++;document.getElementById('progress').textContent=kills+'/3';
+     document.getElementById('gold').textContent=1760+kills*120;
+     if(kills===3)toast('🎉 Hoàn thành nhiệm vụ!');
+   }
+ }else toast('⚔️ Không có quái trong tầm đánh');
+}
+document.getElementById('attack').onclick=attack;
+document.getElementById('skill1').onclick=()=>toast('🔥 Hỏa Kích!');
+document.getElementById('skill2').onclick=()=>toast('⚡ Lôi Kích!');
+document.querySelectorAll('.side,.menu,#mission').forEach(b=>b.onclick=()=>toast(b.innerText.replace(/\n/g,' · ')));
+
 const joy=document.getElementById('joy');
-joy.addEventListener('touchstart',e=>{
- sx=e.touches[0].clientX;sy=e.touches[0].clientY;
-},{passive:true});
-joy.addEventListener('touchend',e=>{
- const x=e.changedTouches[0].clientX-sx,y=e.changedTouches[0].clientY-sy;
- if(Math.abs(x)+Math.abs(y)>25)
- toast(x>20?'➡️ Di chuyển phải':x<-20?'⬅️ Di chuyển trái':y>20?'⬇️ Di chuyển xuống':'⬆️ Di chuyển lên');
-},{passive:true});
+function joyStart(e){
+ e.preventDefault();joyActive=true;
+ const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+ const p=e.touches?e.touches[0]:e;joyMove(p,cx,cy);
+}
+function joyMove(p,cx,cy){
+ let dx=p.clientX-cx,dy=p.clientY-cy,len=Math.hypot(dx,dy),max=45;
+ if(len>max){dx=dx/len*max;dy=dy/len*max}
+ joyX=dx/max;joyY=dy/max;
+}
+function joyEnd(){joyActive=false;joyX=0;joyY=0}
+joy.addEventListener('touchstart',joyStart,{passive:false});
+joy.addEventListener('touchmove',e=>{e.preventDefault();const r=joy.getBoundingClientRect();joyMove(e.touches[0],r.left+r.width/2,r.top+r.height/2)},{passive:false});
+joy.addEventListener('touchend',joyEnd,{passive:false});
+joy.addEventListener('mousedown',joyStart);
+addEventListener('mousemove',e=>{if(joyActive){const r=joy.getBoundingClientRect();joyMove(e,r.left+r.width/2,r.top+r.height/2)}});
+addEventListener('mouseup',joyEnd);
 </script>
 </body>
 </html>
